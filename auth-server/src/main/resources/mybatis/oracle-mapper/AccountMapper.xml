@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.xgit.parts.auth.account.dao.mapper.AccountMapper">
+  <resultMap id="BaseResultMap" type="cn.com.xgit.parts.auth.account.dao.entity.AccountDO">
+    <id column="LOGIN_NAME" jdbcType="VARCHAR" property="loginName" />
+    <result column="USER_ID" jdbcType="VARCHAR" property="userId" />
+    <result column="LAST_LOGIN_TIME" jdbcType="TIMESTAMP" property="lastLoginTime" />
+    <result column="LAST_LOGIN_IP" jdbcType="VARCHAR" property="lastLoginIp" />
+    <result column="STATUS" jdbcType="DECIMAL" property="status" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    LOGIN_NAME, USER_ID, LAST_LOGIN_TIME, LAST_LOGIN_IP, STATUS, CREATE_TIME, UPDATE_TIME
+  </sql>
+    <select id="checkByUserId" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(user_id) from ius_account where user_id = #{userId,jdbcType=VARCHAR}
+    </select>
+    <select id="checkByPrimaryKey" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(login_name) from ius_account where login_name = #{loginName,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectUserIdByAccount" parameterType="java.lang.String" resultType="java.lang.String">
+        select USER_ID from ius_account where login_name = #{loginName,jdbcType=VARCHAR} and STATUS = 0
+    </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ius_account
+    where login_name = #{loginName,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ius_account
+    where user_id = #{userId,jdbcType=VARCHAR}
+    and rownum = 1
+  </select>
+
+  <select id="queryAccountsByUserIds"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from IUS_ACCOUNT
+    where USER_ID in
+    <foreach collection="userIds" item="userId" open="(" close =")" separator=",">
+      #{userId,jdbcType=VARCHAR}
+    </foreach>
+  </select>
+
+  <select id="selectListByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ius_account
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ius_account
+    where login_name = #{loginName,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByUserId" parameterType="java.lang.String">
+    delete from ius_account
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.com.xgit.parts.auth.account.dao.entity.AccountDO">
+    insert into ius_account (login_name, user_id, status,
+      last_login_time, last_login_ip, create_time, 
+      update_time)
+    values (#{loginName,jdbcType=VARCHAR}, #{user_id,jdbcType=VARCHAR}, #{status,jdbcType=DECIMAL},
+      #{lastLoginTime,jdbcType=TIMESTAMP}, #{lastLoginIp,jdbcType=VARCHAR},
+      systimestamp,
+      systimestamp
+  </insert>
+  <insert id="insertSelective" parameterType="cn.com.xgit.parts.auth.account.dao.entity.AccountDO">
+    insert into ius_account
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        login_name,
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time,
+      </if>
+      <if test="lastLoginIp != null">
+        last_login_ip,
+      </if>
+        create_time,
+        update_time,
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="loginName != null">
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="lastLoginTime != null">
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginIp != null">
+        #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      systimestamp,
+      systimestamp
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.com.xgit.parts.auth.account.dao.entity.AccountDO">
+    update ius_account
+    <set>
+      <if test="status != null">
+        status = #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time = systimestamp,
+      </if>
+      <if test="lastLoginIp != null">
+        last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+        update_time = systimestamp,
+    </set>
+    where login_name = #{loginName,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.com.xgit.parts.auth.account.dao.entity.AccountDO">
+    update ius_account
+    set user_id = #{userId,jdbcType=VARCHAR},
+      status = #{status,jdbcType=DECIMAL},
+      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where login_name = #{loginName,jdbcType=VARCHAR}
+  </update>
+
+  <select id="checkLoginName" parameterType="cn.com.xgit.parts.auth.account.dao.entity.AccountDO" resultType="java.lang.Integer">
+    select count(login_name) from ius_account where login_name = #{loginName,jdbcType=VARCHAR} and user_id != #{userId,jdbcType=VARCHAR} and status =0
+  </select>
+
+  <select id="getLastLoginTime" parameterType="java.lang.String" resultType="java.util.Date">
+    select LAST_LOGIN_TIME from ius_account where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateLoginTime" parameterType="java.lang.String">
+    update ius_account
+    set
+      last_login_time = systimestamp,
+      update_time = systimestamp
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.xgit.parts.auth.account.dao.mapper.sys.SysAccountMapper">
+    <resultMap id="BaseResultMap" type="cn.com.xgit.parts.auth.account.dao.entity.sys.SysAccountDO">
+            <result column="USER_ID" property="userId" jdbcType="VARCHAR"/>
+            <result column="LOGIN_NAME" property="loginName" jdbcType="VARCHAR"/>
+            <result column="LAST_LOGIN_TIME" property="lastLoginTime" jdbcType="TIMESTAMP"/>
+            <result column="LAST_LOGIN_IP" property="lastLoginIp" jdbcType="VARCHAR"/>
+            <result column="LOCKED" property="locked" jdbcType="INTEGER"/>
+            <result column="NAME" property="name" jdbcType="VARCHAR"/>
+            <result column="MOBILE" property="mobile" jdbcType="VARCHAR"/>
+            <result column="TELEPHONE" property="telephone" jdbcType="VARCHAR"/>
+            <result column="SEX" property="sex" jdbcType="INTEGER"/>
+            <result column="ICON" property="icon" jdbcType="VARCHAR"/>
+            <result column="NICKNAME" property="nickname" jdbcType="VARCHAR"/>
+            <result column="EMAIL" property="email" jdbcType="VARCHAR"/>
+            <result column="ID_NUMBER" property="idNumber" jdbcType="VARCHAR"/>
+            <result column="AREA_CODE" property="areaCode" jdbcType="VARCHAR"/>
+            <result column="ERP_CODE" property="erpCode" jdbcType="VARCHAR"/>
+            <result column="CODE" property="code" jdbcType="VARCHAR"/>
+            <result column="ORG_ID" property="orgId" jdbcType="VARCHAR"/>
+            <result column="DEPT_ID" property="deptId" jdbcType="VARCHAR"/>
+            <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+            <result column="STATUS" property="status" jdbcType="INTEGER"/>
+            <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="PASSWORD_ERROR_TIMES" property="passwordErrorTimes" jdbcType="INTEGER"/>
+
+            <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        USER_ID,LOGIN_NAME,LAST_LOGIN_TIME,LAST_LOGIN_IP,LOCKED,NAME,MOBILE,TELEPHONE,SEX,
+        ICON,NICKNAME,EMAIL,ID_NUMBER,AREA_CODE,ERP_CODE,CODE,ORG_ID,DEPT_ID,REMARK,
+        STATUS,CREATE_TIME,PASSWORD_ERROR_TIMES,UPDATE_TIME
+    </sql>
+
+    <sql id="cond">
+        <where>
+
+            <if test="userId != null and userId != ''">
+                and  USER_ID =#{userId,jdbcType=VARCHAR}
+            </if>
+            <if test="exUserId != null and exUserId != ''">
+                and  USER_ID !=#{exUserId,jdbcType=VARCHAR}
+            </if>
+
+            <if test="loginName != null and loginName != ''">
+                and  LOGIN_NAME =#{loginName,jdbcType=VARCHAR}
+            </if>
+            <if test="lastLoginTime != null">
+                and  LAST_LOGIN_TIME =#{lastLoginTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="lastLoginIp != null and lastLoginIp != ''">
+                and  LAST_LOGIN_IP =#{lastLoginIp,jdbcType=VARCHAR}
+            </if>
+            <if test="locked != null">
+                and  LOCKED =#{locked,jdbcType=INTEGER}
+            </if>
+            <if test="name != null and name != ''">
+                and  NAME =#{name,jdbcType=VARCHAR}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                and  MOBILE =#{mobile,jdbcType=VARCHAR}
+            </if>
+            <if test="telephone != null and telephone != ''">
+                and  TELEPHONE =#{telephone,jdbcType=VARCHAR}
+            </if>
+            <if test="sex != null">
+                and  SEX =#{sex,jdbcType=INTEGER}
+            </if>
+            <if test="icon != null and icon != ''">
+                and  ICON =#{icon,jdbcType=VARCHAR}
+            </if>
+            <if test="nickname != null and nickname != ''">
+                and  NICKNAME =#{nickname,jdbcType=VARCHAR}
+            </if>
+            <if test="email != null and email != ''">
+                and  EMAIL =#{email,jdbcType=VARCHAR}
+            </if>
+            <if test="idNumber != null and idNumber != ''">
+                and  ID_NUMBER =#{idNumber,jdbcType=VARCHAR}
+            </if>
+            <if test="areaCode != null and areaCode != ''">
+                and  AREA_CODE =#{areaCode,jdbcType=VARCHAR}
+            </if>
+            <if test="erpCode != null and erpCode != ''">
+                and  ERP_CODE =#{erpCode,jdbcType=VARCHAR}
+            </if>
+            <if test="code != null and code != ''">
+                and  CODE =#{code,jdbcType=VARCHAR}
+            </if>
+            <if test="orgId != null and orgId != ''">
+                and  ORG_ID =#{orgId,jdbcType=VARCHAR}
+            </if>
+            <if test="deptId != null and deptId != ''">
+                and  DEPT_ID =#{deptId,jdbcType=VARCHAR}
+            </if>
+            <if test="remark != null and remark != ''">
+                and  REMARK =#{remark,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null">
+                and  STATUS =#{status,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and  CREATE_TIME =#{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateTime != null">
+                and  UPDATE_TIME =#{updateTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </sql>
+
+    <select id="list" parameterType="cn.com.xgit.parts.auth.module.account.vo.SysAccountVO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_ACCOUNT
+        <include refid="cond"/>
+    </select>
+
+    <select id="queryList" parameterType="cn.com.xgit.parts.auth.module.account.vo.SysAccountVO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_ACCOUNT
+        <include refid="cond"/>
+    </select>
+
+    <select id="queryListByIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_ACCOUNT
+        where USER_ID in
+        <foreach collection="userIds" item="userId" open="(" separator=","  close=")">
+         #{userId,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+
+
+    <delete id="deleteByPrimaryKeySelective" parameterType="java.lang.String">
+        delete from SYS_ACCOUNT where USER_ID =#{userId,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insert" parameterType="cn.com.xgit.parts.auth.account.dao.entity.sys.SysAccountDO">
+        insert into SYS_ACCOUNT (
+        USER_ID,LOGIN_NAME,LAST_LOGIN_TIME,LAST_LOGIN_IP,LOCKED,NAME,MOBILE,TELEPHONE,SEX,
+        ICON,NICKNAME,EMAIL,ID_NUMBER,AREA_CODE,ERP_CODE,CODE,ORG_ID,DEPT_ID,REMARK,
+        STATUS,CREATE_TIME,PASSWORD_ERROR_TIMES,UPDATE_TIME
+        )
+        values (
+         #{userId,jdbcType=VARCHAR},#{loginName,jdbcType=VARCHAR},#{lastLoginTime,jdbcType=TIMESTAMP},#{lastLoginIp,jdbcType=VARCHAR},
+         #{locked,jdbcType=DECIMAL},#{name,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},#{telephone,jdbcType=VARCHAR},#{sex,jdbcType=INTEGER},
+         #{icon,jdbcType=VARCHAR},#{nickname,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},#{idNumber,jdbcType=VARCHAR},#{areaCode,jdbcType=VARCHAR},
+         #{erpCode,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR},#{orgId,jdbcType=VARCHAR},#{deptId,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},
+         #{status,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},0,#{updateTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into `SYS_ACCOUNT` (
+        USER_ID,LOGIN_NAME,LAST_LOGIN_TIME,LAST_LOGIN_IP,LOCKED,NAME,MOBILE,TELEPHONE,SEX,ICON,NICKNAME,EMAIL,ID_NUMBER,AREA_CODE,ERP_CODE,CODE,ORG_ID,DEPT_ID,REMARK,STATUS,CREATE_TIME,PASSWORD_ERROR_TIMES,UPDATE_TIME
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.userId,jdbcType=VARCHAR},#{item.loginName,jdbcType=VARCHAR},#{item.lastLoginTime,jdbcType=TIMESTAMP},#{item.lastLoginIp,jdbcType=VARCHAR},
+                #{item.locked,jdbcType=DECIMAL},#{item.name,jdbcType=VARCHAR},#{item.mobile,jdbcType=VARCHAR},#{item.telephone,jdbcType=VARCHAR},#{item.sex,jdbcType=INTEGER},
+                #{item.icon,jdbcType=VARCHAR},#{item.nickname,jdbcType=VARCHAR},#{item.email,jdbcType=VARCHAR},#{item.idNumber,jdbcType=VARCHAR},#{item.areaCode,jdbcType=VARCHAR},
+                #{item.erpCode,jdbcType=VARCHAR},#{item.code,jdbcType=VARCHAR},#{item.orgId,jdbcType=VARCHAR},#{item.deptId,jdbcType=VARCHAR},#{item.remark,jdbcType=VARCHAR},
+                #{item.status,jdbcType=INTEGER},#{item.createTime,jdbcType=TIMESTAMP},0,#{item.updateTime,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="cn.com.xgit.parts.auth.account.dao.entity.sys.SysAccountDO">
+        update SYS_ACCOUNT
+        <set>
+            <if test="loginName != null">
+                LOGIN_NAME =#{loginName,jdbcType=VARCHAR},
+            </if>
+            <if test="lastLoginTime != null">
+                LAST_LOGIN_TIME =#{lastLoginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastLoginIp != null">
+                LAST_LOGIN_IP =#{lastLoginIp,jdbcType=VARCHAR},
+            </if>
+            <if test="locked != null">
+                LOCKED =#{locked,jdbcType=DECIMAL},
+            </if>
+            <if test="name != null">
+                NAME =#{name,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                MOBILE =#{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone != null">
+                TELEPHONE =#{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                SEX =#{sex,jdbcType=INTEGER},
+            </if>
+            <if test="icon != null">
+                ICON =#{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null">
+                NICKNAME =#{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                EMAIL =#{email,jdbcType=VARCHAR},
+            </if>
+            <if test="idNumber != null">
+                ID_NUMBER =#{idNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="areaCode != null">
+                AREA_CODE =#{areaCode,jdbcType=VARCHAR},
+            </if>
+            <if test="erpCode != null">
+                ERP_CODE =#{erpCode,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                CODE =#{code,jdbcType=VARCHAR},
+            </if>
+            <if test="orgId != null">
+                ORG_ID =#{orgId,jdbcType=VARCHAR},
+            </if>
+            <if test="deptId != null">
+                DEPT_ID =#{deptId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                REMARK =#{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                STATUS =#{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME =#{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="passwordErrorTimes != null">
+                PASSWORD_ERROR_TIMES =#{passwordErrorTimes,jdbcType=TIMESTAMP},
+            </if>
+
+            <if test="updateTime != null">
+                UPDATE_TIME =#{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where USER_ID =#{userId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateLock" parameterType="cn.com.xgit.parts.auth.VO.LockVO">
+        update SYS_ACCOUNT
+        <set>
+
+            <if test="lock != null">
+                LOCKED =#{lock,jdbcType=DECIMAL},
+            </if>
+
+        </set>
+        where USER_ID in
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+
+</mapper>

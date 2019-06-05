@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.xgit.parts.auth.account.dao.mapper.TmpMenuMapper">
+  <resultMap id="BaseResultMap" type="cn.com.xgit.parts.auth.account.dao.entity.TmpMenuDO">
+    <result column="TMP_ID" jdbcType="VARCHAR" property="tmpId" />
+    <result column="MENU_ID" jdbcType="DECIMAL" property="menuId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    TMP_ID, MENU_ID
+  </sql>
+
+  <select id="queryList"  resultType="java.lang.Integer" parameterType="java.lang.String">
+    select MENU_ID
+    from IUS_TMP_MENU where TMP_ID = #{tmpId,jdbcType=VARCHAR}
+  </select>
+
+
+  <insert id="insert" parameterType="cn.com.xgit.parts.auth.account.dao.entity.TmpAuthDO">
+    insert into IUS_TMP_MENU (TMP_ID, MENU_ID)
+    values (#{tmpId,jdbcType=VARCHAR}, #{menuId,jdbcType=DECIMAL})
+  </insert>
+
+  <delete id="removeByTemplate" parameterType="java.lang.String">
+    delete from IUS_TMP_MENU where TMP_ID = #{tmpId,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="removeMenu" parameterType="cn.com.xgit.parts.auth.account.dao.entity.TmpMenuDO">
+    delete from IUS_TMP_MENU where TMP_ID = #{tmpId,jdbcType=VARCHAR} and MENU_ID=#{menuId,jdbcType=DECIMAL}
+  </delete>
+
+
+</mapper>

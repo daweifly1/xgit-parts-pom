@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.xgit.parts.auth.account.dao.mapper.RoleAuthMapper">
+  <resultMap id="BaseResultMap" type="cn.com.xgit.parts.auth.account.dao.entity.RoleAuthDO">
+    <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+    <result column="auth_id" jdbcType="DECIMAL" property="authId" />
+  </resultMap>
+  <insert id="insert" parameterType="cn.com.xgit.parts.auth.account.dao.entity.RoleAuthDO">
+    insert into IUS_ROLE_MENU (role_id, menu_id, channel
+      )
+    values (#{roleId,jdbcType=VARCHAR}, #{menuId,jdbcType=DECIMAL}, #{channel,jdbcType=DECIMAL}
+      )
+  </insert>
+
+
+  <select id="getAuthByRoleId" parameterType="java.lang.String" resultType="java.lang.Integer">
+      select auth_id from IUS_ROLE_AUTH where role_id =#{roleId} and status = 0
+  </select>
+
+
+  <delete id="deleteAuth" parameterType="java.lang.String">
+    delete from IUS_ROLE_AUTH where role_id =#{roleId}
+  </delete>
+
+  <insert id="insertSelective" parameterType="cn.com.xgit.parts.auth.account.dao.entity.RoleAuthDO">
+    insert into IUS_ROLE_AUTH
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="authId != null">
+        auth_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="authId != null">
+        #{authId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+
+</mapper>

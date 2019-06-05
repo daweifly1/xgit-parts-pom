@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.xgit.parts.auth.account.dao.mapper.ProfileMapper">
+  <resultMap id="BaseResultMap" type="cn.com.xgit.parts.auth.account.dao.entity.ProfileDO">
+    <id column="ID" jdbcType="VARCHAR" property="userId" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="MOBILE" jdbcType="VARCHAR" property="mobile" />
+    <result column="TELEPHONE" jdbcType="VARCHAR" property="telephone" />
+    <result column="SEX" jdbcType="DECIMAL" property="sex" />
+    <result column="DEPT_ID" jdbcType="VARCHAR" property="deptId" />
+    <result column="ICON" jdbcType="VARCHAR" property="icon" />
+    <result column="NICKNAME" jdbcType="VARCHAR" property="nickname" />
+    <result column="EMAIL" jdbcType="VARCHAR" property="email" />
+    <result column="LOCKED" jdbcType="DECIMAL" property="locked" />
+    <result column="SPACE_ID" jdbcType="VARCHAR" property="spaceId" />
+    <result column="ID_NUMBER" jdbcType="VARCHAR" property="idNumber" />
+    <result column="AREA_CODE" jdbcType="VARCHAR" property="areaCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, NAME, MOBILE, TELEPHONE,SEX,DEPT_ID,ICON,NICKNAME,EMAIL,LOCKED,SPACE_ID,ID_NUMBER,AREA_CODE
+  </sql>
+
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from IUS_PROFILE
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <!--查询用户列表-->
+  <select id="list"  resultMap="BaseResultMap" parameterType="cn.com.xgit.parts.auth.VO.ProfileConditionVO">
+    select
+    p.ID, p.NAME, p.MOBILE, p.TELEPHONE,p.SEX,p.DEPT_ID,p.ICON,p.NICKNAME,p.EMAIL,p.LOCKED,p.SPACE_ID,p.ID_NUMBER,p.AREA_CODE
+    from IUS_PROFILE p
+    <if test="deptCode != null and deptCode != ''">
+      left join IUS_DEPARTMENT d on p.dept_id=d.id
+    </if>
+    where 1=1
+    <if test="name!=null and name!=''">
+      and p.NAME like CONCAT(CONCAT('%', #{name}), '%')
+    </if>
+    <if test="mobile!=null and mobile!=''">
+      and p.MOBILE = #{mobile,jdbcType=VARCHAR}
+    </if>
+    <if test="telephone!=null and telephone!=''">
+      and p.TELEPHONE = #{telephone,jdbcType=VARCHAR}
+    </if>
+    <if test="sex!=null and sex!=''">
+      and p.SEX = #{sex,jdbcType=VARCHAR}
+    </if>
+    <if test="deptId!=null and deptId!=''">
+      and p.DEPT_ID = #{deptId,jdbcType=VARCHAR}
+    </if>
+    <if test="nickname!=null and nickname!=''">
+      and p.NICKNAME = #{nickname,jdbcType=VARCHAR}
+    </if>
+    <if test="locked !=null">
+      and p.LOCKED = #{locked,jdbcType=DECIMAL}
+    </if>
+    <if test="email!=null and email!=''">
+      and p.EMAIL = #{email,jdbcType=VARCHAR}
+    </if>
+    <if test="myself!=null and myself!=''">
+      and p.ID != #{myself,jdbcType=VARCHAR}
+    </if>
+    <if test="areaCode!=null and areaCode!=''">
+      and p.AREA_CODE like CONCAT(#{areaCode}, '%')
+    </if>
+    <if test="spaceId!=null and spaceId!=''">
+      and p.SPACE_ID = #{spaceId,jdbcType=VARCHAR}
+    </if>
+    <if test="deptCode != null and deptCode != ''">
+      and d.CODE like CONCAT(CONCAT(#{deptCode}), '%')
+    </if>
+  </select>
+  
+  <select id="getCountByMobile" parameterType="cn.com.xgit.parts.auth.account.dao.entity.ProfileDO" resultType="java.lang.Integer">
+    select count(*) 
+    from IUS_PROFILE 
+    where 
+    MOBILE = #{mobile,jdbcType=VARCHAR}
+    <if test="userId != null and userId != ''">
+      and id != #{userId,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <insert id="insert" parameterType="cn.com.xgit.parts.auth.account.dao.entity.ProfileDO">
+    insert into IUS_PROFILE (ID, NAME, MOBILE,TELEPHONE,SEX,DEPT_ID,ICON,NICKNAME,EMAIL,LOCKED,SPACE_ID,CREATE_DATE,ID_NUMBER,AREA_CODE)
+    values
+    (#{userId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},#{telephone,jdbcType=VARCHAR},#{sex,jdbcType=VARCHAR},
+    #{deptId,jdbcType=VARCHAR},#{icon,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},#{locked,jdbcType=DECIMAL},#{spaceId,jdbcType=VARCHAR},now(),#{idNumber,jdbcType=VARCHAR},#{areaCode,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="update" parameterType="cn.com.xgit.parts.auth.account.dao.entity.ProfileDO">
+    update IUS_PROFILE
+    <set>
+      <if test="name != null " >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        MOBILE = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        TELEPHONE = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        SEX = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null">
+        DEPT_ID = #{deptId,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null">
+        ICON = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null">
+        NICKNAME = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="locked != null">
+        LOCKED = #{locked,jdbcType=DECIMAL},
+      </if>
+      <if test="idNumber != null">
+        ID_NUMBER = #{idNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null">
+        AREA_CODE = #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="spaceId != null">
+        SPACE_ID = #{spaceId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{userId,jdbcType=VARCHAR}
+  </update>
+
+  <delete id="removeById" parameterType="java.lang.String">
+    delete from IUS_PROFILE where id = #{userId,jdbcType=VARCHAR}
+  </delete>
+
+  <select id="queryCountByDept" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(1) FROM  IUS_PROFILE where dept_id = #{deptId,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

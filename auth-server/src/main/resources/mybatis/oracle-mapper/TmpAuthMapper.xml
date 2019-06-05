@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.xgit.parts.auth.account.dao.mapper.TmpAuthMapper">
+  <resultMap id="BaseResultMap" type="cn.com.xgit.parts.auth.account.dao.entity.TmpAuthDO">
+    <result column="TMP_ID" jdbcType="VARCHAR" property="tmpId" />
+    <result column="AUTH_ID" jdbcType="DECIMAL" property="authId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    TMP_ID, AUTH_ID
+  </sql>
+
+  <select id="queryList"  resultType="java.lang.Integer" parameterType="java.lang.String">
+    select AUTH_ID
+    from IUS_TMP_AUTH where TMP_ID = #{tmpId,jdbcType=VARCHAR}
+  </select>
+
+
+  <insert id="insert" parameterType="cn.com.xgit.parts.auth.account.dao.entity.TmpAuthDO">
+    insert into IUS_TMP_AUTH (TMP_ID, AUTH_ID)
+    values (#{tmpId,jdbcType=VARCHAR}, #{authId,jdbcType=DECIMAL})
+  </insert>
+
+  <delete id="removeByTemplate" parameterType="java.lang.String">
+    delete from IUS_TMP_AUTH where TMP_ID = #{tmpId,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="removeAuth" parameterType="cn.com.xgit.parts.auth.account.dao.entity.TmpAuthDO">
+    delete from IUS_TMP_AUTH where TMP_ID = #{tmpId,jdbcType=VARCHAR} and  AUTH_ID=#{authId,jdbcType=DECIMAL}
+  </delete>
+
+</mapper>
