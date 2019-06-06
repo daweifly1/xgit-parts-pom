@@ -54,7 +54,7 @@ public class SysUserRolesService extends BaseService<SysUserRolesVO, SysUserRole
     }
 
     @Transactional
-    public void updateUserRole(List<String> roleIds, String userId) {
+    public void updateUserRole(List<String> roleIds, Long userId) {
         sysUserRolesMapper.deleteByUserId(userId);
         if (CollectionUtils.isNotEmpty(roleIds)) {
             List<SysUserRolesDO> ll = new ArrayList<>(roleIds.size());

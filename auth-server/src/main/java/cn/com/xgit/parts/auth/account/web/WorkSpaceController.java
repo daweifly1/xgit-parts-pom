@@ -2,6 +2,7 @@ package cn.com.xgit.parts.auth.account.web;
 
 import cn.com.xgit.parts.auth.account.service.WorkspaceService;
 import cn.com.xgit.parts.auth.VO.WorkspaceVO;
+import cn.com.xgit.parts.auth.module.base.BasicController;
 import com.xgit.bj.core.rsp.ResultMessage;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

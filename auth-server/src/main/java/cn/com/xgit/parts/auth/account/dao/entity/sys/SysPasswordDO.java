@@ -14,9 +14,9 @@ import java.util.Date;
 public class SysPasswordDO implements Serializable {
     private static final long serialVersionUID = -1L;
     //
-    private Integer id;
+    private Long id;
     //用户ID
-    private String userId;
+    private Long userId;
     //密码
     private String password;
     //修改时间

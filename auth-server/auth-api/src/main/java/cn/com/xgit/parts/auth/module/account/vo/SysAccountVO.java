@@ -15,14 +15,8 @@ import java.util.List;
  */
 @Data
 @ToString
-public class SysAccountVO extends BaseEntity implements Serializable{
+public class SysAccountVO extends BaseEntity implements Serializable {
     private static final long serialVersionUID = -1L;
-
-    @ApiModelProperty(value = "公司ID，为机构或其父节点")
-    private Long orgId;
-    @ApiModelProperty(value = "机构ID")
-    private Long deptId;
-
     @ApiModelProperty(value = "登录名")
     private String loginName;
     @ApiModelProperty(value = "最近登录时间")
@@ -57,15 +51,9 @@ public class SysAccountVO extends BaseEntity implements Serializable{
     private String remark;
     @ApiModelProperty(value = "状态（0有效，1无效）")
     private Integer status;
-    @ApiModelProperty(value = "添加时间")
-    private Date createTime;
-    @ApiModelProperty(value = "修改时间")
-    private Date updateTime;
     //============非本表数据================================================
     @ApiModelProperty(value = "要排除的用户id")
-    private String exUserId;
-    @ApiModelProperty(value = "机构名称")
-    private String deptName;
+    private Long exUserId;
     private String roleNames;
     private List<SysRoleVO> roleVOs;
     private List<String> roleIds;

@@ -1,7 +1,7 @@
 package cn.com.xgit.parts.auth.account.web.sys;
 
 import cn.com.xgit.parts.auth.account.facade.sys.UserAuthFacade;
-import cn.com.xgit.parts.auth.account.web.BasicController;
+import cn.com.xgit.parts.auth.module.base.BasicController;
 import com.xgit.bj.core.rsp.ResultMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

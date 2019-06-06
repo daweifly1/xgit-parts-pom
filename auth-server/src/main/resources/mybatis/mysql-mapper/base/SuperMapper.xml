@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.xgit.parts.auth.module.base.SuperMapper">
+
+  <!--当前表逻辑删除判断-->
+  <sql id="is_del">
+    <if test="'${isLogicDel}'=='true'">
+      AND a.is_del = 0
+    </if>
+  </sql>
+
+  <!--逻辑删和wrapper的聚合-->
+  <sql id="del_sqlSegment">
+      <include refid="is_del"/>
+      <include refid="sqlSegment"/>
+  </sql>
+
+  <!--wrapper包装的sql导入-->
+  <sql id="sqlSegment">
+    <if test="ew.sqlSegment != null">
+      ${ew.sqlSegment}
+    </if>
+  </sql>
+
+  <!--有一对多关系时，分页可能需要子查询，这时候要在需要分页的子查询最后引入这个-->
+  <sql id="limit">
+    LIMIT 0
+  </sql>
+
+  <sql id="orderBy">
+    ORDER BY a.updated_date DESC
+  </sql>
+
+  <!--数据规则 必须用EntityWrapper包装-->
+  <sql id="currentDataRule">
+    <if test="ew.entity.currentDataRule != null">
+      AND (
+      <if test="ew.entity.currentDataRule.userId != null">
+        (a.created_by = #{ew.entity.currentDataRule.userId}
+        <if test="ew.entity.currentDataRule.onlyOffices != null">
+          AND a.office_id in
+          <foreach collection="ew.entity.currentDataRule.onlyOffices" item="onlyOffice" open="("
+                   close=")"
+                   separator=",">
+            #{onlyOffice.id}
+          </foreach>
+        </if>
+        )
+      </if>
+      <if test="ew.entity.currentDataRule.offices != null">
+        <if test="ew.entity.currentDataRule.userId != null">
+          OR
+        </if>
+        a.office_id in
+        <foreach collection="ew.entity.currentDataRule.offices" item="office" open="(" close=")" separator=",">
+          #{office.id}
+        </foreach>
+      </if>
+      )
+    </if>
+  </sql>
+</mapper>

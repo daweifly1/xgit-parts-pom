@@ -18,6 +18,9 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <mybatis-plus.version>3.0.7</mybatis-plus.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>cn.com.xgit</groupId>
@@ -63,9 +66,16 @@
         <!--<version>11.2.0.3</version>-->
         <!--</dependency>-->
         <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper</artifactId>
-            <version>4.1.6</version>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-annotation</artifactId>
+            <version>${mybatis-plus.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <version>${mybatis-plus.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

@@ -1,7 +1,7 @@
 package cn.com.xgit.parts.auth.account.web.sys;
 
 import cn.com.xgit.parts.auth.account.facade.sys.UserAuthFacade;
-import cn.com.xgit.parts.auth.account.web.BasicController;
+import cn.com.xgit.parts.auth.module.base.BasicController;
 import cn.com.xgit.parts.auth.module.menu.vo.SysRoleVO;
 import com.xgit.bj.core.rsp.ResultMessage;
 import org.apache.commons.lang.StringUtils;

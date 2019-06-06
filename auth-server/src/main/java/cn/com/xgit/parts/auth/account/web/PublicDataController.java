@@ -3,6 +3,7 @@ package cn.com.xgit.parts.auth.account.web;
 import cn.com.xgit.parts.auth.account.service.DepartmentService;
 import cn.com.xgit.parts.auth.account.service.ProfileService;
 import cn.com.xgit.parts.auth.VO.DepartmentVO;
+import cn.com.xgit.parts.auth.module.base.BasicController;
 import com.xgit.bj.core.rsp.ResultMessage;
 import com.xgit.bj.core.rsp.PageCommonVO;
 import com.xgit.bj.core.rsp.SearchCommonVO;

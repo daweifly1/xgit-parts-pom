@@ -19,7 +19,5 @@ public class UserRegistVO implements Serializable {
     @ApiModelProperty(value = "账户信息")
     private SysAccountVO sysAccountVO;
 
-//    @ApiModelProperty(value = "公司机构信息")
-//    private DepartmentVO departmentVO;
 
 }

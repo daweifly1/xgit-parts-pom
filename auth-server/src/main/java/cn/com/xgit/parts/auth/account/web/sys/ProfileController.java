@@ -2,11 +2,10 @@ package cn.com.xgit.parts.auth.account.web.sys;
 
 import cn.com.xgit.parts.auth.account.facade.sys.UserAuthFacade;
 import cn.com.xgit.parts.auth.account.infra.ErrorCode;
-import cn.com.xgit.parts.auth.account.service.sys.SysAccountService;
 import com.github.pagehelper.PageInfo;
 import cn.com.xgit.parts.auth.VO.LockVO;
 import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
-import cn.com.xgit.parts.auth.account.web.BasicController;
+import cn.com.xgit.parts.auth.module.base.BasicController;
 import com.xgit.bj.core.Ref;
 import com.xgit.bj.core.rsp.ResultMessage;
 import com.xgit.bj.core.rsp.PageCommonVO;

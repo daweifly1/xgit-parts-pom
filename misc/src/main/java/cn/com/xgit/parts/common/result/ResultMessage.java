@@ -109,4 +109,9 @@ public class ResultMessage<T> implements Serializable {
         this.status = status;
         return this;
     }
+
+    public class success extends ResultMessage<T> {
+        public <T> success(int code, String desc, T value) {
+        }
+    }
 }

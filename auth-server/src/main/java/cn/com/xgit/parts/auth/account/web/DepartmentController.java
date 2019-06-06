@@ -2,6 +2,7 @@ package cn.com.xgit.parts.auth.account.web;
 
 import cn.com.xgit.parts.auth.account.infra.ErrorCode;
 import cn.com.xgit.parts.auth.account.service.DepartmentService;
+import cn.com.xgit.parts.auth.module.base.BasicController;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -3,6 +3,7 @@ package cn.com.xgit.parts.auth.account.web;
 
 import cn.com.xgit.parts.auth.account.facade.sys.UserAuthFacade;
 import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
+import cn.com.xgit.parts.auth.module.base.BasicController;
 import com.xgit.bj.core.rsp.ResultMessage;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

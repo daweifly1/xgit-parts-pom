@@ -2,7 +2,7 @@ package cn.com.xgit.parts.auth.account.web.sys;
 
 import cn.com.xgit.parts.auth.account.infra.ErrorCode;
 import cn.com.xgit.parts.auth.account.service.sys.SysRoleService;
-import cn.com.xgit.parts.auth.account.web.BasicController;
+import cn.com.xgit.parts.auth.module.base.BasicController;
 import com.github.pagehelper.PageInfo;
 import cn.com.xgit.parts.auth.module.menu.vo.SysRoleVO;
 import com.xgit.bj.core.rsp.ResultMessage;

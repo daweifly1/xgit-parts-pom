@@ -1,12 +1,7 @@
 package cn.com.xgit.parts.auth.account.service.base;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import cn.com.xgit.parts.auth.account.dao.mapper.base.BaseMapper;
 import cn.com.xgit.parts.auth.account.infra.ErrorCode;
-import com.xgit.bj.core.rsp.PageCommonVO;
-import com.xgit.bj.core.rsp.SearchCommonVO;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

@@ -1,8 +1,12 @@
 package cn.com.xgit.parts.auth.account.infra;
 
-public enum ErrorCode implements com.xgit.bj.core.ErrorCode {
+public enum ErrorCode implements cn.com.xgit.parts.common.result.ErrorCode {
     Success(0, "操作成功"),
     Failure(1, "操作失败"),
+
+    UserNeedValidateCode(11, "由于密码录入错误过多，请输入验证码"),
+
+    //后面的考虑废弃=======================================前端仅展示错误信息即可
     NeedLogin(2, "用户没有登录"),
     UnExceptedError(3, "未知的错误发生"),
     IllegalArument(4, "参数错误"),
@@ -13,7 +17,7 @@ public enum ErrorCode implements com.xgit.bj.core.ErrorCode {
     RoleNameExists(9, "角色名已存在"),
     RoleIsUsed(10, "角色已经被使用"),
     UserLocked(11000, "用户被锁定"),
-    UserNeedValidateCode(11, "由于密码录入错误过多，请输入验证码"),
+
     OldPwdNotRight(12, "原密码不正确"),
     PwdAlreadSet(13, "该用户已经设置密码"),
     SqlSyntaxError(14, "数据库执行异常"),

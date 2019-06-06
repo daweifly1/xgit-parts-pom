@@ -6,7 +6,7 @@ package cn.com.xgit.parts.auth.enums;
 public enum PasswordType {
     NORMAL(0, "普通登录"),
     QUERY(1, "查询"),
-    SYS_OP(2, "高级操作");
+    DYNAMIC(2, "手机动态密码，可以仅存缓存");
 
     private int type;
     private String desc;

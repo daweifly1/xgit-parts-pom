@@ -15,9 +15,9 @@ import java.util.Date;
 public class SysPasswordVO implements Serializable {
     private static final long serialVersionUID = -1L;
     @ApiModelProperty(value = "")
-    private Integer id;
+    private Long id;
     @ApiModelProperty(value = "用户ID")
-    private String userId;
+    private Long userId;
     @ApiModelProperty(value = "密码")
     private String password;
     @ApiModelProperty(value = "修改时间")

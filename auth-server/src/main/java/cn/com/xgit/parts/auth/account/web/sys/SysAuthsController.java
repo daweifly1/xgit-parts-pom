@@ -2,9 +2,9 @@ package cn.com.xgit.parts.auth.account.web.sys;
 
 import cn.com.xgit.parts.auth.account.infra.ErrorCode;
 import cn.com.xgit.parts.auth.account.service.sys.SysAuthsService;
-import cn.com.xgit.parts.auth.account.web.BasicController;
+import cn.com.xgit.parts.auth.module.base.BasicController;
 import cn.com.xgit.parts.auth.module.menu.vo.SysAuthsVO;
-import com.xgit.bj.core.rsp.ResultMessage;
+import cn.com.xgit.parts.common.result.ResultMessage;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class SysAuthsController extends BasicController {
 
             return ResultMessage(code);
         } catch (Exception e) {
-            return new ResultMessage(ErrorCode.Failure.getCode(), e.getMessage());
+            return actionErrorResult(ErrorCode.Failure.getCode(), e.getMessage());
         }
     }
 
@@ -60,7 +60,7 @@ public class SysAuthsController extends BasicController {
             ErrorCode code = sysAuthsService.remove(condition, getUserId(request));
             return ResultMessage(code);
         } catch (Exception e) {
-            return new ResultMessage(ErrorCode.Failure.getCode(), e.getMessage());
+            return actionErrorResult(ErrorCode.Failure.getCode(), e.getMessage());
         }
     }
 
