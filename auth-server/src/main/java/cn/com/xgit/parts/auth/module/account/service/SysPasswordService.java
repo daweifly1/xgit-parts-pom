@@ -1,12 +1,10 @@
 package cn.com.xgit.parts.auth.module.account.service;
 
 import cn.com.xgit.parts.auth.module.account.entity.SysPassword;
-import cn.com.xgit.parts.auth.module.base.SuperMapper;
-import cn.com.xgit.parts.auth.module.base.SuperService;
+import cn.com.xgit.parts.auth.common.base.SuperMapper;
+import cn.com.xgit.parts.auth.common.base.SuperService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * SysPassword 系统密码

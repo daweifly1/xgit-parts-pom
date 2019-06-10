@@ -4,7 +4,7 @@ import cn.com.xgit.parts.auth.exception.AuthException;
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.auth.module.account.param.UserLoginVO;
 import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
-import cn.com.xgit.parts.auth.module.base.BasicController;
+import cn.com.xgit.parts.auth.common.base.BasicController;
 import cn.com.xgit.parts.auth.module.login.facade.UserInfoFacade;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import cn.com.xgit.parts.common.util.BeanUtil;

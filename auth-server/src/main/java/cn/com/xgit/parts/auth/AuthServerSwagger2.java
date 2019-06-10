@@ -16,10 +16,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class AuthServerSwagger2 {
     @Bean
     public Docket createRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage("com.xgit.bj.auth.web")).paths(PathSelectors.any()).build();
+        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage("cn.com.xgit.parts.auth.module.*.controller")).paths(PathSelectors.any()).build();
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("Spring Boot中使用Swagger2构建RESTful APIs").description("更多swagger2相关文章请访问官网：http://swagger.io/").contact(new Contact("dev", "", "dev@com.bkrwin.ufast")).version("1.0").build();
+        return new ApiInfoBuilder().title("用户权限管理").description("用户、平台、权限、角色").contact(new Contact("dev", "", "dev@com.bkrwin.ufast")).version("1.0").build();
     }
 }

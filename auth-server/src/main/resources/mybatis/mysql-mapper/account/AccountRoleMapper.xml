@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.xgit.parts.auth.module.account.mapper.SysAccountRoleMapper">
+    <resultMap id="BaseResultMap" type="cn.com.xgit.parts.auth.module.account.entity.SysAccountRole">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="role_id" jdbcType="INTEGER" property="roleId"/>
+    </resultMap>
+
+    <select id="queryListByRoleIds" resultMap="BaseResultMap">
+        select
+        id,user_id,role_id
+        from IUS_ACCOUNT
+        where role_id in
+        <foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
+            #{roleId}
+        </foreach>
+        limit #{limit}
+    </select>
+</mapper>

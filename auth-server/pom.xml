@@ -5,7 +5,7 @@
 
     <groupId>com.xgit.bj.auth</groupId>
     <artifactId>auth-server</artifactId>
-    <version>${auth-api.version}</version>
+    <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>auth-server</name>
@@ -33,7 +33,6 @@
             <artifactId>auth-api</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -99,8 +98,8 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
         </dependency>
 
     </dependencies>

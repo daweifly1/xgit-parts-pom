@@ -1,7 +1,8 @@
 package cn.com.xgit.parts.auth.account.infra;
 
 import cn.com.xgit.parts.auth.exception.AuthException;
-import com.xgit.bj.core.rsp.ResultMessage;
+import cn.com.xgit.parts.auth.exception.code.ErrorCode;
+import cn.com.xgit.parts.common.result.ResultMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,7 +18,7 @@ public class ExceptionAdvice {
     @ResponseBody
     public ResultMessage processExcption(NativeWebRequest request, AuthException e) {
         log.error(e.getMessage(), e.getCode());
-        return new ResultMessage(e.getCode(), e.getMessage(), null);
+        return  ResultMessage.error(e.getCode(), e.getMessage(), null);
     }
 
     @ExceptionHandler({Exception.class})
@@ -26,7 +27,7 @@ public class ExceptionAdvice {
         this.log.error("Exception ", e);
         ErrorCode code = ErrorCode.UnExceptedError;
 
-        return new ResultMessage(code.getCode(), code.getDesc(), e.getMessage());
+        return ResultMessage.error(code.getCode(), code.getDesc(), e.getMessage());
     }
 
     @ExceptionHandler({IllegalArgumentException.class})
@@ -35,7 +36,7 @@ public class ExceptionAdvice {
         this.log.error("IllegalArgumentException ", e);
         ErrorCode code = ErrorCode.IllegalArument;
 
-        return new ResultMessage(code.getCode(), code.getDesc(), null);
+        return  ResultMessage.error(code.getCode(), code.getDesc(), null);
     }
 
     @ExceptionHandler({SQLIntegrityConstraintViolationException.class})
@@ -43,6 +44,6 @@ public class ExceptionAdvice {
     public ResultMessage processSQLIntegrityConstraintViolationException(NativeWebRequest request, IllegalArgumentException e) {
         this.log.error("SQLIntegrityConstraintViolationException 异常", e);
         ErrorCode code = ErrorCode.SQLIntegrityConstraintViolation;
-        return new ResultMessage(code.getCode(), code.getDesc(), null);
+        return  ResultMessage.error(code.getCode(), code.getDesc(), null);
     }
 }

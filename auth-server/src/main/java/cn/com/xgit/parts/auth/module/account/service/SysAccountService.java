@@ -1,14 +1,14 @@
 package cn.com.xgit.parts.auth.module.account.service;
 
-import cn.com.xgit.parts.auth.account.infra.ErrorCode;
+import cn.com.xgit.parts.auth.exception.code.ErrorCode;
 import cn.com.xgit.parts.auth.enums.PasswordType;
 import cn.com.xgit.parts.auth.exception.CommonException;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccount;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccountRole;
 import cn.com.xgit.parts.auth.module.account.entity.SysPassword;
 import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
-import cn.com.xgit.parts.auth.module.base.SuperMapper;
-import cn.com.xgit.parts.auth.module.base.SuperService;
+import cn.com.xgit.parts.auth.common.base.SuperMapper;
+import cn.com.xgit.parts.auth.common.base.SuperService;
 import cn.com.xgit.parts.common.util.AccountValidatorUtil;
 import cn.com.xgit.parts.common.util.BeanUtil;
 import cn.com.xgit.parts.common.util.security.CryptoUtil;
@@ -200,7 +200,7 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
             return sysAccountVO;
         }
         sysAccountVO = BeanUtil.do2bo(sysAccount, SysAccountVO.class);
-
+        //TODO
         sysAccountVO.setRoleIds(null);
         return sysAccountVO;
     }

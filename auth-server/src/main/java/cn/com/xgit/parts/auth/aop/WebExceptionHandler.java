@@ -2,9 +2,9 @@ package cn.com.xgit.parts.auth.aop;
 
 
 import cn.com.xgit.parts.auth.exception.AuthException;
-import cn.com.xgit.parts.auth.account.infra.ErrorCode;
-import com.xgit.bj.common.util.fastjson.FastJsonUtil;
-import com.xgit.bj.core.rsp.ResultMessage;
+import cn.com.xgit.parts.auth.exception.code.ErrorCode;
+import cn.com.xgit.parts.common.result.ResultMessage;
+import cn.com.xgit.parts.common.util.fastjson.FastJsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.io.IOUtils;
@@ -34,7 +34,7 @@ public class WebExceptionHandler {
             }
             this.exceptionLog(e, request);
             if (e instanceof AuthException) {
-                ResultMessage view = new ResultMessage(((AuthException) e).getCode(), e.getMessage());
+                ResultMessage view = ResultMessage.error(((AuthException) e).getCode(), e.getMessage());
                 response.setContentType("text/html;charset=utf-8");
                 out.write(FastJsonUtil.toJSONString(view));
             }
@@ -42,7 +42,7 @@ public class WebExceptionHandler {
 //        // ajax请求
 //        View view = View.wrapError("发生错误，请联系开发解决");
 //        view.put("errorMsg", fullStackTrace);
-            ResultMessage view = new ResultMessage(ErrorCode.Failure, e.getMessage());
+            ResultMessage view = ResultMessage.error(ErrorCode.Failure.getCode(), e.getMessage());
             response.setContentType("text/html;charset=utf-8");
             out.write(FastJsonUtil.toJSONString(view));
 

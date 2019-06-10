@@ -1,11 +1,11 @@
 package cn.com.xgit.parts.auth.module.login.facade;
 
 import cn.com.xgit.parts.auth.account.infra.AuthConstant;
-import cn.com.xgit.parts.auth.account.infra.ErrorCode;
 import cn.com.xgit.parts.auth.account.manager.cache.RedisClient;
 import cn.com.xgit.parts.auth.enums.PasswordType;
 import cn.com.xgit.parts.auth.exception.AuthException;
 import cn.com.xgit.parts.auth.exception.CommonException;
+import cn.com.xgit.parts.auth.exception.code.ErrorCode;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccount;
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.auth.module.account.param.UserLoginVO;

@@ -1,6 +1,7 @@
 package cn.com.xgit.parts.auth.exception;
 
-import cn.com.xgit.parts.auth.account.infra.ErrorCode;
+
+import cn.com.xgit.parts.auth.exception.code.ErrorCode;
 
 /**
  * 定义鉴权异常类型，此种异常返回前端错误码是约定的，展示message的同时需要考虑其他操作（如前几次用户不需要输入验证码，用户密码错误到一定程度需要输入验证码）

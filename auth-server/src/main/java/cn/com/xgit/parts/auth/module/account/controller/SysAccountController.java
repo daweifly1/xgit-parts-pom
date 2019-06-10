@@ -1,10 +1,10 @@
 package cn.com.xgit.parts.auth.module.account.controller;
 
-import cn.com.xgit.parts.auth.account.infra.ErrorCode;
+import cn.com.xgit.parts.auth.exception.code.ErrorCode;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccount;
 import cn.com.xgit.parts.auth.module.account.service.SysAccountService;
 import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
-import cn.com.xgit.parts.auth.module.base.BasicController;
+import cn.com.xgit.parts.auth.common.base.BasicController;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;

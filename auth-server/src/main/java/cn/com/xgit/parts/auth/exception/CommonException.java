@@ -1,6 +1,6 @@
 package cn.com.xgit.parts.auth.exception;
 
-import cn.com.xgit.parts.auth.account.infra.ErrorCode;
+import cn.com.xgit.parts.auth.exception.code.ErrorCode;
 
 /**
  * 定义普通异常类型，此种异常返回前端往往是默认的错误码仅需展示message即可
