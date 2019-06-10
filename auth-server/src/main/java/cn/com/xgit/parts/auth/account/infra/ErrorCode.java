@@ -4,6 +4,7 @@ public enum ErrorCode implements cn.com.xgit.parts.common.result.ErrorCode {
     Success(0, "操作成功"),
     Failure(1, "操作失败"),
 
+    UserNameExists(8, "用户帐号已存在"),
     UserNeedValidateCode(11, "由于密码录入错误过多，请输入验证码"),
 
     //后面的考虑废弃=======================================前端仅展示错误信息即可
@@ -13,7 +14,7 @@ public enum ErrorCode implements cn.com.xgit.parts.common.result.ErrorCode {
     SQLIntegrityConstraintViolation(5, "违反完整性约束"),
     NoAuthorization(6, "没有权限执行此操作"),
     CheckLoginFailure(7, "用户不存在或者密码错误"),
-    UserNameExists(8, "用户帐号已存在"),
+
     RoleNameExists(9, "角色名已存在"),
     RoleIsUsed(10, "角色已经被使用"),
     UserLocked(11000, "用户被锁定"),

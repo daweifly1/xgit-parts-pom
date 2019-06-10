@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,12 +49,9 @@ public class SysAccountController extends BasicController {
     }
 
     @DeleteMapping("/removeByUserId")
-    public ResultMessage<ErrorCode> removeAccountByUserId(@RequestParam("userId") Long userId) {
-        int r = sysAccountService.batchDelete(Arrays.asList(userId));
-        if (r > 0) {
-            return ResultMessage(ErrorCode.Success);
-        }
-        return actionErrorResult("delete error");
+    public ResultMessage removeAccountByUserId(@RequestParam("userId") Long userId) {
+        sysAccountService.removeAccountByUserId(userId);
+        return ResultMessage.success();
     }
 
 
@@ -66,7 +62,7 @@ public class SysAccountController extends BasicController {
     }
 
     @PostMapping("/resetPassword")
-    public ResultMessage resetPassword(@RequestBody List<String> userIds) {
+    public ResultMessage resetPassword(@RequestBody List<Long> userIds) {
         ErrorCode ret = sysAccountService.resetPassword(userIds);
         return ResultMessage(ret);
     }

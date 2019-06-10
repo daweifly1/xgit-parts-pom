@@ -1,20 +1,25 @@
 package cn.com.xgit.parts.auth.module.account.service;
 
+import cn.com.xgit.parts.auth.account.infra.ErrorCode;
 import cn.com.xgit.parts.auth.enums.PasswordType;
 import cn.com.xgit.parts.auth.exception.CommonException;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccount;
+import cn.com.xgit.parts.auth.module.account.entity.SysAccountRole;
 import cn.com.xgit.parts.auth.module.account.entity.SysPassword;
 import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
 import cn.com.xgit.parts.auth.module.base.SuperMapper;
 import cn.com.xgit.parts.auth.module.base.SuperService;
 import cn.com.xgit.parts.common.util.AccountValidatorUtil;
+import cn.com.xgit.parts.common.util.BeanUtil;
 import cn.com.xgit.parts.common.util.security.CryptoUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -25,8 +30,14 @@ import java.util.List;
 @Service
 public class SysAccountService extends SuperService<SuperMapper<SysAccount>, SysAccount> {
 
+    @Value("${password.defaultPsw:123456}")
+    private String defaultPsw;
+
     @Autowired
     private SysPasswordService sysPasswordService;
+
+    @Autowired
+    private SysAccountRoleService sysAccountRoleService;
 
     public SysAccount queryByLoginNameOrMobi(String loginNameOrMobi) {
         SysAccount sysAccount = new SysAccount();
@@ -127,5 +138,70 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
         if (!sysPasswordService.save(sysPassword)) {
             throw new CommonException("系统异常，设置密码错误");
         }
+    }
+
+    @Transactional
+    public boolean removeAccountByUserId(Long userId) {
+        boolean r = super.removeById(userId);
+        if (r) {
+            //删除密码信息
+            SysPassword sysPassword = new SysPassword();
+            sysPassword.setUserId(userId);
+            r = sysPasswordService.remove(new QueryWrapper<>(sysPassword));
+            if (r) {
+                SysAccountRole sysAccountRole = new SysAccountRole();
+                sysAccountRole.setUserId(userId);
+                r = sysAccountRoleService.remove(new QueryWrapper<>(sysAccountRole));
+            }
+        }
+        if (!r) {
+            throw new CommonException("删除失败");
+        }
+        return r;
+    }
+
+    public ErrorCode updatePassword(Long userId, String password) {
+        SysPassword sysPassword = new SysPassword();
+        sysPassword.setUserId(userId);
+        sysPassword.setType(PasswordType.NORMAL.getType());
+        List<SysPassword> ll = sysPasswordService.list(new QueryWrapper<>(sysPassword));
+        if (CollectionUtils.isEmpty(ll)) {
+            return ErrorCode.Failure;
+        }
+        sysPassword = ll.get(0);
+        sysPassword.setPassword(cryptoPassword(password, userId));
+        sysPasswordService.updateById(sysPassword);
+        return ErrorCode.Success;
+    }
+
+    @Transactional
+    public ErrorCode resetPassword(List<Long> userIds) {
+        for (Long userId : userIds) {
+            ErrorCode r = updatePassword(userId, defaultPsw);
+            if (ErrorCode.Success != r) {
+                throw new CommonException("初始密码失败");
+            }
+        }
+        return ErrorCode.Success;
+    }
+
+    public ErrorCode checkLoginName(String loginName) {
+        SysAccount sysAccount = queryByLoginNameOrMobi(loginName);
+        if (null == sysAccount) {
+            return ErrorCode.Success;
+        }
+        return ErrorCode.UserNameExists;
+    }
+
+    public SysAccountVO queryAccountByLoginName(String loginName) {
+        SysAccountVO sysAccountVO = null;
+        SysAccount sysAccount = queryByLoginNameOrMobi(loginName);
+        if (null == sysAccount) {
+            return sysAccountVO;
+        }
+        sysAccountVO = BeanUtil.do2bo(sysAccount, SysAccountVO.class);
+
+        sysAccountVO.setRoleIds(null);
+        return sysAccountVO;
     }
 }

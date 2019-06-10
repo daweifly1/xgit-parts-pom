@@ -6,6 +6,8 @@ import cn.com.xgit.parts.auth.module.base.SuperService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * SysPassword 系统密码
  */
