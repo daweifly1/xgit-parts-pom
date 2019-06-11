@@ -1,6 +1,7 @@
 package cn.com.xgit.parts.auth.module.role.facade;
 
 import cn.com.xgit.parts.auth.module.account.service.SysAccountRoleService;
+import cn.com.xgit.parts.auth.module.menu.param.SysAuthsParam;
 import cn.com.xgit.parts.auth.module.menu.vo.SysAuthsVO;
 import cn.com.xgit.parts.auth.module.role.entity.SysAuths;
 import cn.com.xgit.parts.auth.module.role.service.SysAuthsService;
@@ -73,12 +74,16 @@ public class MenuFacade {
         }
     }
 
-    public Set<Long> queryAuthIds(Long platformId, Long userId, boolean onlyMenu) {
+    private Set<Long> queryAuthIds(Long platformId, Long userId, boolean onlyMenu) {
         //查询用户对应平台所有角色集合
         List<Long> roleIds = sysAccountRoleService.querRolesByUserId(platformId, userId);
         //根据roleId查询拥有的权限码（权限id）
         Set<Long> hasAuthCode = sysRoleAuthService.queryAuthIdSet(platformId, roleIds, onlyMenu);
         return hasAuthCode;
+    }
+
+    public List<Long> getAuthIds(SysAuthsParam sysAuthsParam) {
+        return new ArrayList<>(queryAuthIds(sysAuthsParam.getPlatformId(), sysAuthsParam.getUserId(), false));
     }
 
 //    @Autowired

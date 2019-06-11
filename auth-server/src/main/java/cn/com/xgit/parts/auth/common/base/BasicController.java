@@ -36,22 +36,27 @@ public class BasicController {
         return ResultMessage(code, null);
     }
 
-    public Long getUserId(HttpServletRequest request) {
-        String userId = request.getHeader("x-user-id");
+    public Long getUserId() {
+        String userId = getHttpRequest().getHeader("x-user-id");
         if (StringUtils.isNoneBlank(userId)) {
             return Long.parseLong(userId);
         }
         return null;
     }
 
-    public SysAccountVO getSysAccountVO(HttpServletRequest request) {
-        Long uid = getUserId(request);
+    public SysAccountVO getSysAccountVO() {
+        Long uid = getUserId();
         if (null != uid) {
             SysAccountVO sysAccountVO = new SysAccountVO();
             sysAccountVO.setId(uid);
             return sysAccountVO;
         }
         return null;
+    }
+
+    public String getRemoteIp() {
+        String userIp = getHttpRequest().getHeader("x-remote-ip");
+        return userIp;
     }
 
     public String getRemoteIp(HttpServletRequest request) {

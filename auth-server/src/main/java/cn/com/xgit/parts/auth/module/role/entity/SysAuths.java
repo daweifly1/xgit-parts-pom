@@ -21,9 +21,6 @@ public class SysAuths extends CommEntity {
     //名称
     @ApiModelProperty(value = "名称", name = "name")
     private String name;
-    //编码
-    @ApiModelProperty(value = "编码，唯一索引", name = "code")
-    private String code;
     //父节点id
     @ApiModelProperty(value = "父节点id", name = "parent_id")
     private Long parentId;

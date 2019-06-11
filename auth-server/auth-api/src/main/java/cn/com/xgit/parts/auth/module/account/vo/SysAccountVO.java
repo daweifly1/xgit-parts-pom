@@ -1,7 +1,7 @@
 package cn.com.xgit.parts.auth.module.account.vo;
 
 import cn.com.xgit.parts.auth.module.menu.vo.SysRoleVO;
-import cn.com.xgit.parts.common.base.entity.BaseEntity;
+import cn.com.xgit.parts.common.base.entity.CommEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Data
 @ToString
-public class SysAccountVO extends BaseEntity implements Serializable {
+public class SysAccountVO extends CommEntity implements Serializable {
     private static final long serialVersionUID = -1L;
     @ApiModelProperty(value = "登录名")
     private String loginName;
@@ -55,8 +55,9 @@ public class SysAccountVO extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "要排除的用户id")
     private Long exUserId;
     private String roleNames;
-    private List<SysRoleVO> roleVOs;
+
     private List<String> roleIds;
-    private List<String> authIds;
+
+    private List<SysRoleVO> roleVOs;
 
 }

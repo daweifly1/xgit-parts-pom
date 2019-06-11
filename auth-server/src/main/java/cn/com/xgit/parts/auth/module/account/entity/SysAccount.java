@@ -1,6 +1,6 @@
 package cn.com.xgit.parts.auth.module.account.entity;
 
-import cn.com.xgit.parts.common.base.entity.DataEntity;
+import cn.com.xgit.parts.common.base.entity.CommEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -19,7 +19,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_account")
 @ApiModel(value = "SysAccount", description = "账号信息表")
-public class SysAccount extends DataEntity {
+public class SysAccount extends CommEntity {
     private static final long serialVersionUID = -1L;
     //登录名
     @ApiModelProperty(value = "登录名", name = "login_name")

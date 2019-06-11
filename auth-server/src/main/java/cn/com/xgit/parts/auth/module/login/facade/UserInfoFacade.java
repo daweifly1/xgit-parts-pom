@@ -11,7 +11,6 @@ import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.auth.module.account.param.UserLoginVO;
 import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
 import cn.com.xgit.parts.auth.module.account.service.SysAccountService;
-import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -152,21 +151,11 @@ public class UserInfoFacade {
                 || StringUtils.isBlank(userRegistVO.getUserLoginVO().getLoginName())) {
             throw new AuthException("注册信息不能为空");
         }
-        if (StringUtils.isBlank(userRegistVO.getUserLoginVO().getPassword())) {
-            userRegistVO.getUserLoginVO().setPassword("123456");
-        }
         boolean codeIsTrue = checkCode(userRegistVO.getUserLoginVO());
         if (!codeIsTrue) {
             throw new AuthException("验证码错误");
         }
-        SysAccountVO account = userRegistVO.getSysAccountVO();
-        account.setLoginName(userRegistVO.getUserLoginVO().getLoginName());
-        boolean ec = sysAccountService.saveRegist(account);
-        if (ec && null != account.getId()) {
-            sysAccountService.saveRegistPassword(account.getId(), userRegistVO.getUserLoginVO().getPassword());
-        } else {
-            throw new AuthException("注册失败，保存错误");
-        }
+        sysAccountService.addRegistUser(userRegistVO);
         return userRegistVO;
     }
 
@@ -181,7 +170,7 @@ public class UserInfoFacade {
         }
         String value = getRandomString(6);
         //TODO 发送短信
-        redisClient.set(dynamicPswPrefix + userLoginVO, value, dynamicPswTime);
+        redisClient.set(dynamicPswPrefix + userLoginVO.getLoginName(), value, dynamicPswTime);
         return true;
     }
 

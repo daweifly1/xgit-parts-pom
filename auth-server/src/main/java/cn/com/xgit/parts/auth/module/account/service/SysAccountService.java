@@ -1,14 +1,17 @@
 package cn.com.xgit.parts.auth.module.account.service;
 
-import cn.com.xgit.parts.auth.exception.code.ErrorCode;
+import cn.com.xgit.parts.auth.common.base.SuperMapper;
+import cn.com.xgit.parts.auth.common.base.SuperService;
 import cn.com.xgit.parts.auth.enums.PasswordType;
+import cn.com.xgit.parts.auth.exception.AuthException;
 import cn.com.xgit.parts.auth.exception.CommonException;
+import cn.com.xgit.parts.auth.exception.code.ErrorCode;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccount;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccountRole;
 import cn.com.xgit.parts.auth.module.account.entity.SysPassword;
+import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
 import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
-import cn.com.xgit.parts.auth.common.base.SuperMapper;
-import cn.com.xgit.parts.auth.common.base.SuperService;
+import cn.com.xgit.parts.auth.module.account.vo.SysPasswordVO;
 import cn.com.xgit.parts.common.util.AccountValidatorUtil;
 import cn.com.xgit.parts.common.util.BeanUtil;
 import cn.com.xgit.parts.common.util.security.CryptoUtil;
@@ -160,16 +163,21 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
         return r;
     }
 
-    public ErrorCode updatePassword(Long userId, String password) {
+    public ErrorCode updatePassword(SysPasswordVO sysPasswordVO) {
         SysPassword sysPassword = new SysPassword();
-        sysPassword.setUserId(userId);
-        sysPassword.setType(PasswordType.NORMAL.getType());
+        sysPassword.setUserId(sysPasswordVO.getUserId());
+        if (PasswordType.NORMAL.contain(sysPasswordVO.getType())) {
+            sysPassword.setType(sysPasswordVO.getType());
+        } else {
+            sysPassword.setType(PasswordType.NORMAL.getType());
+        }
+
         List<SysPassword> ll = sysPasswordService.list(new QueryWrapper<>(sysPassword));
         if (CollectionUtils.isEmpty(ll)) {
             return ErrorCode.Failure;
         }
         sysPassword = ll.get(0);
-        sysPassword.setPassword(cryptoPassword(password, userId));
+        sysPassword.setPassword(cryptoPassword(sysPasswordVO.getPassword(), sysPasswordVO.getUserId()));
         sysPasswordService.updateById(sysPassword);
         return ErrorCode.Success;
     }
@@ -177,7 +185,10 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
     @Transactional
     public ErrorCode resetPassword(List<Long> userIds) {
         for (Long userId : userIds) {
-            ErrorCode r = updatePassword(userId, defaultPsw);
+            SysPasswordVO sysPasswordVO = new SysPasswordVO();
+            sysPasswordVO.setUserId(userId);
+            sysPasswordVO.setPassword(defaultPsw);
+            ErrorCode r = updatePassword(sysPasswordVO);
             if (ErrorCode.Success != r) {
                 throw new CommonException("初始密码失败");
             }
@@ -203,5 +214,19 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
         //TODO
         sysAccountVO.setRoleIds(null);
         return sysAccountVO;
+    }
+
+    public void addRegistUser(UserRegistVO userRegistVO) {
+        if (StringUtils.isBlank(userRegistVO.getUserLoginVO().getPassword())) {
+            userRegistVO.getUserLoginVO().setPassword("123456");
+        }
+        SysAccountVO account = userRegistVO.getSysAccountVO();
+        account.setLoginName(userRegistVO.getUserLoginVO().getLoginName());
+        boolean ec = saveRegist(account);
+        if (ec && null != account.getId()) {
+            saveRegistPassword(account.getId(), userRegistVO.getUserLoginVO().getPassword());
+        } else {
+            throw new AuthException("注册失败，保存错误");
+        }
     }
 }

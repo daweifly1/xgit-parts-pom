@@ -54,10 +54,10 @@ public class SysAuthsController extends BasicController {
         }
         boolean r = false;
         if (null == sysAuths.getId()) {
-            sysAuths.setCreatedBy(getUserId(request));
+            sysAuths.setCreatedBy(getUserId());
             r = sysAuthsService.save(sysAuths);
         } else {
-            sysAuths.setUpdatedBy(getUserId(request));
+            sysAuths.setUpdatedBy(getUserId());
             r = sysAuthsService.updateById(sysAuths);
         }
         if (!r) {

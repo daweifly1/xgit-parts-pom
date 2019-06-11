@@ -1,6 +1,7 @@
 package cn.com.xgit.parts.auth.module.role.controller;
 
 import cn.com.xgit.parts.auth.common.base.BasicController;
+import cn.com.xgit.parts.auth.module.menu.param.SysAuthsParam;
 import cn.com.xgit.parts.auth.module.menu.vo.SysAuthsVO;
 import cn.com.xgit.parts.auth.module.role.entity.SysAuths;
 import cn.com.xgit.parts.auth.module.role.facade.MenuFacade;
@@ -8,6 +9,8 @@ import cn.com.xgit.parts.common.result.ResultMessage;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,8 +34,20 @@ public class MenuController extends BasicController {
             return ResultMessage.error("平台信息异常");
         }
 
-        List<SysAuthsVO> menuDisplayVOList = menuFacade.menuTreeList(condition, getUserId(request));
+        List<SysAuthsVO> menuDisplayVOList = menuFacade.menuTreeList(condition, getUserId());
         return ResultMessage(menuDisplayVOList);
     }
 
+    @PostMapping("/getAuthIds")
+    @ApiOperation("查询权限码集合--feign接口")
+    public ResultMessage<List<Long>> getAuthIds(@RequestBody SysAuthsParam sysAuthsParam, HttpServletRequest request) {
+        if (null == sysAuthsParam) {
+            return ResultMessage.error("参数异常");
+        }
+        if (null == sysAuthsParam.getPlatformId()) {
+            return ResultMessage.error("平台信息异常");
+        }
+        List<Long> authIds = menuFacade.getAuthIds(sysAuthsParam);
+        return ResultMessage(authIds);
+    }
 }

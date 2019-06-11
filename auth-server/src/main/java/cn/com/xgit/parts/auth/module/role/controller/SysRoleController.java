@@ -43,7 +43,7 @@ public class SysRoleController extends BasicController {
         if (null == sysRole) {
             return ResultMessage(ErrorCode.IllegalArument);
         }
-        Long uid = getUserId(req);
+        Long uid = getUserId();
         if (null == sysRole.getId()) {
             sysRole.setCreatedBy(uid);
         } else {

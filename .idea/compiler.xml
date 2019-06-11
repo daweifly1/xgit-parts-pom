@@ -8,7 +8,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="auth-api" />
         <module name="auth-server" />
-        <module name="misc" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -17,5 +16,11 @@
       <module name="misc" target="1.8" />
       <module name="xgit-parts-pom" target="1.8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="auth-api" options="-parameters" />
+      <module name="auth-server" options="-parameters" />
+    </option>
   </component>
 </project>

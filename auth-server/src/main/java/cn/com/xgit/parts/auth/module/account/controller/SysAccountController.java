@@ -1,13 +1,17 @@
 package cn.com.xgit.parts.auth.module.account.controller;
 
+import cn.com.xgit.parts.auth.common.base.BasicController;
+import cn.com.xgit.parts.auth.exception.AuthException;
 import cn.com.xgit.parts.auth.exception.code.ErrorCode;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccount;
+import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
 import cn.com.xgit.parts.auth.module.account.service.SysAccountService;
 import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
-import cn.com.xgit.parts.auth.common.base.BasicController;
+import cn.com.xgit.parts.auth.module.account.vo.SysPasswordVO;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.micrometer.core.instrument.util.StringUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +36,6 @@ public class SysAccountController extends BasicController {
     @Autowired
     private SysAccountService sysAccountService;
 
-
     @GetMapping("/list")
     @ApiOperation("查询用户列表")
     public ResultMessage<IPage<SysAccount>> list(SysAccount condition) {
@@ -56,8 +59,8 @@ public class SysAccountController extends BasicController {
 
 
     @PostMapping("/password")
-    public ResultMessage<ErrorCode> password(@RequestParam("userId") Long userId, @RequestParam("password") String password) {
-        ErrorCode ret = sysAccountService.updatePassword(userId, password);
+    public ResultMessage<ErrorCode> password(@RequestBody SysPasswordVO sysPasswordVO) {
+        ErrorCode ret = sysAccountService.updatePassword(sysPasswordVO);
         return ResultMessage(ret);
     }
 
@@ -78,5 +81,28 @@ public class SysAccountController extends BasicController {
     public ResultMessage<SysAccountVO> queryAccountByLoginName(String loginName) {
         SysAccountVO ret = sysAccountService.queryAccountByLoginName(loginName);
         return ResultMessage(ret);
+    }
+
+    @RequestMapping(value = {"/addUser"}, method = {org.springframework.web.bind.annotation.RequestMethod.POST})
+    @ApiOperation("用户添加用户")
+    public ResultMessage<String> addUser(@RequestBody UserRegistVO userRegistVO) {
+        if (null == userRegistVO || null == userRegistVO.getSysAccountVO() || null == userRegistVO.getUserLoginVO()
+                || StringUtils.isBlank(userRegistVO.getUserLoginVO().getLoginName())) {
+            throw new AuthException("用户信息不能为空");
+        }
+        try {
+            Long userId = getUserId();
+            if (null != userId) {
+                userRegistVO.getSysAccountVO().setCreatedBy(userId);
+            }
+            sysAccountService.addRegistUser(userRegistVO);
+            return ResultMessage.success();
+        } catch (AuthException e) {
+            log.info("", e);
+            return actionErrorResult(e.getCode(), e.getMessage());
+        } catch (Exception e) {
+            log.info("", e);
+            return actionErrorResult("用户添加用户失败：" + e.getMessage());
+        }
     }
 }

@@ -1,10 +1,10 @@
 package cn.com.xgit.parts.auth.module.login.controller;
 
+import cn.com.xgit.parts.auth.common.base.BasicController;
 import cn.com.xgit.parts.auth.exception.AuthException;
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.auth.module.account.param.UserLoginVO;
 import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
-import cn.com.xgit.parts.auth.common.base.BasicController;
 import cn.com.xgit.parts.auth.module.login.facade.UserInfoFacade;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import cn.com.xgit.parts.common.util.BeanUtil;
@@ -116,23 +116,4 @@ public class AuthController extends BasicController {
         }
     }
 
-//    @RequestMapping(value = {"/addUser"}, method = {org.springframework.web.bind.annotation.RequestMethod.POST})
-//    @ApiOperation("用户添加用户")
-//    public ResultMessage<String> addUser(@RequestHeader("x-user-id") Long userId, @RequestBody UserRegistVO userRegistVO) {
-//        try {
-//            UserRegistVO ret = userInfoFacade.regist(userRegistVO, null);
-//            return ResultMessage.success();
-//        } catch (AuthException e) {
-//            log.info("", e);
-//            return actionErrorResult(e.getCode(), e.getMessage());
-//        } catch (Exception e) {
-//            log.info("", e);
-//            return actionErrorResult("用户添加用户失败：" + e.getMessage());
-//        }
-//    }
-//@RequestMapping(value = {"/password"}, method = {org.springframework.web.bind.annotation.RequestMethod.POST})
-//public ResultMessage password(@RequestHeader("x-user-id") Long userId, @RequestBody UpdatePasswordVO updatePasswordVO) {
-//    ErrorCode ret = sysAccountService.updateChangePassword(updatePasswordVO, userId);
-//    return ResultMessage.success(ret);
-//}
 }
