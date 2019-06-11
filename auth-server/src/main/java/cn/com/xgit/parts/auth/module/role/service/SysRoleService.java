@@ -1,10 +1,11 @@
 package cn.com.xgit.parts.auth.module.role.service;
 
-import cn.com.xgit.parts.auth.exception.code.ErrorCode;
-import cn.com.xgit.parts.auth.module.account.service.SysAccountRoleService;
 import cn.com.xgit.parts.auth.common.base.SuperMapper;
 import cn.com.xgit.parts.auth.common.base.SuperService;
+import cn.com.xgit.parts.auth.exception.code.ErrorCode;
+import cn.com.xgit.parts.auth.module.account.service.SysAccountRoleService;
 import cn.com.xgit.parts.auth.module.role.entity.SysRole;
+import cn.com.xgit.parts.auth.module.role.mapper.SysRoleMapper;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -21,6 +22,8 @@ import java.util.List;
 @Service
 public class SysRoleService extends SuperService<SuperMapper<SysRole>, SysRole> {
 
+    @Autowired
+    private SysRoleMapper sysRoleMapper;
     @Autowired
     private SysAccountRoleService sysAccountRoleService;
 

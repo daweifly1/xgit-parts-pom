@@ -3,8 +3,6 @@ package cn.com.xgit.parts.auth.account.manager.cache;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
@@ -20,8 +18,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
-import java.util.LinkedHashSet;
-import java.util.List;
 
 
 @Configuration
@@ -31,8 +27,8 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Resource
     private LettuceConnectionFactory lettuceConnectionFactory;
 
-    @Autowired
-    private CacheProperties cacheProperties;
+//    @Autowired
+//    private CacheProperties cacheProperties;
 
     @Bean
     public KeyGenerator keyGenerator() {
@@ -61,14 +57,12 @@ public class RedisConfig extends CachingConfigurerSupport {
         RedisCacheManager.RedisCacheManagerBuilder builder = RedisCacheManager.RedisCacheManagerBuilder
                 .fromConnectionFactory(lettuceConnectionFactory);
 
-        List<String> cacheNames = this.cacheProperties.getCacheNames();
-        if (!cacheNames.isEmpty()) {
-            builder.initialCacheNames(new LinkedHashSet<>(cacheNames));
-        }
-
+//        List<String> cacheNames = this.cacheProperties.getCacheNames();
 //        if (!cacheNames.isEmpty()) {
-//            builder.initialCacheNames(CacheGroup.getCacheGroups());
+//            builder.initialCacheNames(new LinkedHashSet<>(cacheNames));
 //        }
+
+        builder.initialCacheNames(CacheGroup.getCacheGroups());
         CacheManager cacheManager = builder.build();
         return cacheManager;
     }

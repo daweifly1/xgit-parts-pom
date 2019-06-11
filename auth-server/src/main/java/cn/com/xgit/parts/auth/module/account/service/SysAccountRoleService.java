@@ -1,9 +1,9 @@
 package cn.com.xgit.parts.auth.module.account.service;
 
-import cn.com.xgit.parts.auth.module.account.entity.SysAccountRole;
-import cn.com.xgit.parts.auth.module.account.mapper.SysAccountRoleMapper;
 import cn.com.xgit.parts.auth.common.base.SuperMapper;
 import cn.com.xgit.parts.auth.common.base.SuperService;
+import cn.com.xgit.parts.auth.module.account.entity.SysAccountRole;
+import cn.com.xgit.parts.auth.module.account.mapper.SysAccountRoleMapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;

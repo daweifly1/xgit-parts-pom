@@ -7,7 +7,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
 
-@ComponentScan(basePackages = {"cn.com.xgit.parts.auth.feign"})
 @EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication

@@ -1,11 +1,12 @@
 package cn.com.xgit.parts.auth.module.role.mapper;
 
+import cn.com.xgit.parts.auth.common.base.SuperMapper;
 import cn.com.xgit.parts.auth.module.role.entity.SysRoleAuth;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface SysRoleAuthMapper {
+public interface SysRoleAuthMapper extends SuperMapper<SysRoleAuth> {
 
     /**
      * 在角色资源关系中冗余平台id，实现根据角色查询拥有的权限资源id

@@ -1,14 +1,16 @@
 package cn.com.xgit.parts.auth.module.role.service;
 
-import cn.com.xgit.parts.auth.exception.CommonException;
 import cn.com.xgit.parts.auth.common.base.SuperMapper;
 import cn.com.xgit.parts.auth.common.base.SuperService;
+import cn.com.xgit.parts.auth.exception.CommonException;
 import cn.com.xgit.parts.auth.module.menu.vo.SysAuthsVO;
 import cn.com.xgit.parts.auth.module.role.entity.SysAuths;
+import cn.com.xgit.parts.auth.module.role.mapper.SysAuthsMapper;
 import cn.com.xgit.parts.common.util.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,9 @@ import java.util.Map;
 @Service
 public class SysAuthsService extends SuperService<SuperMapper<SysAuths>, SysAuths> {
 
+    @Autowired
+    private SysAuthsMapper sysAuthsMapper;
+    @Autowired
     private SysRoleAuthService sysRoleAuthService;
 
     public List<SysAuthsVO> treeList(SysAuths condition, boolean onlyMenu) {

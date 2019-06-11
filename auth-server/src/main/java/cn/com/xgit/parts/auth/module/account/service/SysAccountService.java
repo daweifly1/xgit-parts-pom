@@ -9,6 +9,7 @@ import cn.com.xgit.parts.auth.exception.code.ErrorCode;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccount;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccountRole;
 import cn.com.xgit.parts.auth.module.account.entity.SysPassword;
+import cn.com.xgit.parts.auth.module.account.mapper.SysAccountMapper;
 import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
 import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
 import cn.com.xgit.parts.auth.module.account.vo.SysPasswordVO;
@@ -35,6 +36,9 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
 
     @Value("${password.defaultPsw:123456}")
     private String defaultPsw;
+
+    @Autowired
+    private SysAccountMapper sysAccountMapper;
 
     @Autowired
     private SysPasswordService sysPasswordService;

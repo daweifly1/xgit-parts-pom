@@ -1,4 +1,4 @@
-package cn.com.xgit.parts.auth.common.handler;
+package cn.com.xgit.parts.auth.account.manager.mybatis.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;
