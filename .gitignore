@@ -21,7 +21,7 @@
 
 *.iml
 .idea
-.idea/*xml
+.idea/*.xml
 /.idea/
 /.idea/libraries/
 /.idea/libraries/*.xml
