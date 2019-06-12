@@ -22,6 +22,8 @@
 *.iml
 .idea
 .idea/*.xml
+.idea/workspace.xml
+.idea/encodings.xml
 /.idea/
 /.idea/libraries/
 /.idea/libraries/*.xml
