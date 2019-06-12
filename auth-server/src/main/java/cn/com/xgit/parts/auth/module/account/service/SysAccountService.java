@@ -13,6 +13,8 @@ import cn.com.xgit.parts.auth.module.account.mapper.SysAccountMapper;
 import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
 import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
 import cn.com.xgit.parts.auth.module.account.vo.SysPasswordVO;
+import cn.com.xgit.parts.auth.module.menu.vo.SysRoleVO;
+import cn.com.xgit.parts.auth.module.role.entity.SysRole;
 import cn.com.xgit.parts.common.util.AccountValidatorUtil;
 import cn.com.xgit.parts.common.util.BeanUtil;
 import cn.com.xgit.parts.common.util.security.CryptoUtil;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -56,7 +59,7 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
             }
         }
         sysAccount = new SysAccount();
-        sysAccount.setLoginName(loginNameOrMobi);
+        sysAccount.setUsername(loginNameOrMobi);
         List<SysAccount> ll = super.list(new QueryWrapper<>(sysAccount));
         if (CollectionUtils.isNotEmpty(ll)) {
             return ll.get(0);
@@ -67,7 +70,7 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
 
     public boolean checkLoginPsw(Long userId, String password) {
         String dbNomalPsw = queryDbNomalPsw(userId);
-        if (StringUtils.isNoneBlank(dbNomalPsw) && dbNomalPsw.equals(password)) {
+        if (StringUtils.isNoneBlank(dbNomalPsw) && dbNomalPsw.equals(cryptoPassword(password, userId))) {
             return true;
         }
         return false;
@@ -97,14 +100,14 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
 
     private void checkExistMobileOrLoginName(SysAccountVO account) {
         SysAccount sysAccount = new SysAccount();
-        sysAccount.setLoginName(account.getLoginName());
+        sysAccount.setUsername(account.getUsername());
         List<SysAccount> ll = super.list(new QueryWrapper<>(sysAccount));
         if (CollectionUtils.isNotEmpty(ll)) {
             throw new CommonException("用户名已经存在！");
         }
         if (StringUtils.isNoneBlank(account.getMobile())) {
             sysAccount = new SysAccount();
-            sysAccount.setLoginName(account.getMobile());
+            sysAccount.setUsername(account.getMobile());
             ll = super.list(new QueryWrapper<>(sysAccount));
             if (CollectionUtils.isNotEmpty(ll)) {
                 throw new CommonException("手机号码已经存在！");
@@ -208,29 +211,60 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
         return ErrorCode.UserNameExists;
     }
 
-    public SysAccountVO queryAccountByLoginName(String loginName) {
+    public SysAccountVO queryAccountByIdOrLoginName(Long userId, String loginName, Long platformId) {
+        SysAccount sysAccount = null;
         SysAccountVO sysAccountVO = null;
-        SysAccount sysAccount = queryByLoginNameOrMobi(loginName);
+        if (null != userId) {
+            sysAccount = this.getById(userId);
+        }
         if (null == sysAccount) {
-            return sysAccountVO;
+            sysAccount = queryByLoginNameOrMobi(loginName);
         }
         sysAccountVO = BeanUtil.do2bo(sysAccount, SysAccountVO.class);
-        //TODO
-        sysAccountVO.setRoleIds(null);
+        if (null != sysAccountVO && null != platformId) {
+            //根据用户id、平台查询角色列表
+            List<SysRole> roles = sysAccountRoleService.querRolesByUserId(platformId, sysAccount.getId());
+            sysAccountVO.setRoles(BeanUtil.do2bo4List(roles, SysRoleVO.class));
+        }
         return sysAccountVO;
     }
 
+    @Transactional
     public void addRegistUser(UserRegistVO userRegistVO) {
         if (StringUtils.isBlank(userRegistVO.getUserLoginVO().getPassword())) {
             userRegistVO.getUserLoginVO().setPassword("123456");
         }
         SysAccountVO account = userRegistVO.getSysAccountVO();
-        account.setLoginName(userRegistVO.getUserLoginVO().getLoginName());
+        account.setUsername(userRegistVO.getUserLoginVO().getUsername());
         boolean ec = saveRegist(account);
         if (ec && null != account.getId()) {
             saveRegistPassword(account.getId(), userRegistVO.getUserLoginVO().getPassword());
+            if (CollectionUtils.isNotEmpty(account.getRoles())) {
+                List<SysAccountRole> rs = getRolesFromRoles(account.getRoles(), account.getId());
+                sysAccountRoleService.saveBatch(rs);
+            }
         } else {
             throw new AuthException("注册失败，保存错误");
         }
+    }
+
+    /**
+     * 若注册时候指定了角色，则将角色与用户关联(不校验角色平台是否存在)
+     *
+     * @param roles
+     */
+    private List<SysAccountRole> getRolesFromRoles(List<SysRoleVO> roles, Long userId) {
+        List<SysAccountRole> r = new ArrayList<>(roles.size());
+        for (SysRoleVO vo : roles) {
+            if (null == vo || null == vo.getId() || null == vo.getPlatformId()) {
+                throw new AuthException("保存用户角色信息错误");
+            }
+            SysAccountRole sysAccountRole = new SysAccountRole();
+            sysAccountRole.setPlatformId(vo.getPlatformId());
+            sysAccountRole.setUserId(userId);
+            sysAccountRole.setRoleId(vo.getId());
+            r.add(sysAccountRole);
+        }
+        return r;
     }
 }

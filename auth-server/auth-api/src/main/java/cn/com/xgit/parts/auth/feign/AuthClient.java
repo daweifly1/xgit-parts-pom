@@ -34,6 +34,6 @@ public interface AuthClient {
 
 
     @RequestMapping(value = {"/sysAccount/queryAccountByLoginName"}, method = {RequestMethod.GET})
-    ResultMessage<SysAccountVO> queryAccountByLoginName(String loginName);
+    ResultMessage<SysAccountVO> queryAccountByLoginName(@RequestParam(value = "platformId") String loginName, @RequestParam(value = "platformId",required = false) Long platformId);
 
 }

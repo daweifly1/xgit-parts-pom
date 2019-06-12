@@ -13,7 +13,7 @@ import java.io.Serializable;
 @ApiModel(value = "注册信息")
 public class UserRegistVO implements Serializable {
     private static final long serialVersionUID = -1L;
-    @ApiModelProperty(value = "登录信息")
+    @ApiModelProperty(value = "登录密码相关信息")
     private UserLoginVO userLoginVO;
 
     @ApiModelProperty(value = "账户信息")

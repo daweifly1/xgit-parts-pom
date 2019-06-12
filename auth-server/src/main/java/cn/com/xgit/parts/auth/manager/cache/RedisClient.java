@@ -1,4 +1,4 @@
-package cn.com.xgit.parts.auth.account.manager.cache;
+package cn.com.xgit.parts.auth.manager.cache;
 
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;

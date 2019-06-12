@@ -22,8 +22,8 @@ import java.util.Date;
 public class SysAccount extends CommEntity {
     private static final long serialVersionUID = -1L;
     //登录名
-    @ApiModelProperty(value = "登录名", name = "login_name")
-    private String loginName;
+    @ApiModelProperty(value = "登录名", name = "username")
+    private String username;
     //最近登录时间
     @ApiModelProperty(value = "最近登录时间", name = "last_login_time")
     private Date lastLoginTime;
@@ -60,18 +60,6 @@ public class SysAccount extends CommEntity {
     //地区编码
     @ApiModelProperty(value = "地区编码", name = "area_code")
     private String areaCode;
-    //erp员工编码
-    @ApiModelProperty(value = "erp员工编码", name = "erp_code")
-    private String erpCode;
-    //员工编码
-    @ApiModelProperty(value = "员工编码", name = "code")
-    private String code;
-    //公司ID，为机构或其父节点
-    @ApiModelProperty(value = "公司ID，为机构或其父节点", name = "org_id")
-    private String orgId;
-    //机构ID
-    @ApiModelProperty(value = "机构ID", name = "dept_id")
-    private String deptId;
     //备注
     @ApiModelProperty(value = "备注", name = "remark")
     private String remark;

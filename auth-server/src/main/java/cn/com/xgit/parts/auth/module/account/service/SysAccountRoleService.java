@@ -4,6 +4,8 @@ import cn.com.xgit.parts.auth.common.base.SuperMapper;
 import cn.com.xgit.parts.auth.common.base.SuperService;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccountRole;
 import cn.com.xgit.parts.auth.module.account.mapper.SysAccountRoleMapper;
+import cn.com.xgit.parts.auth.module.role.entity.SysRole;
+import cn.com.xgit.parts.auth.module.role.service.SysRoleService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -24,6 +26,9 @@ public class SysAccountRoleService extends SuperService<SuperMapper<SysAccountRo
 
     @Autowired
     private SysAccountRoleMapper sysAccountRoleMapper;
+
+    @Autowired
+    private SysRoleService sysRoleService;
 
     public boolean queryCheckByRoleIds(List<Long> roleIds) {
         List<SysAccountRole> ll = sysAccountRoleMapper.queryListByRoleIds(roleIds, 1);
@@ -48,7 +53,7 @@ public class SysAccountRoleService extends SuperService<SuperMapper<SysAccountRo
      * @param userId
      * @return
      */
-    public List<Long> querRolesByUserId(Long platformId, Long userId) {
+    public List<Long> querRoleIdsByUserId(Long platformId, Long userId) {
         Set<Long> r = new HashSet<>();
         SysAccountRole e = new SysAccountRole();
         e.setUserId(userId);
@@ -60,5 +65,14 @@ public class SysAccountRoleService extends SuperService<SuperMapper<SysAccountRo
             }
         }
         return new ArrayList<>(r);
+    }
+
+    public List<SysRole> querRolesByUserId(Long platformId, Long userId) {
+        List<SysRole> r = new ArrayList<>();
+        List<Long> ll = querRoleIdsByUserId(platformId, userId);
+        if (CollectionUtils.isNotEmpty(ll)) {
+            r.addAll(sysRoleService.listByIds(ll));
+        }
+        return r;
     }
 }

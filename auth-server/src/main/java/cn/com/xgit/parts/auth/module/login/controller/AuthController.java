@@ -5,9 +5,11 @@ import cn.com.xgit.parts.auth.exception.AuthException;
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.auth.module.account.param.UserLoginVO;
 import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
+import cn.com.xgit.parts.auth.module.account.vo.SysPasswordVO;
 import cn.com.xgit.parts.auth.module.login.facade.UserInfoFacade;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import cn.com.xgit.parts.common.util.BeanUtil;
+import io.micrometer.core.instrument.util.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +69,15 @@ public class AuthController extends BasicController {
         return ResultMessage.error("短信发送失败");
     }
 
+    @PostMapping(value = {"/sendEmailPsw"})
+    public ResultMessage<String> sendEmailPsw(@RequestBody UserLoginVO userLoginVO) {
+        boolean b = userInfoFacade.sendEmailPsw(userLoginVO);
+        if (b) {
+            return ResultMessage.success();
+        }
+        return ResultMessage.error("email发送失败");
+    }
+
     @RequestMapping(value = {"/logout"}, method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public ResultMessage logout(@RequestHeader("x-user-id") String userId) {
         return ResultMessage.success(userId);
@@ -107,7 +118,7 @@ public class AuthController extends BasicController {
     public ResultMessage<String> regist(@RequestBody UserRegistVO userRegistVO, HttpServletRequest request) {
         try {
             String ip = getRemoteIp(request);
-            UserRegistVO ret = userInfoFacade.regist(userRegistVO, ip);
+            userInfoFacade.regist(userRegistVO, ip);
             return ResultMessage.success("注册成功");
         } catch (AuthException e) {
             log.info("", e);
@@ -116,6 +127,18 @@ public class AuthController extends BasicController {
             log.info("", e);
             return ResultMessage.success("注册失败：" + e.getMessage());
         }
+    }
+
+
+    @PostMapping("/password")
+    @ApiOperation("更新登录密码")
+    public ResultMessage password(@RequestBody SysPasswordVO sysPasswordVO) {
+        if (null == sysPasswordVO || StringUtils.isBlank(sysPasswordVO.getPassword()) || StringUtils.isBlank(sysPasswordVO.getOldPassword())) {
+            return ResultMessage.error("参数错误");
+        }
+        sysPasswordVO.setUserId(getUserId());
+        userInfoFacade.password(sysPasswordVO);
+        return ResultMessage.success();
     }
 
 }

@@ -10,10 +10,13 @@ import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * 异常处理
@@ -65,5 +68,40 @@ public class WebExceptionHandler {
 //        String fullStackTrace = org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace(e);
         log.error("系统异常,uri:{},parameters:{}", uri, parameters, e);
     }
+
+
+
+//    @ExceptionHandler({AuthException.class})
+//    @ResponseBody
+//    public ResultMessage processExcption(NativeWebRequest request, AuthException e) {
+//        log.error(e.getMessage(), e.getCode());
+//        return  ResultMessage.error(e.getCode(), e.getMessage(), null);
+//    }
+//
+//    @ExceptionHandler({Exception.class})
+//    @ResponseBody
+//    public ResultMessage processExcption(NativeWebRequest request, Exception e) {
+//        this.log.error("Exception ", e);
+//        ErrorCode code = ErrorCode.UnExceptedError;
+//
+//        return ResultMessage.error(code.getCode(), code.getDesc(), e.getMessage());
+//    }
+//
+//    @ExceptionHandler({IllegalArgumentException.class})
+//    @ResponseBody
+//    public ResultMessage processIllegalArumentExcption(NativeWebRequest request, IllegalArgumentException e) {
+//        this.log.error("IllegalArgumentException ", e);
+//        ErrorCode code = ErrorCode.IllegalArument;
+//
+//        return  ResultMessage.error(code.getCode(), code.getDesc(), null);
+//    }
+//
+//    @ExceptionHandler({SQLIntegrityConstraintViolationException.class})
+//    @ResponseBody
+//    public ResultMessage processSQLIntegrityConstraintViolationException(NativeWebRequest request, IllegalArgumentException e) {
+//        this.log.error("SQLIntegrityConstraintViolationException 异常", e);
+//        ErrorCode code = ErrorCode.SQLIntegrityConstraintViolation;
+//        return  ResultMessage.error(code.getCode(), code.getDesc(), null);
+//    }
 
 }

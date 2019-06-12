@@ -1,4 +1,4 @@
-package cn.com.xgit.parts.auth.account.infra.datasource;
+package cn.com.xgit.parts.auth.manager.mybatis.datasource;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import org.springframework.beans.factory.annotation.Value;

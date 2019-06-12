@@ -1,16 +1,16 @@
 package cn.com.xgit.parts.auth.module.login.facade;
 
-import cn.com.xgit.parts.auth.account.infra.AuthConstant;
-import cn.com.xgit.parts.auth.account.manager.cache.RedisClient;
 import cn.com.xgit.parts.auth.enums.PasswordType;
 import cn.com.xgit.parts.auth.exception.AuthException;
 import cn.com.xgit.parts.auth.exception.CommonException;
 import cn.com.xgit.parts.auth.exception.code.ErrorCode;
+import cn.com.xgit.parts.auth.manager.cache.RedisClient;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccount;
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.auth.module.account.param.UserLoginVO;
 import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
 import cn.com.xgit.parts.auth.module.account.service.SysAccountService;
+import cn.com.xgit.parts.auth.module.account.vo.SysPasswordVO;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -76,11 +76,11 @@ public class UserInfoFacade {
 
     public SysUserLoginInfoVO login(UserLoginVO userLoginVO, String ip) {
         preLoginCheck(userLoginVO);
-        SysAccount accountDO = sysAccountService.queryByLoginNameOrMobi(userLoginVO.getLoginName());
+        SysAccount accountDO = sysAccountService.queryByLoginNameOrMobi(userLoginVO.getUsername());
         if (accountDO == null) {
             throw new CommonException("用户不存在或者密码错误");
         }
-        if (accountDO.getLocked() == AuthConstant.USER_LOCKED) {
+        if (accountDO.getLocked() == 1) {
             throw new CommonException("用户被锁定");
         }
         //非手机动态验证码时候，错误一定次数后要求输入验证码
@@ -95,7 +95,7 @@ public class UserInfoFacade {
         if (pass) {
             SysUserLoginInfoVO r = new SysUserLoginInfoVO();
             r.setId(accountDO.getId());
-            r.setLoginName(accountDO.getLoginName());
+            r.setUsername(accountDO.getUsername());
             r.setName(accountDO.getName());
             return r;
         } else {
@@ -104,7 +104,7 @@ public class UserInfoFacade {
     }
 
     private void preLoginCheck(UserLoginVO userLoginVO) {
-        if (StringUtils.isBlank(userLoginVO.getLoginName())) {
+        if (StringUtils.isBlank(userLoginVO.getUsername())) {
             throw new CommonException("用户名不能为空");
         }
         if (StringUtils.isBlank(userLoginVO.getPassword())) {
@@ -124,7 +124,7 @@ public class UserInfoFacade {
 
     private boolean checkeLoginPassword(Long userId, UserLoginVO userLoginVO) {
         if (PasswordType.DYNAMIC.getType() == userLoginVO.getPswType()) {
-            String psw = redisClient.get(dynamicPswPrefix + userLoginVO.getLoginName());
+            String psw = redisClient.get(dynamicPswPrefix + userLoginVO.getUsername());
             if (StringUtils.isNoneBlank(psw) && psw.equals(userLoginVO.getPassword())) {
                 return true;
             }
@@ -148,7 +148,7 @@ public class UserInfoFacade {
     @Transactional
     public UserRegistVO regist(UserRegistVO userRegistVO, String ip) {
         if (null == userRegistVO || null == userRegistVO.getSysAccountVO() || null == userRegistVO.getUserLoginVO()
-                || StringUtils.isBlank(userRegistVO.getUserLoginVO().getLoginName())) {
+                || StringUtils.isBlank(userRegistVO.getUserLoginVO().getUsername())) {
             throw new AuthException("注册信息不能为空");
         }
         boolean codeIsTrue = checkCode(userRegistVO.getUserLoginVO());
@@ -170,9 +170,46 @@ public class UserInfoFacade {
         }
         String value = getRandomString(6);
         //TODO 发送短信
-        redisClient.set(dynamicPswPrefix + userLoginVO.getLoginName(), value, dynamicPswTime);
+        sendMsg(value, userLoginVO.getUsername(), true);
+        redisClient.set(dynamicPswPrefix + userLoginVO.getUsername(), value, dynamicPswTime);
         return true;
     }
+
+    public boolean sendEmailPsw(UserLoginVO userLoginVO) {
+        if (StringUtils.isBlank(userLoginVO.getCode())) {
+            throw new CommonException("验证码错误");
+        }
+        //校验验证码
+        boolean codeIsTrue = checkCode(userLoginVO);
+        if (!codeIsTrue) {
+            throw new CommonException("验证码错误");
+        }
+        String value = getRandomString(6);
+        //TODO 发送email
+        sendMsg(value, userLoginVO.getUsername(), false);
+        redisClient.set(dynamicPswPrefix + userLoginVO.getUsername(), value, dynamicPswTime);
+        return true;
+    }
+
+    //发送短信或者email
+    private void sendMsg(String value, String username, boolean mobi) {
+        SysAccount account = sysAccountService.queryByLoginNameOrMobi(username);
+        if (null == account) {
+            throw new CommonException("账号错误");
+        }
+        if (mobi) {
+            if (StringUtils.isBlank(account.getMobile())) {
+                throw new CommonException("账号未设置手机号码");
+            }
+            //TODO 调用短信接口
+        } else {
+            if (StringUtils.isBlank(account.getEmail())) {
+                throw new CommonException("账号未设置Email信息");
+            }
+            //TODO 调用email接口
+        }
+    }
+
 
     public String getRandomString(int length) {
         String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -183,5 +220,37 @@ public class UserInfoFacade {
             sb.append(str.charAt(number));
         }
         return sb.toString();
+    }
+
+    public void password(SysPasswordVO sysPasswordVO) {
+        SysAccount account = null;
+        if (null == sysPasswordVO.getUserId()) {
+            if (StringUtils.isBlank(sysPasswordVO.getUsername())) {
+                throw new CommonException("用户名参数错误");
+            }
+            //若没有登录，则根据username查询
+            account = sysAccountService.queryByLoginNameOrMobi(sysPasswordVO.getUsername());
+        } else {
+            account = sysAccountService.getById(sysPasswordVO.getUserId());
+        }
+        if (null == account) {
+            throw new CommonException("用户名不存在");
+        }
+        sysPasswordVO.setUserId(account.getId());
+        if (!checkOldPsw(sysPasswordVO)) {
+            throw new CommonException("原密码输入错误");
+        }
+        sysAccountService.updatePassword(sysPasswordVO);
+    }
+
+    private boolean checkOldPsw(SysPasswordVO sysPasswordVO) {
+        if (PasswordType.DYNAMIC.isDynamicType(sysPasswordVO.getType())) {
+            String psw = redisClient.get(dynamicPswPrefix + sysPasswordVO.getUsername());
+            if (StringUtils.isNoneBlank(psw) && psw.equals(sysPasswordVO.getPassword())) {
+                return true;
+            }
+            throw new CommonException("动态密码输入错误");
+        }
+        return sysAccountService.checkLoginPsw(sysPasswordVO.getUserId(), sysPasswordVO.getPassword());
     }
 }

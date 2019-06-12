@@ -76,7 +76,7 @@ public class MenuFacade {
 
     private Set<Long> queryAuthIds(Long platformId, Long userId, boolean onlyMenu) {
         //查询用户对应平台所有角色集合
-        List<Long> roleIds = sysAccountRoleService.querRolesByUserId(platformId, userId);
+        List<Long> roleIds = sysAccountRoleService.querRoleIdsByUserId(platformId, userId);
         //根据roleId查询拥有的权限码（权限id）
         Set<Long> hasAuthCode = sysRoleAuthService.queryAuthIdSet(platformId, roleIds, onlyMenu);
         return hasAuthCode;

@@ -18,7 +18,7 @@ import java.util.List;
 public class SysAccountVO extends CommEntity implements Serializable {
     private static final long serialVersionUID = -1L;
     @ApiModelProperty(value = "登录名")
-    private String loginName;
+    private String username;
     @ApiModelProperty(value = "最近登录时间")
     private Date lastLoginTime;
     @ApiModelProperty(value = "最近登录IP")
@@ -43,21 +43,12 @@ public class SysAccountVO extends CommEntity implements Serializable {
     private String idNumber;
     @ApiModelProperty(value = "地区编码")
     private String areaCode;
-    @ApiModelProperty(value = "erp员工编码")
-    private String erpCode;
-    @ApiModelProperty(value = "员工编码")
-    private String code;
     @ApiModelProperty(value = "备注")
     private String remark;
     @ApiModelProperty(value = "状态（0有效，1无效）")
     private Integer status;
     //============非本表数据================================================
-    @ApiModelProperty(value = "要排除的用户id")
-    private Long exUserId;
-    private String roleNames;
-
-    private List<String> roleIds;
-
-    private List<SysRoleVO> roleVOs;
+    @ApiModelProperty(value = "拥有角色信息")
+    private List<SysRoleVO> roles;
 
 }

@@ -7,7 +7,6 @@ import cn.com.xgit.parts.auth.module.account.entity.SysAccount;
 import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
 import cn.com.xgit.parts.auth.module.account.service.SysAccountService;
 import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
-import cn.com.xgit.parts.auth.module.account.vo.SysPasswordVO;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -41,9 +40,9 @@ public class SysAccountController extends BasicController {
         return ResultMessage.success(sysAccountService.page(getPagination(), new QueryWrapper<>(condition)));
     }
 
-    @PutMapping
+    @PutMapping("add")
+    @ApiOperation("查询用户列表")
     public ResultMessage<String> account(@RequestBody SysAccount accountVO) {
-
         if (sysAccountService.updateByVO(accountVO)) {
             return ResultMessage.success();
         }
@@ -51,16 +50,10 @@ public class SysAccountController extends BasicController {
     }
 
     @DeleteMapping("/removeByUserId")
+    @ApiOperation("删除用户")
     public ResultMessage removeAccountByUserId(@RequestParam("userId") Long userId) {
         sysAccountService.removeAccountByUserId(userId);
         return ResultMessage.success();
-    }
-
-
-    @PostMapping("/password")
-    public ResultMessage<ErrorCode> password(@RequestBody SysPasswordVO sysPasswordVO) {
-        ErrorCode ret = sysAccountService.updatePassword(sysPasswordVO);
-        return ResultMessage(ret);
     }
 
     @PostMapping("/resetPassword")
@@ -77,8 +70,14 @@ public class SysAccountController extends BasicController {
     }
 
     @GetMapping("/queryAccountByLoginName")
-    public ResultMessage<SysAccountVO> queryAccountByLoginName(String loginName) {
-        SysAccountVO ret = sysAccountService.queryAccountByLoginName(loginName);
+    public ResultMessage<SysAccountVO> queryAccountByLoginName(@RequestParam(value = "platformId") String loginName, @RequestParam(value = "platformId", required = false) Long platformId) {
+        SysAccountVO ret = sysAccountService.queryAccountByIdOrLoginName(null, loginName, platformId);
+        return ResultMessage(ret);
+    }
+
+    @GetMapping("/queryAccountById")
+    public ResultMessage<SysAccountVO> queryAccountById(@RequestParam(value = "userId") Long userId, @RequestParam(value = "platformId") Long platformId) {
+        SysAccountVO ret = sysAccountService.queryAccountByIdOrLoginName(userId, null, platformId);
         return ResultMessage(ret);
     }
 
@@ -86,7 +85,7 @@ public class SysAccountController extends BasicController {
     @ApiOperation("用户添加用户")
     public ResultMessage<String> addUser(@RequestBody UserRegistVO userRegistVO) {
         if (null == userRegistVO || null == userRegistVO.getSysAccountVO() || null == userRegistVO.getUserLoginVO()
-                || StringUtils.isBlank(userRegistVO.getUserLoginVO().getLoginName())) {
+                || StringUtils.isBlank(userRegistVO.getUserLoginVO().getUsername())) {
             throw new AuthException("用户信息不能为空");
         }
         try {

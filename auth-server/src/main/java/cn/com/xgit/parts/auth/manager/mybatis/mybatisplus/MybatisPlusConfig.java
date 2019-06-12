@@ -1,6 +1,6 @@
-package cn.com.xgit.parts.auth.account.manager.mybatis;
+package cn.com.xgit.parts.auth.manager.mybatis.mybatisplus;
 
-import cn.com.xgit.parts.auth.account.infra.datasource.DatasourceConfig;
+import cn.com.xgit.parts.auth.manager.mybatis.datasource.DatasourceConfig;
 import com.baomidou.mybatisplus.core.parser.ISqlParser;
 import com.baomidou.mybatisplus.extension.injector.LogicSqlInjector;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;

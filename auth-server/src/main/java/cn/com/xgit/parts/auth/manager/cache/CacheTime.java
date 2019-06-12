@@ -1,4 +1,4 @@
-package cn.com.xgit.parts.auth.account.manager.cache;
+package cn.com.xgit.parts.auth.manager.cache;
 
 public class CacheTime {
     /**

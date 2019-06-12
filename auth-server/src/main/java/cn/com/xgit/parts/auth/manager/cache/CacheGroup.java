@@ -1,4 +1,4 @@
-package cn.com.xgit.parts.auth.account.manager.cache;
+package cn.com.xgit.parts.auth.manager.cache;
 
 import lombok.extern.slf4j.Slf4j;
 

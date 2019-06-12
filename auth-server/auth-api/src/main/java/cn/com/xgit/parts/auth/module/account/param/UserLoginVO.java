@@ -8,7 +8,7 @@ import lombok.ToString;
 @ToString
 public class UserLoginVO {
     @ApiModelProperty(value = "登录名称")
-    private String loginName;
+    private String username;
     @ApiModelProperty(value = "密码")
     private String password;
 

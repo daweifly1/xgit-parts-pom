@@ -5,6 +5,8 @@
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="role_id" jdbcType="INTEGER" property="roleId"/>
+        <result column="platform_id" jdbcType="INTEGER" property="platformId"/>
+
     </resultMap>
 
     <select id="queryListByRoleIds" resultMap="BaseResultMap">

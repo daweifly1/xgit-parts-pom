@@ -1,4 +1,4 @@
-package cn.com.xgit.parts.auth.account.manager.config;
+package cn.com.xgit.parts.auth.manager.kapt;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;

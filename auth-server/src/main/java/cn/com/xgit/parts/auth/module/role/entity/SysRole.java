@@ -1,6 +1,6 @@
 package cn.com.xgit.parts.auth.module.role.entity;
 
-import cn.com.xgit.parts.common.base.entity.DataEntity;
+import cn.com.xgit.parts.common.base.entity.CommEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,7 +13,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_role")
 @ApiModel(value = "SysRole", description = "角色信息表")
-public class SysRole extends DataEntity {
+public class SysRole extends CommEntity {
     private static final long serialVersionUID = -1L;
 
     @ApiModelProperty(value = "平台id", name = "platform_id")

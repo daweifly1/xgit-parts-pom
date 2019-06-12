@@ -1,4 +1,4 @@
-package cn.com.xgit.parts.auth.account.manager.mybatis;
+package cn.com.xgit.parts.auth.manager.mybatis.mybatisplus;
 
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.TableInfoHelper;

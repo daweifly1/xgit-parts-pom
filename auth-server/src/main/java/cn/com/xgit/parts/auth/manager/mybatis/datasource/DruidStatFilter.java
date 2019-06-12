@@ -1,4 +1,4 @@
-package cn.com.xgit.parts.auth.account.infra.datasource;
+package cn.com.xgit.parts.auth.manager.mybatis.datasource;
 
 import com.alibaba.druid.support.http.WebStatFilter;
 
