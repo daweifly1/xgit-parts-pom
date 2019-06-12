@@ -8,6 +8,7 @@ import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
 import cn.com.xgit.parts.auth.module.login.facade.UserInfoFacade;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import cn.com.xgit.parts.common.util.BeanUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import java.io.ByteArrayOutputStream;
 @Slf4j
 @RestController
 @RequestMapping({"/auth"})
+@Api("登录、注册相关操作Controller ")
 public class AuthController extends BasicController {
     @Autowired
     private UserInfoFacade userInfoFacade;

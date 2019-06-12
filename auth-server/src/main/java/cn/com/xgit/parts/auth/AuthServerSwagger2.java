@@ -16,10 +16,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class AuthServerSwagger2 {
     @Bean
     public Docket createRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage("cn.com.xgit.parts.auth.module.*.controller")).paths(PathSelectors.any()).build();
+        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage("cn.com.xgit.parts.auth.module")).paths(PathSelectors.any()).build();
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("用户权限管理").description("用户、平台、权限、角色").contact(new Contact("dev", "", "dev@com.bkrwin.ufast")).version("1.0").build();
+        return new ApiInfoBuilder().title("用户中心").description("用户、平台、权限、角色").contact(new Contact("dev", "", "test@test.com")).version("1.0").build();
     }
 }

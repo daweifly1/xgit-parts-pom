@@ -6,6 +6,7 @@ import cn.com.xgit.parts.auth.module.menu.vo.SysAuthsVO;
 import cn.com.xgit.parts.auth.module.role.entity.SysAuths;
 import cn.com.xgit.parts.auth.module.role.service.SysAuthsService;
 import cn.com.xgit.parts.common.result.ResultMessage;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/sysAuths")
+@Api("系统权限资源管理操作Controller ")
 public class SysAuthsController extends BasicController {
     @Autowired
     private SysAuthsService sysAuthsService;

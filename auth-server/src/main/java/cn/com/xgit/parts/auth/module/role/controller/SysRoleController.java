@@ -1,12 +1,13 @@
 package cn.com.xgit.parts.auth.module.role.controller;
 
-import cn.com.xgit.parts.auth.exception.code.ErrorCode;
 import cn.com.xgit.parts.auth.common.base.BasicController;
+import cn.com.xgit.parts.auth.exception.code.ErrorCode;
 import cn.com.xgit.parts.auth.module.role.entity.SysRole;
 import cn.com.xgit.parts.auth.module.role.service.SysRoleService;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import java.util.Arrays;
 @Slf4j
 @RestController
 @RequestMapping("/sysRole")
+@Api("角色管理操作Controller ")
 public class SysRoleController extends BasicController {
     @Autowired
     private SysRoleService sysRoleService;

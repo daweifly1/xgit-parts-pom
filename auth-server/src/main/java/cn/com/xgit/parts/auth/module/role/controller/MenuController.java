@@ -6,6 +6,7 @@ import cn.com.xgit.parts.auth.module.menu.vo.SysAuthsVO;
 import cn.com.xgit.parts.auth.module.role.entity.SysAuths;
 import cn.com.xgit.parts.auth.module.role.facade.MenuFacade;
 import cn.com.xgit.parts.common.result.ResultMessage;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping({"/menu"})
+@Api("用户菜单，权限码相关操作Controller ")
 public class MenuController extends BasicController {
 
     @Autowired

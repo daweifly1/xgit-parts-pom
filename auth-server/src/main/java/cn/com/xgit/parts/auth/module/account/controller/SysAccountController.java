@@ -12,6 +12,7 @@ import cn.com.xgit.parts.common.result.ResultMessage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.micrometer.core.instrument.util.StringUtils;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-/**
- * 账户信息的管理操作
- */
 @Slf4j
 @RestController
 @RequestMapping("/sysAccount")
+@Api(value = "账户信息的管理操作Controller")
 public class SysAccountController extends BasicController {
     @Autowired
     private SysAccountService sysAccountService;
