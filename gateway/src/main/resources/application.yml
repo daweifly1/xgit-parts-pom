@@ -1,0 +1,68 @@
+server:
+  port: 8080
+spring:
+  session:
+    store-type: none
+jwt:
+  expiration: 10
+  header: Authorization
+  route:
+    authentication:
+      path: auth/login
+      refresh: auth/refresh
+      register: '"auth/register"'
+  secret: mySecret
+  tokenHead: Bearer
+
+logging:
+  file: ${LOG_TEMP:./logs}/${spring.application.name}.log
+  level:
+    com.xiaojun: debug
+
+zuul:
+  routes:
+    main-data:
+      path: /api/main-data/**
+      serviceId: demo1
+    api-a:
+      path: /cop/**
+      serviceid: copper-purchase
+    api-b:
+      path: /cos/**
+      serviceid: copper-server
+    api-c:
+      path: /web/**
+      serviceid: copper-surface
+    api-d:
+      path: /ius-d/**
+      serviceId: fast-auth-server
+    api-e:
+      path: /ss/**
+      serviceId: storage-server
+    api-f:
+      path: /ss-cdw/**
+      serviceId: storage-server-cdw
+    api-g:
+      path: /ius-s/**
+      serviceId: storage-server-v
+  max:
+    host:
+      connections: 500
+  host:
+      socket-timeout-millis: 600000
+      connect-timeout-millis: 600000
+
+security:
+  basic:
+   enabled: false
+
+fast:
+  auth:
+    login:
+      url: /ius/auth/login,/ius/auth/sigin
+    logout:
+      url: /ius/auth/logout,/ius/auth/signout
+    thirdAuth:
+      url: /ius/thirdAuth/webAuth,/ius/thirdAuth/registerAccount
+    thirdUser:
+      url: /ius/thirdAuth/getUserInfo

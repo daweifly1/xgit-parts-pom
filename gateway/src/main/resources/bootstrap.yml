@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: storage-server-v
+  profiles:
+    active: dev
+eureka:
+  client:
+    service-url:
+      defaultZone: http://10.100.2.109:18100/eureka/
+    instance:
+      prefer-ip-address: true
