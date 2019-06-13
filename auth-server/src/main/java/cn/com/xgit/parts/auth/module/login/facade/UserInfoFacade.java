@@ -9,6 +9,7 @@ import cn.com.xgit.parts.auth.module.account.entity.SysAccount;
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.auth.module.account.param.UserLoginVO;
 import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
+import cn.com.xgit.parts.auth.module.account.service.SysAccountRoleService;
 import cn.com.xgit.parts.auth.module.account.service.SysAccountService;
 import cn.com.xgit.parts.auth.module.account.vo.SysPasswordVO;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.image.BufferedImage;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -56,6 +59,9 @@ public class UserInfoFacade {
 
     @Autowired
     private SysAccountService sysAccountService;
+
+    @Autowired
+    private SysAccountRoleService sysAccountRoleService;
 
     public UserLoginVO createAuthInfo() {
         UserLoginVO authInfoVO = new UserLoginVO();
@@ -97,6 +103,8 @@ public class UserInfoFacade {
             r.setId(accountDO.getId());
             r.setUsername(accountDO.getUsername());
             r.setName(accountDO.getName());
+            List<Long> roleIds = sysAccountRoleService.querRoleIdsByUserId(null, r.getId());
+            r.setRoleIds(new HashSet<>(roleIds));
             return r;
         } else {
             throw new CommonException("密码错误");

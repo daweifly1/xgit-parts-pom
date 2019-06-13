@@ -1,4 +1,4 @@
-package cn.com.xgit.gw.security.filter;
+package cn.com.xgit.gw.security.jwt;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 

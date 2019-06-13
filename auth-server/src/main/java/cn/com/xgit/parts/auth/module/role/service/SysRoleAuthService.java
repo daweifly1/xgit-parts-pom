@@ -4,6 +4,7 @@ import cn.com.xgit.parts.auth.common.base.SuperMapper;
 import cn.com.xgit.parts.auth.common.base.SuperService;
 import cn.com.xgit.parts.auth.module.role.entity.SysRoleAuth;
 import cn.com.xgit.parts.auth.module.role.mapper.SysRoleAuthMapper;
+import cn.com.xgit.parts.auth.module.role.param.AuthRolePlatformParam;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -50,5 +51,14 @@ public class SysRoleAuthService extends SuperService<SuperMapper<SysRoleAuth>, S
             ll.forEach(x -> set.add(x.getAuthId()));
         }
         return set;
+    }
+
+    public Set<Long> queryAuthIdList(AuthRolePlatformParam param) {
+        Set<Long> authIds = new HashSet<>();
+        List<SysRoleAuth> ll = sysRoleAuthMapper.queryAuthIdList(param.getRoleIdList(),param.getPlatformId());
+        for (SysRoleAuth ra : ll) {
+            authIds.add(ra.getAuthId());
+        }
+        return authIds;
     }
 }

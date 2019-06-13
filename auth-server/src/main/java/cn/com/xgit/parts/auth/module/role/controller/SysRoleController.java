@@ -71,4 +71,5 @@ public class SysRoleController extends BasicController {
     public ResultMessage<String> delete(@RequestBody String[] ids) {
         return sysRoleService.deleteByIds(new ArrayList(Arrays.asList(ids)));
     }
+
 }

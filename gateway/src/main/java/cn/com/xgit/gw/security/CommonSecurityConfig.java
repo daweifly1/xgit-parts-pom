@@ -3,7 +3,7 @@
  */
 package cn.com.xgit.gw.security;
 
-import cn.com.xgit.gw.security.filter.JWTAuthenticationFilter;
+import cn.com.xgit.gw.security.jwt.JWTAuthenticationFilter;
 import cn.com.xgit.gw.security.manager.XgAuthorizeConfigManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +23,9 @@ public class CommonSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private XgAuthorizeConfigManager authorizeConfigManager;
+
+    @Autowired
+    private JWTAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -49,8 +52,7 @@ public class CommonSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .expiredSessionStrategy(expiredSessionStrategy())
 //                .and()
 //                .and()
-                .addFilterBefore(new com.xiaojun.auth.filter.JWTLoginFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JWTAuthenticationFilter(), com.xiaojun.auth.filter.JWTLoginFilter.class);
-        authorizeConfigManager.config(http.authorizeRequests());
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        authorizeConfigManager.config(http.authorizeRequests());//授权
     }
 }

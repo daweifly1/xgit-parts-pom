@@ -4,7 +4,10 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>gateway</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <modules>
+        <module>gw-api</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <name>eu-gateway</name>
     <description>基于RBAC管理的网关</description>
@@ -20,6 +23,11 @@
     </parent>
 
     <dependencies>
+        <dependency>
+            <groupId>cn.com.xgit</groupId>
+            <artifactId>gw-api</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-undertow</artifactId>

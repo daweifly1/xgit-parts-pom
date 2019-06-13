@@ -26,4 +26,6 @@ public interface SysRoleAuthMapper extends SuperMapper<SysRoleAuth> {
      * @return
      */
     List<SysRoleAuth> queryRoleAuthJoin(@Param("platformId") Long platformId, @Param("roleIds") List<Long> roleIds, @Param("onlyMenu") boolean onlyMenu);
+
+    List<SysRoleAuth> queryAuthIdList(@Param("roleIdList") List<Long> roleIdList,@Param("platformId") Long platformId);
 }

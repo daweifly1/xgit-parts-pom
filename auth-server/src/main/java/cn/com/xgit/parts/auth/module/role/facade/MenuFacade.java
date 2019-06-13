@@ -4,6 +4,7 @@ import cn.com.xgit.parts.auth.module.account.service.SysAccountRoleService;
 import cn.com.xgit.parts.auth.module.menu.param.SysAuthsParam;
 import cn.com.xgit.parts.auth.module.menu.vo.SysAuthsVO;
 import cn.com.xgit.parts.auth.module.role.entity.SysAuths;
+import cn.com.xgit.parts.auth.module.role.param.AuthRolePlatformParam;
 import cn.com.xgit.parts.auth.module.role.service.SysAuthsService;
 import cn.com.xgit.parts.auth.module.role.service.SysRoleAuthService;
 import org.apache.commons.collections.CollectionUtils;
@@ -11,8 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 用户权限关系
@@ -84,6 +89,27 @@ public class MenuFacade {
 
     public List<Long> getAuthIds(SysAuthsParam sysAuthsParam) {
         return new ArrayList<>(queryAuthIds(sysAuthsParam.getPlatformId(), sysAuthsParam.getUserId(), false));
+    }
+
+    //此内容可以考虑localcache(角色--》url集合)
+    public Set<String> queryUrlsByRoleIds(AuthRolePlatformParam param) {
+        Set<String> urls = new HashSet<>();
+        if (null == param || CollectionUtils.isEmpty(param.getRoleIdList())) {
+            return urls;
+        }
+        Set<Long> authIds = sysRoleAuthService.queryAuthIdList(param);
+        //根据authId分批查询对应的url
+        int max = 1000;
+        Stream.iterate(0, n -> n + 1).limit((authIds.size() - 1) / max + 1).forEach(i -> {
+            List<Long> pageIdList = authIds.stream().skip(i * max).limit(max).collect(Collectors.toList());
+            Collection<SysAuths> ll = sysAuthsService.listByIds(pageIdList);
+            if (CollectionUtils.isNotEmpty(ll)) {
+                for (SysAuths a : ll) {
+                    urls.add(a.getUrl());
+                }
+            }
+        });
+        return urls;
     }
 
 //    @Autowired

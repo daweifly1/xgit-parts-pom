@@ -5,6 +5,7 @@ import cn.com.xgit.parts.auth.module.menu.param.SysAuthsParam;
 import cn.com.xgit.parts.auth.module.menu.vo.SysAuthsVO;
 import cn.com.xgit.parts.auth.module.role.entity.SysAuths;
 import cn.com.xgit.parts.auth.module.role.facade.MenuFacade;
+import cn.com.xgit.parts.auth.module.role.param.AuthRolePlatformParam;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping({"/menu"})
@@ -51,5 +53,10 @@ public class MenuController extends BasicController {
         }
         List<Long> authIds = menuFacade.getAuthIds(sysAuthsParam);
         return ResultMessage(authIds);
+    }
+
+    @PostMapping("/queryUrlsByRoleIds")
+    ResultMessage<Set<String>> queryUrlsByRoleIds(@RequestBody AuthRolePlatformParam param) {
+        return ResultMessage.success(menuFacade.queryUrlsByRoleIds(param));
     }
 }

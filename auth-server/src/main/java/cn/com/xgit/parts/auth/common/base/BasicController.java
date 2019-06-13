@@ -1,7 +1,6 @@
 package cn.com.xgit.parts.auth.common.base;
 
 import cn.com.xgit.parts.auth.exception.code.ErrorCode;
-import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
@@ -36,33 +35,6 @@ public class BasicController {
         return ResultMessage(code, null);
     }
 
-    public Long getUserId() {
-        String userId = getHttpRequest().getHeader("x-user-id");
-        if (StringUtils.isNoneBlank(userId)) {
-            return Long.parseLong(userId);
-        }
-        return null;
-    }
-
-    public SysAccountVO getSysAccountVO() {
-        Long uid = getUserId();
-        if (null != uid) {
-            SysAccountVO sysAccountVO = new SysAccountVO();
-            sysAccountVO.setId(uid);
-            return sysAccountVO;
-        }
-        return null;
-    }
-
-    public String getRemoteIp() {
-        String userIp = getHttpRequest().getHeader("x-remote-ip");
-        return userIp;
-    }
-
-    public String getRemoteIp(HttpServletRequest request) {
-        String userIp = request.getHeader("x-remote-ip");
-        return userIp;
-    }
 
     /**
      * 获取分页参数
@@ -98,6 +70,28 @@ public class BasicController {
 
     HttpServletRequest getHttpRequest() {
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+    }
+
+    public Long getUserId() {
+        String userId = getHttpRequest().getHeader("x-user-id");
+        if (StringUtils.isNoneBlank(userId)) {
+            return Long.parseLong(userId);
+        }
+        return null;
+    }
+
+    public Long getUserName() {
+        String userId = getHttpRequest().getHeader("x-user-id");
+        if (StringUtils.isNoneBlank(userId)) {
+            return Long.parseLong(userId);
+        }
+        return null;
+    }
+
+
+    public String getRemoteIp(HttpServletRequest request) {
+        String userIp = request.getHeader("x-remote-ip");
+        return userIp;
     }
 
     public ResultMessage<Object> deleteBatchIds(String ids, SuperService superService) {

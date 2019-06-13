@@ -1,4 +1,4 @@
-package cn.com.xgit.gw.common.http;
+package cn.com.xgit.gw.util.http;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -73,12 +73,29 @@ public class CookieUtil {
         } catch (UnsupportedEncodingException e) {
             log.error("", e);
         }
-        cookie.setMaxAge((int) time);
+        if (time > 1L) {
+            cookie.setMaxAge((int) time);
+        }
         // 将Cookie添加到Response中,使之生效addCookie后，如果已经存在相同名字的cookie，则最新的覆盖旧的cookie
         response.addCookie(cookie);
         if (isHttpOnly) {
             cookie.setHttpOnly(true);
         }
         return response;
+    }
+
+    public static void delCookie(HttpServletRequest request, HttpServletResponse response, String name) {
+        Cookie[] cookies = request.getCookies();
+        if (null != cookies) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(name)) {
+                    cookie.setValue(null);
+                    cookie.setMaxAge(0);// 立即销毁cookie
+                    cookie.setPath("/");
+                    response.addCookie(cookie);
+                    break;
+                }
+            }
+        }
     }
 }

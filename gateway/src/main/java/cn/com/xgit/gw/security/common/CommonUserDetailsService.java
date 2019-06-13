@@ -21,7 +21,7 @@ import java.util.Set;
 /**
  * 依赖rbac
  */
-@Component
+//@Component
 public class CommonUserDetailsService implements UserDetailsService {
 
     @Autowired

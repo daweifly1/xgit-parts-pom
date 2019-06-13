@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/auth-server/auth-api/auth-api.iml" filepath="$PROJECT_DIR$/auth-server/auth-api/auth-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/auth-server/auth-server.iml" filepath="$PROJECT_DIR$/auth-server/auth-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/gateway/gateway.iml" filepath="$PROJECT_DIR$/gateway/gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gateway/gw-api/gw-api.iml" filepath="$PROJECT_DIR$/gateway/gw-api/gw-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/xgit-parts-pom.iml" filepath="$PROJECT_DIR$/xgit-parts-pom.iml" />
     </modules>
   </component>

@@ -1,42 +1,45 @@
-package cn.com.xgit.gw.security.filter;
+package cn.com.xgit.gw.security.jwt;
 
-import cn.com.xgit.gw.common.http.CookieUtil;
+import cn.com.xgit.gw.security.CustomsSecurityProperties;
+import cn.com.xgit.gw.security.common.beans.CommonUserDetails;
+import cn.com.xgit.gw.util.http.CookieUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * jwt token相关操作
+ */
 @Slf4j
+@Component
 public class TokenAuthenticationHandler implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String CLAIM_KEY_CREATED = "created";
+    @Autowired
+    private CustomsSecurityProperties securityProperties;
+
     private static final String CLAIM_KEY_SUBJECT = "subject";
 
-    private static final String DEFAULT_SECRET = "scDemo001";
-    public static final Long DEFAULT_EXPIRATION = 200 * 60L;
-
-    private String secret = DEFAULT_SECRET;
-    private Long EXPIRATION = DEFAULT_EXPIRATION;
-
     public TokenAuthenticationHandler() {
-
     }
 
-    public String getSubjectFromToken(String token) {
-        String subject;
+    public CommonUserDetails getSubjectFromToken(String token) {
+        CommonUserDetails subject;
         try {
             final Claims claims = getClaimsFromToken(token);
-            subject = claims.get(CLAIM_KEY_SUBJECT).toString();
+            subject = (CommonUserDetails) claims.get(CLAIM_KEY_SUBJECT);
         } catch (Exception e) {
             subject = null;
         }
@@ -47,7 +50,7 @@ public class TokenAuthenticationHandler implements Serializable {
     private Claims getClaimsFromToken(String token) {
         Claims claims;
         try {
-            claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+            claims = Jwts.parser().setSigningKey(securityProperties.getClaimKeySecret()).parseClaimsJws(token).getBody();
         } catch (Exception e) {
             claims = null;
         }
@@ -55,14 +58,14 @@ public class TokenAuthenticationHandler implements Serializable {
     }
 
     private Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + EXPIRATION * 1000);
+        return new Date(System.currentTimeMillis() + securityProperties.getJwtExpiration() * 1000L);
     }
 
-    public String generateToken(String subject) {
+    public String generateToken(CommonUserDetails subject) {
         Map<String, Object> claims = new HashMap<String, Object>();
-        claims.put(CLAIM_KEY_CREATED, new Date());
+        claims.put(securityProperties.getClaimKeyCreated(), new Date());
         claims.put(CLAIM_KEY_SUBJECT, subject);
-        return generateToken(claims);
+        return doGenerateToken(claims);
     }
 
     /**
@@ -92,16 +95,16 @@ public class TokenAuthenticationHandler implements Serializable {
         try {
             Claims claims = getClaimsFromToken(token);
             claims.put("created", new Date());
-            refreshedToken = generateToken(claims);
+            refreshedToken = doGenerateToken(claims);
         } catch (Exception e) {
             refreshedToken = null;
         }
         return refreshedToken;
     }
 
-    String generateToken(Map<String, Object> claims) {
+    String doGenerateToken(Map<String, Object> claims) {
         return Jwts.builder().setClaims(claims).setExpiration(generateExpirationDate())
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
+                .signWith(SignatureAlgorithm.HS512, securityProperties.getClaimKeySecret()).compact();
     }
 
     /**
@@ -113,26 +116,45 @@ public class TokenAuthenticationHandler implements Serializable {
     public void doRefreshToken(HttpServletResponse resp, String token, boolean init) {
         Claims claims = getClaimsFromToken(token);
         if (null != claims) {
-            String subject = claims.get(CLAIM_KEY_SUBJECT).toString();
-            if (StringUtils.isNotBlank(subject)) {
+            CommonUserDetails subject = (CommonUserDetails) claims.get(CLAIM_KEY_SUBJECT);
+            if (null != subject) {
                 SecurityContextHolder.getContext().setAuthentication(new JWTAuthenticationToken(subject));
             }
             long expiration = claims.getExpiration().getTime();
-            long date = System.currentTimeMillis() + (EXPIRATION * 1000 >> 1);
-
+            long date = System.currentTimeMillis() + (securityProperties.getJwtExpiration() * 1000 >> 1);
 
             //距离过期时间还有一半时候刷新token
             if (date > expiration) {
                 token = refreshToken(token);
-                CookieUtil.setCookie(resp, JWTConsts.HEADER_STRING, JWTConsts.TOKEN_PREFIX + token, DEFAULT_EXPIRATION);
+                CookieUtil.setCookie(resp, JWTConsts.HEADER_STRING, JWTConsts.TOKEN_PREFIX + token, securityProperties.getJwtExpiration());
 //                ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 //                HttpSession session = attr.getRequest().getSession(true);
 //                session.setAttribute(JWTConsts.HEADER_STRING, token);
             }
             if (init) {
-                CookieUtil.setCookie(resp, JWTConsts.HEADER_STRING, JWTConsts.TOKEN_PREFIX + token, DEFAULT_EXPIRATION);
+                CookieUtil.setCookie(resp, JWTConsts.HEADER_STRING, JWTConsts.TOKEN_PREFIX + token, securityProperties.getJwtExpiration());
             }
             resp.addHeader(JWTConsts.HEADER_STRING, JWTConsts.TOKEN_PREFIX + token);
         }
+    }
+
+    /**
+     * 登陆成功后操作
+     *
+     * @param commonUserDetails
+     * @param resp
+     */
+    public void saveAfterLogin(CommonUserDetails commonUserDetails, HttpServletResponse resp) {
+        SecurityContextHolder.getContext().setAuthentication(new JWTAuthenticationToken(commonUserDetails));
+        String token = generateToken(commonUserDetails);
+        resp.addHeader(JWTConsts.HEADER_STRING, JWTConsts.TOKEN_PREFIX + token);
+        CookieUtil.setCookie(resp, JWTConsts.HEADER_STRING, JWTConsts.TOKEN_PREFIX + token, securityProperties.getJwtExpiration());
+
+    }
+
+    public void rmAfterLoginOut(HttpServletResponse response, HttpServletRequest request) {
+        CookieUtil.delCookie(request, response, JWTConsts.HEADER_STRING);
+        response.setHeader(JWTConsts.HEADER_STRING, null);
+        log.debug(" response.setHeader ???????????????");
     }
 }

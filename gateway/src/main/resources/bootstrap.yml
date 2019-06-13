@@ -1,6 +1,6 @@
 spring:
   application:
-    name: storage-server-v
+    name: gw-server
   profiles:
     active: dev
 eureka:

@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.Set;
+
 @Data
 @ToString
 @ApiModel(value = "用户登录信息")
@@ -14,5 +16,7 @@ public class SysUserLoginInfoVO {
     private String username;
     //姓名
     private String name;
+
+    Set<Long> roleIds;
 
 }

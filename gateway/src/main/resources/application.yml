@@ -1,23 +1,8 @@
 server:
-  port: 8080
+  port: 9000
 spring:
   session:
     store-type: none
-jwt:
-  expiration: 10
-  header: Authorization
-  route:
-    authentication:
-      path: auth/login
-      refresh: auth/refresh
-      register: '"auth/register"'
-  secret: mySecret
-  tokenHead: Bearer
-
-logging:
-  file: ${LOG_TEMP:./logs}/${spring.application.name}.log
-  level:
-    com.xiaojun: debug
 
 zuul:
   routes:
@@ -49,20 +34,19 @@ zuul:
     host:
       connections: 500
   host:
-      socket-timeout-millis: 600000
-      connect-timeout-millis: 600000
+    socket-timeout-millis: 600000
+    connect-timeout-millis: 600000
 
-security:
-  basic:
-   enabled: false
+xgxx:
+  customs:
+    destinationUrl: /ius/auth/login
+    signInPage: /ius/auth/login
+    signOutPage: /logout
+    signOutSuccessUrl: /ius/auth/login
+    claimKeyCreated: xgxxDev
+    jwtExpiration: 1200
 
-fast:
-  auth:
-    login:
-      url: /ius/auth/login,/ius/auth/sigin
-    logout:
-      url: /ius/auth/logout,/ius/auth/signout
-    thirdAuth:
-      url: /ius/thirdAuth/webAuth,/ius/thirdAuth/registerAccount
-    thirdUser:
-      url: /ius/thirdAuth/getUserInfo
+logging:
+  file: ${LOG_TEMP:./logs}/${spring.application.name}.log
+  level:
+    cn.com.xgit: debug

@@ -32,4 +32,17 @@
             aa.type=1
         </if>
     </select>
+    <select id="queryAuthIdList" resultType="cn.com.xgit.parts.auth.module.role.entity.SysRoleAuth">
+        select
+        id,auth_id,role_id,platform_id
+        from sys_role_auth
+        where role_id in
+        <foreach collection="roleIdList" item="roleId" open="(" close=")" separator=",">
+            #{roleId}
+        </foreach>
+        <if test="platformId!=null">
+            and platform_id=#{platformId}
+        </if>
+
+    </select>
 </mapper>
