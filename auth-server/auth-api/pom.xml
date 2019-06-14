@@ -31,8 +31,15 @@
         </dependency>
 
         <dependency>
+            <groupId>cn.com.xgit</groupId>
+            <artifactId>gw-api</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
@@ -41,6 +48,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

@@ -70,10 +70,7 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
 
     public boolean checkLoginPsw(Long userId, String password) {
         String dbNomalPsw = queryDbNomalPsw(userId);
-        if (StringUtils.isNoneBlank(dbNomalPsw) && dbNomalPsw.equals(cryptoPassword(password, userId))) {
-            return true;
-        }
-        return false;
+        return StringUtils.isNoneBlank(dbNomalPsw) && dbNomalPsw.equals(cryptoPassword(password, userId));
     }
 
     public String queryDbNomalPsw(Long userId) {

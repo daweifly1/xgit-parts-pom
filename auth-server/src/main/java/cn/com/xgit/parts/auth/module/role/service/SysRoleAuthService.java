@@ -29,10 +29,7 @@ public class SysRoleAuthService extends SuperService<SuperMapper<SysRoleAuth>, S
         SysRoleAuth e = new SysRoleAuth();
         e.setAuthId(authId);
         List<SysRoleAuth> ll = list(new QueryWrapper<>(e));
-        if (CollectionUtils.isNotEmpty(ll)) {
-            return true;
-        }
-        return false;
+        return CollectionUtils.isNotEmpty(ll);
     }
 
     /**

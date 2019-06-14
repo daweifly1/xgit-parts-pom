@@ -2,6 +2,7 @@ package cn.com.xgit.parts.auth.aop;
 
 
 import cn.com.xgit.parts.auth.exception.AuthException;
+import cn.com.xgit.parts.auth.exception.CommonException;
 import cn.com.xgit.parts.auth.exception.code.ErrorCode;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import cn.com.xgit.parts.common.util.fastjson.FastJsonUtil;
@@ -10,13 +11,10 @@ import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
-import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * 异常处理
@@ -28,27 +26,29 @@ public class WebExceptionHandler {
     public Object invoke(HttpServletRequest request, HttpServletResponse response, Exception e) {
         PrintWriter out = null;
         try {
+            response.setCharacterEncoding("UTF-8");
             out = response.getWriter();
             if (e instanceof ClientAbortException) {
                 log.warn("ClientAbortException url: {}, msg: {}", request.getRequestURI(), e.getMessage());
                 // 浏览器已经关闭
                 response.setContentType("text/html;charset=utf-8");
                 out.write("发生错误，请联系开发解决");
+                return null;
             }
+            response.setContentType("application/json; charset=utf-8");
             this.exceptionLog(e, request);
             if (e instanceof AuthException) {
                 ResultMessage view = ResultMessage.error(((AuthException) e).getCode(), e.getMessage());
-                response.setContentType("text/html;charset=utf-8");
+                out.write(FastJsonUtil.toJSONString(view));
+            } else if (e instanceof CommonException) {
+                ResultMessage view = ResultMessage.error(((CommonException) e).getCode(), e.getMessage());
+                out.write(FastJsonUtil.toJSONString(view));
+            } else {
+                ResultMessage view = ResultMessage.error(ErrorCode.Failure.getCode(), e.getMessage());
                 out.write(FastJsonUtil.toJSONString(view));
             }
-
-//        // ajax请求
-//        View view = View.wrapError("发生错误，请联系开发解决");
-//        view.put("errorMsg", fullStackTrace);
-            ResultMessage view = ResultMessage.error(ErrorCode.Failure.getCode(), e.getMessage());
-            response.setContentType("text/html;charset=utf-8");
-            out.write(FastJsonUtil.toJSONString(view));
-
+            out.flush();
+            out.close();
         } catch (Exception ex) {
             this.exceptionLog(ex, request);
         } finally {
@@ -61,14 +61,18 @@ public class WebExceptionHandler {
      * 异常日志
      */
     private void exceptionLog(Exception e, HttpServletRequest request) {
-        String parameters = FastJsonUtil.toJSONString(request.getParameterMap());
-        String uri = request.getRequestURI();
-        // 异常堆栈信息
-        // 异常堆栈信息
+        try {
+            String parameters = FastJsonUtil.toJSONString(request.getParameterMap());
+            String uri = request.getRequestURI();
+            // 异常堆栈信息
+            // 异常堆栈信息
 //        String fullStackTrace = org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace(e);
-        log.error("系统异常,uri:{},parameters:{}", uri, parameters, e);
-    }
+            log.error("系统异常,uri:{},parameters:{}", uri, parameters, e);
+        } catch (Exception ex) {
+            log.error("系统异常打印失败", ex);
+        }
 
+    }
 
 
 //    @ExceptionHandler({AuthException.class})

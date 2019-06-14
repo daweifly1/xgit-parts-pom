@@ -1,5 +1,6 @@
 package cn.com.xgit.parts.auth.common.base;
 
+import cn.com.xgit.gw.http.CommHttpParam;
 import cn.com.xgit.parts.auth.exception.code.ErrorCode;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -73,25 +74,15 @@ public class BasicController {
     }
 
     public Long getUserId() {
-        String userId = getHttpRequest().getHeader("x-user-id");
-        if (StringUtils.isNoneBlank(userId)) {
-            return Long.parseLong(userId);
-        }
-        return null;
+        return CommHttpParam.getUserId(getHttpRequest());
     }
 
-    public Long getUserName() {
-        String userId = getHttpRequest().getHeader("x-user-id");
-        if (StringUtils.isNoneBlank(userId)) {
-            return Long.parseLong(userId);
-        }
-        return null;
+    public String getUserName() {
+        return CommHttpParam.getUserName(getHttpRequest());
     }
-
 
     public String getRemoteIp(HttpServletRequest request) {
-        String userIp = request.getHeader("x-remote-ip");
-        return userIp;
+        return CommHttpParam.getRemoteIp(getHttpRequest());
     }
 
     public ResultMessage<Object> deleteBatchIds(String ids, SuperService superService) {

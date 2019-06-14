@@ -1,6 +1,6 @@
 package cn.com.xgit.gw.security.jwt;
 
-import cn.com.xgit.gw.common.http.CookieUtil;
+import cn.com.xgit.gw.util.http.CookieUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class JWTAuthenticationFilter extends GenericFilterBean {
 //            token = (String) req.getSession().getAttribute(HEADER_STRING);
 //        }
         if (StringUtils.isBlank(token)) {
-            token = (String) CookieUtil.getCookieValueByName(req, JWTConsts.HEADER_STRING);
+            token = CookieUtil.getCookieValueByName(req, JWTConsts.HEADER_STRING);
         }
         if (StringUtils.isNotBlank(token) && token.startsWith(JWTConsts.TOKEN_PREFIX.trim())) {
             tokenAuthenticationHandler.doRefreshToken(resp, token.replace(JWTConsts.TOKEN_PREFIX.trim(), "").trim(), false);

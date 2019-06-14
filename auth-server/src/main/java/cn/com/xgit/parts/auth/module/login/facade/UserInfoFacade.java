@@ -133,10 +133,7 @@ public class UserInfoFacade {
     private boolean checkeLoginPassword(Long userId, UserLoginVO userLoginVO) {
         if (PasswordType.DYNAMIC.getType() == userLoginVO.getPswType()) {
             String psw = redisClient.get(dynamicPswPrefix + userLoginVO.getUsername());
-            if (StringUtils.isNoneBlank(psw) && psw.equals(userLoginVO.getPassword())) {
-                return true;
-            }
-            return false;
+            return StringUtils.isNoneBlank(psw) && psw.equals(userLoginVO.getPassword());
         }
         return sysAccountService.checkLoginPsw(userId, userLoginVO.getPassword());
     }
@@ -201,6 +198,7 @@ public class UserInfoFacade {
 
     //发送短信或者email
     private void sendMsg(String value, String username, boolean mobi) {
+        log.info(value+"      "+username+"  "+mobi);
         SysAccount account = sysAccountService.queryByLoginNameOrMobi(username);
         if (null == account) {
             throw new CommonException("账号错误");

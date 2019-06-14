@@ -13,7 +13,7 @@ public enum PasswordType {
     private String desc;
 
 
-    private PasswordType(int type, String desc) {
+    PasswordType(int type, String desc) {
         this.desc = desc;
         this.type = type;
     }

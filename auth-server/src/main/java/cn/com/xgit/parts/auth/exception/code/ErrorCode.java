@@ -54,7 +54,7 @@ public enum ErrorCode implements cn.com.xgit.parts.common.result.ErrorCode {
     private String desc;
     private int code;
 
-    private ErrorCode(int code, String desc) {
+    ErrorCode(int code, String desc) {
         this.desc = desc;
         this.code = code;
     }

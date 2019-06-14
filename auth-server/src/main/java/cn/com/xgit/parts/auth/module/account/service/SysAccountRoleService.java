@@ -32,10 +32,7 @@ public class SysAccountRoleService extends SuperService<SuperMapper<SysAccountRo
 
     public boolean queryCheckByRoleIds(List<Long> roleIds) {
         List<SysAccountRole> ll = sysAccountRoleMapper.queryListByRoleIds(roleIds, 1);
-        if (CollectionUtils.isNotEmpty(ll)) {
-            return false;
-        }
-//        for (Long roleId : roleIds) {
+        return !CollectionUtils.isNotEmpty(ll);//        for (Long roleId : roleIds) {
 //            SysAccountRole e = new SysAccountRole();
 //            e.setRoleId(roleId);
 //            List<SysAccountRole> ll = list(new QueryWrapper<>(e));
@@ -43,7 +40,6 @@ public class SysAccountRoleService extends SuperService<SuperMapper<SysAccountRo
 //                return false;
 //            }
 //        }
-        return true;
     }
 
     /**

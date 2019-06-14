@@ -2,7 +2,7 @@ package cn.com.xgit.gw.http;
 
 import cn.com.xgit.gw.http.consts.ZuulRequestHeader;
 import cn.com.xgit.gw.http.exceptions.GwException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,7 +40,7 @@ public class CommHttpParam {
         return null;
     }
 
-    public String getUserName(HttpServletRequest request) {
+    public static String getUserName(HttpServletRequest request) {
         return request.getHeader(ZuulRequestHeader.USER_NAME);
     }
 

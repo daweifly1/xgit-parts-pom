@@ -16,7 +16,7 @@ public class CookieUtil {
     public static String getCookieValueByName(HttpServletRequest request, String name) {
         Map<String, Cookie> cookieMap = ReadCookieMap(request);
         if (cookieMap.containsKey(name)) {
-            Cookie cookie = (Cookie) cookieMap.get(name);
+            Cookie cookie = cookieMap.get(name);
             return cookie.getValue();
         } else {
             return null;
@@ -27,7 +27,7 @@ public class CookieUtil {
     public static Cookie getCookieByName(HttpServletRequest request, String name) {
         Map<String, Cookie> cookieMap = ReadCookieMap(request);
         if (cookieMap.containsKey(name)) {
-            Cookie cookie = (Cookie) cookieMap.get(name);
+            Cookie cookie = cookieMap.get(name);
             return cookie;
         } else {
             return null;
