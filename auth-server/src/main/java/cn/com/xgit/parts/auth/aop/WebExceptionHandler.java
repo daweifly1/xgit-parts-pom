@@ -35,7 +35,7 @@ public class WebExceptionHandler {
                 out.write("发生错误，请联系开发解决");
                 return null;
             }
-            response.setContentType("application/json; charset=utf-8");
+            response.setContentType("application/json;charset=utf-8");
             this.exceptionLog(e, request);
             if (e instanceof AuthException) {
                 ResultMessage view = ResultMessage.error(((AuthException) e).getCode(), e.getMessage());

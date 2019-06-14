@@ -1,11 +1,25 @@
 spring:
+  thymeleaf:
+    prefix: classpath:/templates/
   application:
     name: gw-server
   profiles:
     active: dev
+  cloud:
+    config:
+      discovery:
+        enabled: false
+        serviceId: config-server
+      enabled: false
+      name: auth-server
+      profile: test
+
 eureka:
   client:
+    registry-fetch-interval-seconds: 8
     service-url:
       defaultZone: http://10.100.2.109:18100/eureka/
-    instance:
-      prefer-ip-address: true
+  instance:
+    lease-expiration-duration-in-seconds: 12
+    lease-renewal-interval-in-seconds: 4
+    prefer-ip-address: true

@@ -6,30 +6,12 @@ spring:
 
 zuul:
   routes:
-    main-data:
-      path: /api/main-data/**
-      serviceId: demo1
     api-a:
-      path: /cop/**
-      serviceid: copper-purchase
+      path: /ius/**
+      serviceid: parts-auth-server
     api-b:
       path: /cos/**
       serviceid: copper-server
-    api-c:
-      path: /web/**
-      serviceid: copper-surface
-    api-d:
-      path: /ius-d/**
-      serviceId: fast-auth-server
-    api-e:
-      path: /ss/**
-      serviceId: storage-server
-    api-f:
-      path: /ss-cdw/**
-      serviceId: storage-server-cdw
-    api-g:
-      path: /ius-s/**
-      serviceId: storage-server-v
   max:
     host:
       connections: 500
@@ -41,11 +23,17 @@ xgxx:
   customs:
     destinationUrl: /ius/auth/login
     signInPage: /ius/auth/login
-    signOutPage: /logout
+    signOutPage: /ius/auth/logout
     signOutSuccessUrl: /ius/auth/login
+    loginUrls: /ius/auth/login,/ius/auth/sigin
+    loginOutUrls: /ius/auth/logout
+
+    claimKeySecret: oooooo
     claimKeyCreated: xgxxDev
     jwtExpiration: 1200
-
+#    redirectErrorPage403: http://10.100.2.109:9101/web/index
+    redirectErrorPage404: http://10.100.2.109:9101/web/index
+#    redirectErrorPage500: http://10.100.2.109:9101/web/index
 logging:
   file: ${LOG_TEMP:./logs}/${spring.application.name}.log
   level:

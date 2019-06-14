@@ -1,6 +1,6 @@
 package cn.com.xgit.gw.filter;
 
-import cn.com.xgit.gw.security.CustomsSecurityProperties;
+import cn.com.xgit.gw.CustomsSecurityProperties;
 import cn.com.xgit.gw.security.jwt.TokenAuthenticationHandler;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;

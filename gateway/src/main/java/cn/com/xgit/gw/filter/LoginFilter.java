@@ -1,10 +1,13 @@
 package cn.com.xgit.gw.filter;
 
-import cn.com.xgit.gw.security.CustomsSecurityProperties;
+import cn.com.xgit.gw.CustomsSecurityProperties;
 import cn.com.xgit.gw.security.common.beans.CommonUserDetails;
 import cn.com.xgit.gw.security.jwt.TokenAuthenticationHandler;
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.common.result.ResultMessage;
+import cn.com.xgit.parts.common.util.fastjson.FastJsonUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.zuul.ZuulFilter;
@@ -37,7 +40,12 @@ public class LoginFilter extends ZuulFilter {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         InputStream inputStream = requestContext.getResponseDataStream();
-        ResultMessage<SysUserLoginInfoVO> actionResult = (ResultMessage<SysUserLoginInfoVO>) objectMapper.readValue(inputStream, ResultMessage.class);
+//        ResultMessage<SysUserLoginInfoVO> actionResult = (ResultMessage<SysUserLoginInfoVO>) objectMapper.readValue(inputStream, ResultMessage.class);
+
+        String json = FastJsonUtil.convertStream2Json(inputStream);
+        ResultMessage<SysUserLoginInfoVO> actionResult = JSON.parseObject(json, new TypeReference<ResultMessage<SysUserLoginInfoVO>>() {
+        });
+
         inputStream.close();
         SysUserLoginInfoVO sysUserLoginInfoVO = null;
         if (actionResult.getStatus() != 0) {

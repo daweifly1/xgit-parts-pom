@@ -1,7 +1,7 @@
 /**
  *
  */
-package cn.com.xgit.gw.security.manager.service;
+package cn.com.xgit.gw.module.service;
 
 import cn.com.xgit.gw.security.common.beans.CommonUserDetails;
 import cn.com.xgit.parts.auth.feign.AuthClient;

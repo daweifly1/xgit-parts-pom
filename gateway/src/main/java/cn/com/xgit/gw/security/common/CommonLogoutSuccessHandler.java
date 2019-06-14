@@ -3,7 +3,7 @@
  */
 package cn.com.xgit.gw.security.common;
 
-import cn.com.xgit.gw.security.CustomsSecurityProperties;
+import cn.com.xgit.gw.CustomsSecurityProperties;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringUtils;

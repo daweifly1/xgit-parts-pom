@@ -1,4 +1,4 @@
-package cn.com.xgit.gw.security;
+package cn.com.xgit.gw;
 
 
 import lombok.Data;
@@ -31,4 +31,9 @@ public class CustomsSecurityProperties {
     //退出url集合
     private String[] loginOutUrls;
 
+    private String redirectErrorPage403;
+
+    private String redirectErrorPage404;
+
+    private String redirectErrorPage500;
 }

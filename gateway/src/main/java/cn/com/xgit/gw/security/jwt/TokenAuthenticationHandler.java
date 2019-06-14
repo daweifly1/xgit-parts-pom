@@ -1,8 +1,9 @@
 package cn.com.xgit.gw.security.jwt;
 
-import cn.com.xgit.gw.security.CustomsSecurityProperties;
+import cn.com.xgit.gw.CustomsSecurityProperties;
 import cn.com.xgit.gw.security.common.beans.CommonUserDetails;
 import cn.com.xgit.gw.util.http.CookieUtil;
+import cn.com.xgit.parts.common.util.fastjson.FastJsonUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -39,7 +40,8 @@ public class TokenAuthenticationHandler implements Serializable {
         CommonUserDetails subject;
         try {
             final Claims claims = getClaimsFromToken(token);
-            subject = (CommonUserDetails) claims.get(CLAIM_KEY_SUBJECT);
+            String sub = claims.get(CLAIM_KEY_SUBJECT).toString();
+            subject = FastJsonUtil.parse(sub, CommonUserDetails.class);
         } catch (Exception e) {
             subject = null;
         }
@@ -64,7 +66,8 @@ public class TokenAuthenticationHandler implements Serializable {
     public String generateToken(CommonUserDetails subject) {
         Map<String, Object> claims = new HashMap<String, Object>();
         claims.put(securityProperties.getClaimKeyCreated(), new Date());
-        claims.put(CLAIM_KEY_SUBJECT, subject);
+        String sub = FastJsonUtil.toJSONString(subject);
+        claims.put(CLAIM_KEY_SUBJECT, sub);
         return doGenerateToken(claims);
     }
 
@@ -115,8 +118,9 @@ public class TokenAuthenticationHandler implements Serializable {
      */
     public void doRefreshToken(HttpServletResponse resp, String token, boolean init) {
         Claims claims = getClaimsFromToken(token);
-        if (null != claims) {
-            CommonUserDetails subject = (CommonUserDetails) claims.get(CLAIM_KEY_SUBJECT);
+        if (null != claims && null != claims.get(CLAIM_KEY_SUBJECT)) {
+            String sub = claims.get(CLAIM_KEY_SUBJECT).toString();
+            CommonUserDetails subject = FastJsonUtil.parse(sub, CommonUserDetails.class);
             if (null != subject) {
                 SecurityContextHolder.getContext().setAuthentication(new JWTAuthenticationToken(subject));
             }
@@ -134,7 +138,7 @@ public class TokenAuthenticationHandler implements Serializable {
             if (init) {
                 CookieUtil.setCookie(resp, JWTConsts.HEADER_STRING, JWTConsts.TOKEN_PREFIX + token, securityProperties.getJwtExpiration());
             }
-            resp.addHeader(JWTConsts.HEADER_STRING, JWTConsts.TOKEN_PREFIX + token);
+            resp.setHeader(JWTConsts.HEADER_STRING, JWTConsts.TOKEN_PREFIX + token);
         }
     }
 
@@ -147,7 +151,7 @@ public class TokenAuthenticationHandler implements Serializable {
     public void saveAfterLogin(CommonUserDetails commonUserDetails, HttpServletResponse resp) {
         SecurityContextHolder.getContext().setAuthentication(new JWTAuthenticationToken(commonUserDetails));
         String token = generateToken(commonUserDetails);
-        resp.addHeader(JWTConsts.HEADER_STRING, JWTConsts.TOKEN_PREFIX + token);
+        resp.setHeader(JWTConsts.HEADER_STRING, JWTConsts.TOKEN_PREFIX + token);
         CookieUtil.setCookie(resp, JWTConsts.HEADER_STRING, JWTConsts.TOKEN_PREFIX + token, securityProperties.getJwtExpiration());
 
     }

@@ -16,9 +16,9 @@ public class RbacAuthorizeConfigProvider implements AuthorizeConfigProvider {
 
     @Override
     public boolean config(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry config) {
-        config
-                .antMatchers(HttpMethod.GET, "/fonts/**").permitAll()
-                .antMatchers(HttpMethod.GET,
+
+        config.antMatchers(HttpMethod.GET, "/fonts/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/actuator/**",
                         "/**/*.html", "login", "logout", "/auth/**",
                         "/admin/me",
                         "/resource").authenticated()
