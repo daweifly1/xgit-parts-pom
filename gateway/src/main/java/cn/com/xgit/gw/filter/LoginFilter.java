@@ -67,6 +67,7 @@ public class LoginFilter extends ZuulFilter {
                 CommonUserDetails commonUserDetails = new CommonUserDetails();
                 commonUserDetails.setId(sysUserLoginInfoVO.getId());
                 commonUserDetails.setUsername(sysUserLoginInfoVO.getUsername());
+                commonUserDetails.setRoleIds(sysUserLoginInfoVO.getRoleIds());
                 if (null != commonUserDetails) {
                     tokenAuthenticationHandler.saveAfterLogin(commonUserDetails, ctx.getResponse());
                 }
