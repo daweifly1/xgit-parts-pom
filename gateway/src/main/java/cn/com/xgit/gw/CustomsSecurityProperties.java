@@ -3,11 +3,13 @@ package cn.com.xgit.gw;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "xgxx.customs")
 @Data
+@RefreshScope
 public class CustomsSecurityProperties {
     //跳转的url
     private String destinationUrl;

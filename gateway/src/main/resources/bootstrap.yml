@@ -3,16 +3,14 @@ spring:
     prefix: classpath:/templates/
   application:
     name: gw-server
-  profiles:
-    active: dev
   cloud:
     config:
       discovery:
-        enabled: false
+        enabled: true
         serviceId: config-server
-      enabled: false
-      name: auth-server
-      profile: test
+      enabled: true
+      name: parts-gateway
+      profile: dev
 
 eureka:
   client:
