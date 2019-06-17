@@ -6,15 +6,17 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/shmilyah/cloud-config-samples.git
+          uri: http://10.100.2.58/chendawei/all_config.git
+          username: chendawei
+          password: wangyidan
           search-paths: '{application}'
   application:
     name: config-server
   rabbitmq:
     host: 10.100.2.109
     port: 5672
-    username: guest
-    password: guest
+    username: admin
+    password: admin
 eureka:
   client:
     service-url:
