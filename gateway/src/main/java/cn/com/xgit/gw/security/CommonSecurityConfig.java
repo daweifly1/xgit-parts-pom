@@ -35,7 +35,7 @@ public class CommonSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.csrf().disable().authorizeRequests()
-                .antMatchers("/ius/auth/**").permitAll()
+                .antMatchers("/ius/auth/**","/connect/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
 //                //记住我配置，如果想在'记住我'登录时记录日志，可以注册一个InteractiveAuthenticationSuccessEvent事件的监听器
@@ -64,6 +64,7 @@ public class CommonSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers("/favicon.ico")
+                .antMatchers("/connect/**")
                 .antMatchers(HttpMethod.OPTIONS, "/ius/auth/**")
                 .antMatchers("/swagger-ui.html")
                 .antMatchers("/webjars/**")
