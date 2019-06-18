@@ -51,7 +51,7 @@ public class SocialController extends BasicController {
         return sysAccountSocialService.queryAccountBySocail(sysAccountSocial);
     }
 
-    @DeleteMapping("/release")
+    @GetMapping("/release")
     @ApiOperation("社交登录解绑")
     ResultMessage release(@RequestParam(value = "accountId", required = false) Long accountId, @RequestParam(value = "type") String type) {
         //解绑

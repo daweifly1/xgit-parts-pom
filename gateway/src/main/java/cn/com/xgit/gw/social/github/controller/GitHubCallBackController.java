@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -38,6 +39,14 @@ public class GitHubCallBackController {
     @Autowired
     private AuthClient authClient;
 
+
+    @RequestMapping("/connect/githubLink")
+    @ResponseBody
+    public ResultMessage<String> githubLink() {
+        String url = "https://github.com/login/oauth/authorize?client_id=" + gitHubProperties.getAppId() + "&state=" + UUID.randomUUID();
+        return ResultMessage.success(url);
+    }
+
     @RequestMapping("/connect/githubPage")
     public String githubPage(Model model) {
         String url = "https://github.com/login/oauth/authorize?client_id=" + gitHubProperties.getAppId() + "&state=" + UUID.randomUUID();
@@ -59,9 +68,6 @@ public class GitHubCallBackController {
     @RequestMapping("/connect/github")
     public String callback(String code, String state, Model model, HttpServletResponse response) {
         Map<String, String> gitHubLoginInfo = gitHubService.queryGitHubLoginInfo(code, state);
-        if (MapUtils.isEmpty(gitHubLoginInfo) || StringUtils.isBlank(gitHubLoginInfo.get("login"))) {
-            return "503";
-        }
         if (null != SecurityContextHolder.getContext().getAuthentication()) {
             //如果已经登录则绑定用户
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -69,6 +75,10 @@ public class GitHubCallBackController {
                 CommonUserDetails commonUserDetails = (CommonUserDetails) principal;
                 if (null == commonUserDetails || null == commonUserDetails.getId() || org.apache.commons.lang.StringUtils.isBlank(commonUserDetails.getUsername())) {
                     return "503";
+                }
+                if (MapUtils.isEmpty(gitHubLoginInfo) || StringUtils.isBlank(gitHubLoginInfo.get("login"))) {
+                    model.addAttribute("account", commonUserDetails.getUsername());
+                    return "/github/loginSuccess";
                 }
                 ResultMessage<String> rsp = authClient.bindSocialAccount(commonUserDetails.getId(), gitHubLoginInfo.get("login"), OAuthTypes.GITHUB.getCode());
                 if (null != rsp && ResultMessage.OK == rsp.getStatus()) {
@@ -87,6 +97,9 @@ public class GitHubCallBackController {
                 return "github/bindGithubFail";
             }
         }
+        if (MapUtils.isEmpty(gitHubLoginInfo) || StringUtils.isBlank(gitHubLoginInfo.get("login"))) {
+            return "503";
+        }
         //如果未登录，查询是否有绑定信息，有绑定进行登录，无则跳转到登录页面；
         ResultMessage<SysUserLoginInfoVO> rsp = authClient.queryAccountBySocail(gitHubLoginInfo.get("login"), OAuthTypes.GITHUB.getCode());
         if (null != rsp && null != rsp.getData()) {
@@ -102,7 +115,9 @@ public class GitHubCallBackController {
             if (StringUtils.isNoneBlank(gitHubProperties.getLoginGitHubSuccessUrl())) {
                 return "redirect:" + gitHubProperties.getLoginGitHubSuccessUrl();
             }
-            return "redirect:/actuator/info";
+            model.addAttribute("socialAccount", gitHubLoginInfo.get("login"));
+            model.addAttribute("account", commonUserDetails.getUsername());
+            return "/github/loginSuccess";
         }
         //登录失败显示登录失败原因
         if (StringUtils.isNoneBlank(gitHubProperties.getLoginGitHubFailUrl())) {
