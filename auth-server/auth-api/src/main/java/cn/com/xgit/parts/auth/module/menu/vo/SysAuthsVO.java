@@ -15,10 +15,10 @@ import java.util.List;
 public class SysAuthsVO implements Serializable {
     private static final long serialVersionUID = -1L;
 
-    @ApiModelProperty(value = "Id", name = "id")
+    @ApiModelProperty(value = "Id", name = "id",example = "1")
     private Long id;
 
-    @ApiModelProperty(value = "平台id", name = "platform_id")
+    @ApiModelProperty(value = "平台id", name = "platform_id",example = "1")
     private Long platformId;
     //名称
     @ApiModelProperty(value = "名称", name = "name")

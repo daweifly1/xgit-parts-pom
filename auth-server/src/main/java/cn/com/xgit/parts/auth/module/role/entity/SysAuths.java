@@ -16,16 +16,16 @@ import lombok.ToString;
 public class SysAuths extends CommEntity {
     private static final long serialVersionUID = -1L;
 
-    @ApiModelProperty(value = "平台id", name = "platform_id")
+    @ApiModelProperty(value = "平台id", name = "platform_id", example = "1")
     private Long platformId;
     //名称
     @ApiModelProperty(value = "名称", name = "name")
     private String name;
     //父节点id
-    @ApiModelProperty(value = "父节点id", name = "parent_id")
+    @ApiModelProperty(value = "父节点id", name = "parent_id", example = "0")
     private Long parentId;
     //顺序
-    @ApiModelProperty(value = "顺序", name = "seq")
+    @ApiModelProperty(value = "顺序", name = "seq", example = "1")
     private Long seq;
     //图标
     @ApiModelProperty(value = "图标", name = "icon")

@@ -1,6 +1,7 @@
 package cn.com.xgit.parts.auth.feign.fallback;
 
 import cn.com.xgit.parts.auth.feign.AuthClient;
+import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
 import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
 import cn.com.xgit.parts.auth.module.menu.param.SysAuthsParam;
@@ -19,26 +20,38 @@ public class AuthClientFallBack implements AuthClient {
     @Override
     public ResultMessage<List<Long>> getAuthIds(SysAuthsParam sysAuthsParam) {
         log.warn("getAuthIds 方法熔断，userId：{}，", sysAuthsParam);
-        return ResultMessage.success(null);
+        return ResultMessage.error("服务异常，请稍后重试");
     }
 
     @Override
     public ResultMessage<Set<String>> queryUrlsByRoleIds(AuthRolePlatformParam param) {
         log.warn("queryUrlsByRoleIds 方法熔断，param：{}，", param);
-        return ResultMessage.success(null);
+        return ResultMessage.error("服务异常，请稍后重试");
+    }
+
+    @Override
+    public ResultMessage<String> bindSocialAccount(Long accountId, String socialAccount, String type) {
+        log.warn("bindSocialAccount 方法熔断，accountId：{}，socialAccount：{}", accountId, socialAccount);
+        return ResultMessage.error("服务异常，请稍后重试");
+    }
+
+    @Override
+    public ResultMessage<SysUserLoginInfoVO> queryAccountBySocail(String socialAccount, String type) {
+        log.warn("queryAccountBySocail 方法熔断，socialAccount：{}", socialAccount);
+        return ResultMessage.error("服务异常，请稍后重试");
     }
 
 
     @Override
     public ResultMessage<SysAccountVO> queryAccountByLoginName(String loginName, Long platformId) {
         log.warn("queryAccountByLoginName 方法熔断，loginName：{}，platformId:{}", loginName, platformId);
-        return ResultMessage.success(null);
+        return ResultMessage.error("服务异常，请稍后重试");
     }
 
     @Override
     public ResultMessage<String> addUser(UserRegistVO userRegistVO) {
         log.warn("addUser 方法熔断，userRegistVO：{}", userRegistVO);
-        return ResultMessage.success(null);
+        return ResultMessage.error("服务异常，请稍后重试");
     }
 
 }

@@ -17,4 +17,19 @@ public class GitHubProperties {
     private String appSecret;
 
     private String callBack;
+
+    //去绑定github页面
+    private String bindGitHubUrl;
+    //绑定成功后跳转页面
+    private String bindGitHubSuccessUrl;
+
+    //绑定失败后跳转页面
+    private String bindGitHubFaileUrl;
+
+    //登录成功后跳转页面
+    private String loginGitHubSuccessUrl;
+
+    //登录失败后跳转页面
+    private String loginGitHubFailUrl;
+
 }

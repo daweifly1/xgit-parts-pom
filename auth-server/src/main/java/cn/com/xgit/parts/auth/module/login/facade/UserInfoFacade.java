@@ -12,6 +12,7 @@ import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
 import cn.com.xgit.parts.auth.module.account.service.SysAccountRoleService;
 import cn.com.xgit.parts.auth.module.account.service.SysAccountService;
 import cn.com.xgit.parts.auth.module.account.vo.SysPasswordVO;
+import cn.com.xgit.parts.common.result.ResultMessage;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

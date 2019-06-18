@@ -1,13 +1,16 @@
 package cn.com.xgit.parts.auth.feign;
 
 import cn.com.xgit.parts.auth.feign.fallback.AuthClientFallBack;
+import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
 import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
 import cn.com.xgit.parts.auth.module.menu.param.SysAuthsParam;
 import cn.com.xgit.parts.auth.module.role.param.AuthRolePlatformParam;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.Set;
 
-@FeignClient(name = "${auth.feign.name:auth-server-parts}", fallback = AuthClientFallBack.class)
+@FeignClient(name = "${auth.feign.name:parts-auth-server}", fallback = AuthClientFallBack.class)
 public interface AuthClient {
 
 
@@ -58,4 +61,25 @@ public interface AuthClient {
      */
     @PostMapping("/menu/queryUrlsByRoleIds")
     ResultMessage<Set<String>> queryUrlsByRoleIds(@RequestBody AuthRolePlatformParam param);
+
+    /**
+     * 绑定社交账号
+     *
+     * @param accountId
+     * @param socialAccount
+     * @param type
+     * @return
+     */
+    @PutMapping("/social/bindSocialAccount")
+    ResultMessage<String> bindSocialAccount(@RequestParam(value = "accountId") Long accountId, @RequestParam(value = "socialAccount") String socialAccount, @RequestParam(value = "type") String type);
+
+    /**
+     * 根据社交账号查询用户信息
+     *
+     * @param socialAccount
+     * @param type
+     * @return
+     */
+    @GetMapping("/social/queryAccountBySocail")
+    ResultMessage<SysUserLoginInfoVO> queryAccountBySocail(@RequestParam(value = "socialAccount") String socialAccount, @RequestParam(value = "type") String type);
 }

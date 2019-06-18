@@ -3,10 +3,14 @@ package cn.com.xgit.gw.social;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.params.CookiePolicy;
+import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -29,6 +33,8 @@ public class HttpClientUtils {
     public static String doGet(String url) throws Exception {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(url);
+        RequestConfig defaultConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
+        httpGet.setConfig(defaultConfig);
         CloseableHttpResponse response = httpclient.execute(httpGet); //发送一个http请求
         //如果响应成功,解析响应结果
         if (response.getStatusLine().getStatusCode() == 200) {
@@ -42,6 +48,8 @@ public class HttpClientUtils {
     public static String doPost(String url, Map<String, Object> map) throws Exception {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
+        RequestConfig defaultConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
+        httpPost.setConfig(defaultConfig);
         //拼接参数
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
         for (Map.Entry<String, Object> en : map.entrySet()) {

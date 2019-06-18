@@ -6,8 +6,8 @@ public enum OAuthTypes {
     private String code;
 
     OAuthTypes(int i, String code) {
-        id = i;
-        code = code;
+        this.id = i;
+        this.code = code;
     }
 
     public int getId() {

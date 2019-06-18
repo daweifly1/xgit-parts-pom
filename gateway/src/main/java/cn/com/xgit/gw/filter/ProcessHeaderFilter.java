@@ -39,15 +39,17 @@ public class ProcessHeaderFilter extends ZuulFilter {
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (null != principal && principal instanceof CommonUserDetails) {
-            CommonUserDetails commonUserDetails = (CommonUserDetails) principal;
-            if (null == commonUserDetails || null == commonUserDetails.getId() || StringUtils.isBlank(commonUserDetails.getUsername())) {
-                return false;
+        if (null != SecurityContextHolder.getContext().getAuthentication()) {
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (null != principal && principal instanceof CommonUserDetails) {
+                CommonUserDetails commonUserDetails = (CommonUserDetails) principal;
+                if (null == commonUserDetails || null == commonUserDetails.getId() || StringUtils.isBlank(commonUserDetails.getUsername())) {
+                    return false;
+                }
+                ctx.addZuulRequestHeader(ZuulRequestHeader.USER_ID, commonUserDetails.getId() + "");
+                ctx.addZuulRequestHeader(ZuulRequestHeader.USER_NAME, commonUserDetails.getUsername());
+                ctx.addZuulRequestHeader(ZuulRequestHeader.REMOTE_IP, HttpUtil.getIpAddress(request));
             }
-            ctx.addZuulRequestHeader(ZuulRequestHeader.USER_ID, commonUserDetails.getId() + "");
-            ctx.addZuulRequestHeader(ZuulRequestHeader.USER_NAME, commonUserDetails.getUsername());
-            ctx.addZuulRequestHeader(ZuulRequestHeader.REMOTE_IP, HttpUtil.getIpAddress(request));
         }
         return null;
     }
