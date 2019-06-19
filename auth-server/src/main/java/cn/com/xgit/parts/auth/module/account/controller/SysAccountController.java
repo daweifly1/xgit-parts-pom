@@ -4,6 +4,7 @@ import cn.com.xgit.parts.auth.common.base.BasicController;
 import cn.com.xgit.parts.auth.exception.AuthException;
 import cn.com.xgit.parts.auth.exception.code.ErrorCode;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccount;
+import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
 import cn.com.xgit.parts.auth.module.account.service.SysAccountService;
 import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -74,6 +76,13 @@ public class SysAccountController extends BasicController {
         SysAccountVO ret = sysAccountService.queryAccountByIdOrLoginName(null, loginName, platformId);
         return ResultMessage(ret);
     }
+
+    @RequestMapping(value = {"/queryAccountByUserNameOrMobi"}, method = {RequestMethod.GET})
+    ResultMessage<SysUserLoginInfoVO> queryAccountByUserNameOrMobi(@RequestParam(value = "account") String account, @RequestParam(value = "platformId", required = false) Long platformId, @RequestParam(value = "dynamicPsw") Boolean dynamicPsw) {
+        SysUserLoginInfoVO ret = sysAccountService.queryAccountByUserNameOrMobi(account, platformId, dynamicPsw);
+        return ResultMessage(ret);
+    }
+
 
     @GetMapping("/queryAccountById")
     public ResultMessage<SysAccountVO> queryAccountById(@RequestParam(value = "userId") Long userId, @RequestParam(value = "platformId") Long platformId) {

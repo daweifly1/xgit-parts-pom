@@ -9,7 +9,7 @@ import cn.com.xgit.parts.auth.exception.code.ErrorCode;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccount;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccountRole;
 import cn.com.xgit.parts.auth.module.account.entity.SysPassword;
-import cn.com.xgit.parts.auth.module.account.mapper.SysAccountMapper;
+import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
 import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
 import cn.com.xgit.parts.auth.module.account.vo.SysPasswordVO;
@@ -17,19 +17,19 @@ import cn.com.xgit.parts.auth.module.menu.vo.SysRoleVO;
 import cn.com.xgit.parts.auth.module.role.entity.SysRole;
 import cn.com.xgit.parts.common.util.AccountValidatorUtil;
 import cn.com.xgit.parts.common.util.BeanUtil;
-import cn.com.xgit.parts.common.util.security.CryptoUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -41,7 +41,7 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
     private String defaultPsw;
 
     @Autowired
-    private SysAccountMapper sysAccountMapper;
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private SysPasswordService sysPasswordService;
@@ -114,14 +114,7 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
 
 
     private String cryptoPassword(String text, Long salt) {
-        try {
-            String orginalText = text + "_" + salt;
-            byte[] cypherBytes = CryptoUtil.encryptMD5(orginalText.getBytes());
-            String cypherText = new BigInteger(cypherBytes).toString(16);
-            return cypherText;
-        } catch (Exception e) {
-            throw new CommonException("系统异常，加密出错");
-        }
+        return passwordEncoder.encode(text);
     }
 
     public void updateLoginTime(SysAccount account, String ip, boolean pass) {
@@ -263,5 +256,39 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
             r.add(sysAccountRole);
         }
         return r;
+    }
+
+    public SysUserLoginInfoVO queryAccountByUserNameOrMobi(String account, Long platformId, Boolean dynamicPsw) {
+        SysAccount ddo = null;
+        SysAccount sysAccount = new SysAccount();
+        if (AccountValidatorUtil.isMobile(account)) {
+            sysAccount.setMobile(account);
+            List<SysAccount> ll = super.list(new QueryWrapper<>(sysAccount));
+            if (CollectionUtils.isNotEmpty(ll)) {
+                ddo = ll.get(0);
+            }
+        }
+        if (null == ddo) {
+            sysAccount = new SysAccount();
+            sysAccount.setUsername(account);
+            List<SysAccount> ll = super.list(new QueryWrapper<>(sysAccount));
+            if (CollectionUtils.isNotEmpty(ll)) {
+                ddo = ll.get(0);
+            }
+        }
+        if (null == ddo) {
+            return null;
+        }
+        SysUserLoginInfoVO sysUserLoginInfoVO = new SysUserLoginInfoVO();
+        sysUserLoginInfoVO.setId(ddo.getId());
+        sysUserLoginInfoVO.setUsername(ddo.getUsername());
+        sysUserLoginInfoVO.setName(ddo.getName());
+        if (dynamicPsw) {
+            sysUserLoginInfoVO.setPassword(queryDbNomalPsw(ddo.getId()));
+        } else {
+            sysUserLoginInfoVO.setPassword(queryDbNomalPsw(ddo.getId()));
+        }
+        sysUserLoginInfoVO.setRoleIds(new HashSet<>(sysAccountRoleService.querRoleIdsByUserId(null, ddo.getId())));
+        return sysUserLoginInfoVO;
     }
 }

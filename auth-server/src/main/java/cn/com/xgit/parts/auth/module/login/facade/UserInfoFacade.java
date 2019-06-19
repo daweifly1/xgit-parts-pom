@@ -12,12 +12,12 @@ import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
 import cn.com.xgit.parts.auth.module.account.service.SysAccountRoleService;
 import cn.com.xgit.parts.auth.module.account.service.SysAccountService;
 import cn.com.xgit.parts.auth.module.account.vo.SysPasswordVO;
-import cn.com.xgit.parts.common.result.ResultMessage;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +51,9 @@ public class UserInfoFacade {
     //手机动态密码保存缓存前缀
     @Value("${password.dynamicPswPrefix:30000}")
     private Long dynamicPswTime;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     DefaultKaptcha defaultKaptcha;
@@ -134,7 +137,7 @@ public class UserInfoFacade {
     private boolean checkeLoginPassword(Long userId, UserLoginVO userLoginVO) {
         if (PasswordType.DYNAMIC.getType() == userLoginVO.getPswType()) {
             String psw = redisClient.get(dynamicPswPrefix + userLoginVO.getUsername());
-            return StringUtils.isNoneBlank(psw) && psw.equals(userLoginVO.getPassword());
+            return StringUtils.isNoneBlank(psw) && passwordEncoder.matches(psw, userLoginVO.getPassword());
         }
         return sysAccountService.checkLoginPsw(userId, userLoginVO.getPassword());
     }
@@ -177,7 +180,7 @@ public class UserInfoFacade {
         String value = getRandomString(6);
         //TODO 发送短信
         sendMsg(value, userLoginVO.getUsername(), true);
-        redisClient.set(dynamicPswPrefix + userLoginVO.getUsername(), value, dynamicPswTime);
+        redisClient.set(dynamicPswPrefix + userLoginVO.getUsername(), passwordEncoder.encode(value), dynamicPswTime);
         return true;
     }
 
@@ -193,13 +196,13 @@ public class UserInfoFacade {
         String value = getRandomString(6);
         //TODO 发送email
         sendMsg(value, userLoginVO.getUsername(), false);
-        redisClient.set(dynamicPswPrefix + userLoginVO.getUsername(), value, dynamicPswTime);
+        redisClient.set(dynamicPswPrefix + userLoginVO.getUsername(), passwordEncoder.encode(value), dynamicPswTime);
         return true;
     }
 
     //发送短信或者email
     private void sendMsg(String value, String username, boolean mobi) {
-        log.info(value+"      "+username+"  "+mobi);
+        log.info(value + "      " + username + "  " + mobi);
         SysAccount account = sysAccountService.queryByLoginNameOrMobi(username);
         if (null == account) {
             throw new CommonException("账号错误");

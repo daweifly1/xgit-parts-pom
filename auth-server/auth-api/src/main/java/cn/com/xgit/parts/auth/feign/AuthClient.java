@@ -33,6 +33,11 @@ public interface AuthClient {
     @RequestMapping(value = {"/sysAccount/queryAccountByLoginName"}, method = {RequestMethod.GET})
     ResultMessage<SysAccountVO> queryAccountByLoginName(@RequestParam(value = "loginName") String loginName, @RequestParam(value = "platformId", required = false) Long platformId);
 
+
+    @RequestMapping(value = {"/sysAccount/queryAccountByUserNameOrMobi"}, method = {RequestMethod.GET})
+    ResultMessage<SysUserLoginInfoVO> queryAccountByUserNameOrMobi(@RequestParam(value = "account") String account, @RequestParam(value = "platformId", required = false) Long platformId,@RequestParam(value = "dynamicPsw") Boolean dynamicPsw);
+
+
     /**
      * 添加用户信息，若不指定密码（默认123456），若不指定角色无角色（角色赋值仅需要id即可）
      *

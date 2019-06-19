@@ -49,6 +49,12 @@ public class AuthClientFallBack implements AuthClient {
     }
 
     @Override
+    public ResultMessage<SysUserLoginInfoVO> queryAccountByUserNameOrMobi(String account, Long platformId, Boolean dynamicPsw) {
+        log.warn("queryAccountByUserName 方法熔断，username：{}，platformId:{}", account, platformId);
+        return ResultMessage.error("服务异常，请稍后重试");
+    }
+
+    @Override
     public ResultMessage<String> addUser(UserRegistVO userRegistVO) {
         log.warn("addUser 方法熔断，userRegistVO：{}", userRegistVO);
         return ResultMessage.error("服务异常，请稍后重试");

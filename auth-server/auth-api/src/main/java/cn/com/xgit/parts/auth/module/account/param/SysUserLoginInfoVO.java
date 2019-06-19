@@ -17,6 +17,9 @@ public class SysUserLoginInfoVO {
     //姓名
     private String name;
 
+    //密碼
+    private String password;
+
     Set<Long> roleIds;
 
 }
