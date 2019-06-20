@@ -1,8 +1,11 @@
 package cn.com.xgit.gw.authorization.handler;
 
+import cn.com.xgit.gw.authorization.module.CustomsSecurityProperties;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import cn.com.xgit.parts.common.util.fastjson.FastJsonUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -19,10 +22,17 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
 
     private static final long serialVersionUID = -8970718410437077606L;
 
+    @Autowired
+    private CustomsSecurityProperties customsSecurityProperties;
+
     @Override
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
+        if (StringUtils.isNoneBlank(customsSecurityProperties.getNoLoginRedirectUrl())) {
+            response.sendRedirect(customsSecurityProperties.getNoLoginRedirectUrl());
+            return;
+        }
         response.setStatus(200);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
