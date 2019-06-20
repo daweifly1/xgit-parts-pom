@@ -27,7 +27,9 @@ public class JwtLogoutSuccessHandler implements LogoutSuccessHandler {
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         tokenAuthenticationHandler.rmAfterLoginOut(response, request);
         if (StringUtils.isNotBlank(securityProperties.getSignOutSuccessUrl())) {
-            response.sendRedirect(securityProperties.getSignOutSuccessUrl());
+            String oUrl = request.getRequestURI();
+            String url = org.apache.commons.lang3.StringUtils.isBlank(oUrl) ? securityProperties.getSignOutSuccessUrl() : securityProperties.getNoLoginRedirectUrl() + "oUrl=" + oUrl;
+            response.sendRedirect(url);
             return;
         }
         response.setStatus(200);

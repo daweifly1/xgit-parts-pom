@@ -30,7 +30,9 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
         if (StringUtils.isNoneBlank(customsSecurityProperties.getNoLoginRedirectUrl())) {
-            response.sendRedirect(customsSecurityProperties.getNoLoginRedirectUrl());
+            String oUrl = request.getRequestURI();
+            String url = StringUtils.isBlank(oUrl) ? customsSecurityProperties.getNoLoginRedirectUrl() : customsSecurityProperties.getNoLoginRedirectUrl() + "oUrl=" + oUrl;
+            response.sendRedirect(url);
             return;
         }
         response.setStatus(200);

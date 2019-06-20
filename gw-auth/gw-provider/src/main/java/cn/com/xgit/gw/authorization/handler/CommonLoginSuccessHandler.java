@@ -36,9 +36,16 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
             tokenAuthenticationHandler.saveAfterLogin(principal, response);
 
             if (StringUtils.isNotBlank(customsSecurityProperties.getLoginSuccRedirectUrl())) {
+                String oUrl = request.getParameter("oUrl");
+
                 response.setStatus(302);
+                if (StringUtils.isNotBlank(oUrl)) {
+                    response.sendRedirect(oUrl);
+                    return;
+                }
                 response.sendRedirect(customsSecurityProperties.getLoginSuccRedirectUrl());
                 return;
+
             }
             response.setContentType("application/json; charset=utf-8");
             String body = FastJsonUtil.toJSONString(ResultMessage.success(200, "登录成功"));
