@@ -4,7 +4,10 @@ package cn.com.xgit.gw.authorization.config;
 import cn.com.xgit.gw.authorization.filter.CommonUsernamePasswordFilter;
 import cn.com.xgit.gw.authorization.filter.PhoneLoginAuthenticationFilter;
 import cn.com.xgit.gw.authorization.filter.QrLoginAuthenticationFilter;
-import cn.com.xgit.gw.authorization.handler.CommonLoginAuthSuccessHandler;
+import cn.com.xgit.gw.authorization.filter.jwt.JwtAuthenticationTokenFilter;
+import cn.com.xgit.gw.authorization.handler.CommonLoginSuccessHandler;
+import cn.com.xgit.gw.authorization.handler.JwtAuthenticationEntryPoint;
+import cn.com.xgit.gw.authorization.handler.JwtLogoutSuccessHandler;
 import cn.com.xgit.gw.authorization.provider.PhoneAuthenticationProvider;
 import cn.com.xgit.gw.authorization.provider.QrAuthenticationProvider;
 import cn.com.xgit.gw.authorization.userdetails.CommonUserDetailService;
@@ -24,8 +27,12 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+
+import javax.annotation.Resource;
 
 @Slf4j
 @Configuration
@@ -42,6 +49,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private QrUserDetailService qrUserDetailService;
 
+    @Autowired
+    private JwtAuthenticationEntryPoint unauthorizedHandler;
+
+    @Autowired
+    private CommonLoginSuccessHandler commonLoginSuccessHandler;
+
+    @Resource(name = "restAuthenticationAccessDeniedHandler")
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private JwtLogoutSuccessHandler logoutSuccessHandler;
+
+    @Autowired
+    private JwtAuthenticationTokenFilter authenticationTokenFilter;
+
 
     @Override
     @Bean
@@ -51,27 +73,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .addFilterAt(getUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(getPhoneLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(getQrLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                // 配置登陆页/login并允许访问
-                .formLogin().permitAll()
-                .and()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS).permitAll()
-                .antMatchers("/oauth/**").permitAll()
-                .antMatchers("/login").permitAll()
+        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler).and()
+                // 由于使用的是JWT，我们这里不需要csrf
+                .csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                // 基于token，所以不需要session
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
+        //可以配置读取
+        String[] permitUrls = {"/oauth/**", "/login","/phoneLogin", "/api/v1/auth", "/api/v1/signout", "/error/**", "/api/**"};
+        http.authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll().antMatchers(permitUrls).permitAll()
+                .and().formLogin().loginProcessingUrl("/login")
+//                .and().openidLogin().loginProcessingUrl("/openIdLogin").successHandler(commonLoginSuccessHandler)
+//                .and().oauth2Login().loginProcessingUrl("/authLogin").successHandler(commonLoginSuccessHandler)
                 // 登出页
-                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/backReferer")
+                .and().logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler)
                 // 其余所有请求全部需要鉴权认证
                 .and().authorizeRequests().anyRequest().authenticated()
-                .and()
-                .authorizeRequests().anyRequest().access("@rbacService.hasPermission(request, authentication)")
-                // 由于使用的是JWT，我们这里不需要csrf
-                .and().csrf().disable();
+                .and().authorizeRequests().anyRequest().access("@rbacService.hasPermission(request, authentication)");
+        // 禁用缓存
+        http.headers().cacheControl();
 
-
+        // 添加JWT filter
+        http.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(getUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(getPhoneLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(getQrLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
 
@@ -97,7 +123,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers("/favicon.ico")
-                .antMatchers("/connect/**")
+                .antMatchers("/connect/**", "/actuator/**")
                 .antMatchers("/swagger-ui.html")
                 .antMatchers("/webjars/**")
                 .antMatchers("/swagger-resources/**")
@@ -129,6 +155,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setUserDetailsService(phoneUserDetailService);
         // 禁止隐藏用户未找到异常
         provider.setHideUserNotFoundExceptions(false);
+        // 使用BCrypt进行密码的hash
+        provider.setPasswordEncoder(myEncoder());
         return provider;
     }
 
@@ -156,7 +184,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         } catch (Exception e) {
             log.error("", e);
         }
-        filter.setAuthenticationSuccessHandler(new CommonLoginAuthSuccessHandler());
+        filter.setAuthenticationSuccessHandler(commonLoginSuccessHandler);
         filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error"));
         return filter;
     }
@@ -169,7 +197,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         } catch (Exception e) {
             log.error("", e);
         }
-        filter.setAuthenticationSuccessHandler(new CommonLoginAuthSuccessHandler());
+        filter.setAuthenticationSuccessHandler(commonLoginSuccessHandler);
         filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error"));
         return filter;
     }
@@ -182,7 +210,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         } catch (Exception e) {
             log.error("", e);
         }
-        filter.setAuthenticationSuccessHandler(new CommonLoginAuthSuccessHandler());
+        filter.setAuthenticationSuccessHandler(commonLoginSuccessHandler);
         filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error"));
         return filter;
     }

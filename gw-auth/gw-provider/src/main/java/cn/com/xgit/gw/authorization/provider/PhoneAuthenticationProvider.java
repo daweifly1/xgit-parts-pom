@@ -8,6 +8,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * 手机验证码登陆
@@ -16,17 +17,19 @@ public class PhoneAuthenticationProvider extends MyAbstractUserDetailsAuthentica
 
     private UserDetailsService userDetailsService;
 
-    @Override
-    protected void additionalAuthenticationChecks(UserDetails var1, Authentication authentication) throws AuthenticationException {
 
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    protected void additionalAuthenticationChecks(UserDetails userDetails, Authentication authentication) throws AuthenticationException {
         if (authentication.getCredentials() == null) {
             this.logger.debug("Authentication failed: no credentials provided");
             throw new BadCredentialsException(this.messages.getMessage("PhoneAuthenticationProvider.badCredentials", "Bad credentials"));
         } else {
             String presentedPassword = authentication.getCredentials().toString();
 
-            // 验证码验证，调用公共服务查询 key 为authentication.getPrincipal()的value， 并判断其与验证码是否匹配
-            if (!"1000".equals(presentedPassword)) {
+            if (!passwordEncoder.matches(presentedPassword, userDetails.getPassword())) {
+                this.logger.debug("Authentication failed: verifyCode does not match stored value");
                 this.logger.debug("Authentication failed: verifyCode does not match stored value");
                 throw new BadCredentialsException(this.messages.getMessage("PhoneAuthenticationProvider.badCredentials", "Bad verifyCode"));
             }
@@ -70,5 +73,9 @@ public class PhoneAuthenticationProvider extends MyAbstractUserDetailsAuthentica
 
     public void setUserDetailsService(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
+    }
+
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 }

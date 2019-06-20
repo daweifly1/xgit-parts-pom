@@ -33,6 +33,9 @@ public class CustomsSecurityProperties {
     //退出url集合
     private String[] loginOutUrls;
 
+    //登录成功跳转页面
+    private String loginSuccRedirectUrl;
+
     private String redirectErrorPage403;
 
     private String redirectErrorPage404;

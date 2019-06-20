@@ -3,14 +3,17 @@ package cn.com.xgit.gw.authorization.userdetails;
 import cn.com.xgit.parts.auth.feign.AuthClient;
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.common.result.ResultMessage;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
  * Created by fp295 on 2018/11/25.
  */
 @Service
+@Data
 public class PhoneUserDetailService extends BaseUserDetailService {
 
     @Autowired

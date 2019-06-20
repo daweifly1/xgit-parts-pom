@@ -58,17 +58,17 @@
     <div class="column transition hidden">
         <form id="form" class="ui large form" action="login" method="post" style="border: 0">
             <div class="ui stacked segment">
-                <h3 class="title"> 授权中心 </h3>
+                <h3 class="title"> 认证中心 </h3>
                 <div class="field item">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
-                        <input id="username" name="username" placeholder="用户名" value="test">
+                        <input id="username" name="username" placeholder="用户名" value="admin">
                     </div>
                 </div>
                 <div class="field item" style="height: 80px">
                     <div class="ui left icon input">
                         <i class="lock icon"></i>
-                        <input type="password" id="password" name="password" placeholder="密码" value="123456">
+                        <input type="password" id="password" name="password" placeholder="密码" value="admin">
                     </div>
                     <div class="other">忘记密码？试试 &nbsp;<a href="javascript:void(0);" onclick="change_yzm()"><i class="mobile icon"></i>验证码登陆</a>|<a><i class="qrcode icon"></i>扫码登陆</a></div>
                 </div>
@@ -80,7 +80,7 @@
 
         <form id="form1" class="ui large form transition hidden" action="phoneLogin" method="post" style="border: 0;">
             <div class="ui stacked segment">
-                <h3 class="title"> 授权中心 </h3>
+                <h3 class="title"> 认证中心 </h3>
                 <div class="field item">
                     <div class="ui left icon input">
                         <i class="mobile icon"></i>
@@ -90,7 +90,7 @@
                 <div class="field item" style="height: 80px">
                     <div class="ui right action left icon input">
                         <i class="lock icon"></i>
-                        <input type="text" id="verifyCode" name="verifyCode" placeholder="验证码" value="1000">
+                        <input type="text" id="verifyCode" name="verifyCode" placeholder="验证码" value="admin">
                         <button id="send_btn" type="button" class="ui basic active button" onclick="send_yzm()">点击获取验证码</button>
                     </div>
                     <div class="other">返回 &nbsp;<a href="javascript:void(0);" onclick="change_default()"><i class="user icon"></i>账号密码</a>| <a><i class="qrcode icon"></i>扫码登陆</a></div>
@@ -181,11 +181,11 @@
                             },
                             {
                                 type   : 'minLength[4]',
-                                prompt : '请输入4位验证码'
+                                prompt : '请输入4-8位验证码'
                             },
                             {
-                                type   : 'maxLength[4]',
-                                prompt : '请输入4位验证码'
+                                type   : 'maxLength[8]',
+                                prompt : '请输入4-8位验证码'
                             }
                         ]
                     }

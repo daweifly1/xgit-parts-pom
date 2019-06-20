@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <link rel="stylesheet" href="${request.contextPath}/webjars/Semantic-UI/2.2.10/semantic.min.css"/>
+    <link rel="stylesheet" href="/webjars/Semantic-UI/2.2.10/semantic.min.css"/>
 </head>
 <style type="text/css">
     body {
@@ -32,7 +32,7 @@
     }
 </style>
 <body>
-<form id="form" action="${request.contextPath}/oauth/authorize" method='post'>
+<form id="form" action="/oauth/authorize" method='post'>
     <input id="approval" name='user_oauth_approval' value='false' type='hidden'/>
     <input id="approveOrDeny" name='authorize' value='Authorize' type='hidden'/>
     <input id="scope" name='scope.user' value='true' type='hidden'/>
@@ -53,8 +53,8 @@
     </div>
 </div>
 </body>
-<script src="${request.contextPath}/webjars/jquery/3.2.1/jquery.min.js" ></script>
-<script src="${request.contextPath}/webjars/Semantic-UI/2.2.10/semantic.min.js" ></script>
+<script src="/webjars/jquery/3.2.1/jquery.min.js" ></script>
+<script src="/webjars/Semantic-UI/2.2.10/semantic.min.js" ></script>
 <script>
     $("#modal").modal({closable: false}).modal('show')
     $("#ok").click(function () {
