@@ -1,7 +1,6 @@
 package cn.com.xgit.gw.authorization.userdetails;
 
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service

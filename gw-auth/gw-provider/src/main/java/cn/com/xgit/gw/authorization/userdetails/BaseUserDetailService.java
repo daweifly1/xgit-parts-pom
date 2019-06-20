@@ -6,9 +6,12 @@ import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.Arrays;
 
 
 @Slf4j
@@ -26,9 +29,15 @@ public abstract class BaseUserDetailService implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("找不到该用户，用户名：" + username);
         }
+        GrantedAuthority au = new GrantedAuthority() {
+            @Override
+            public String getAuthority() {
+                return "common";
+            }
+        };
         // 返回带有用户权限信息的User
         org.springframework.security.core.userdetails.User user = new org.springframework.security.core.userdetails.User(baseUser.getUsername(),
-                baseUser.getPassword(), true, true, true, true, null);
+                baseUser.getPassword(), true, true, true, true, Arrays.asList(au));
         return new CommonUserDetails(baseUser, user);
     }
 

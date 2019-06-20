@@ -16,11 +16,11 @@ import javax.servlet.http.HttpServletResponse;
  * Created by fp295 on 2018/6/16.
  * 自定义登陆filter，新增登陆方式：验证码、二维码扫码、账号密码；
  * 验证码登陆：
- *       post: /login?type=phone&phone=13000000000&verifyCode=1000
+ * post: /login?type=phone&phone=13000000000&verifyCode=1000
  * 二维码登陆：
- *       post: /login?type=qr&qrCode=token
+ * post: /login?type=qr&qrCode=token
  * 账号密码登陆：
- *       post: /login?username=username&password=password
+ * post: /login?username=username&password=password
  * 此filter 为生成自定义的 MyAuthenticationToken
  */
 public class CommonUsernamePasswordFilter extends UsernamePasswordAuthenticationFilter {
@@ -39,7 +39,7 @@ public class CommonUsernamePasswordFilter extends UsernamePasswordAuthentication
     private static final String SPRING_SECURITY_RESTFUL_PHONE_KEY = "phone";
     private static final String SPRING_SECURITY_RESTFUL_VERIFY_CODE_KEY = "verifyCode";
     private static final String SPRING_SECURITY_RESTFUL_QR_CODE_KEY = "qrCode";
-    
+
     private static final String SPRING_SECURITY_RESTFUL_LOGIN_URL = "/login";
     private boolean postOnly = true;
 
@@ -62,7 +62,7 @@ public class CommonUsernamePasswordFilter extends UsernamePasswordAuthentication
         String credentials;
 
         // 手机验证码登陆
-        if(SPRING_SECURITY_RESTFUL_TYPE_PHONE.equals(type)){
+        if (SPRING_SECURITY_RESTFUL_TYPE_PHONE.equals(type)) {
             principal = obtainParameter(request, SPRING_SECURITY_RESTFUL_PHONE_KEY);
             credentials = obtainParameter(request, SPRING_SECURITY_RESTFUL_VERIFY_CODE_KEY);
 
@@ -70,7 +70,7 @@ public class CommonUsernamePasswordFilter extends UsernamePasswordAuthentication
             authRequest = new PhoneAuthenticationToken(principal, credentials);
         }
         // 二维码扫码登陆
-        else if(SPRING_SECURITY_RESTFUL_TYPE_QR.equals(type)){
+        else if (SPRING_SECURITY_RESTFUL_TYPE_QR.equals(type)) {
             principal = obtainParameter(request, SPRING_SECURITY_RESTFUL_QR_CODE_KEY);
             credentials = null;
             authRequest = new QrAuthenticationToken(principal, credentials);
@@ -84,8 +84,6 @@ public class CommonUsernamePasswordFilter extends UsernamePasswordAuthentication
             authRequest = new UsernamePasswordAuthenticationToken(principal, credentials);
 
         }
-
-
         // Allow subclasses to set the "details" property
         setDetails(request, authRequest);
         return this.getAuthenticationManager().authenticate(authRequest);
@@ -97,7 +95,7 @@ public class CommonUsernamePasswordFilter extends UsernamePasswordAuthentication
     }
 
     private String obtainParameter(HttpServletRequest request, String parameter) {
-        String result =  request.getParameter(parameter);
+        String result = request.getParameter(parameter);
         return result == null ? "" : result;
     }
 }

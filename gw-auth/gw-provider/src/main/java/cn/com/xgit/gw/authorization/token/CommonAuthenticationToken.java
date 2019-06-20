@@ -19,7 +19,6 @@ public class CommonAuthenticationToken extends AbstractAuthenticationToken {
      * This constructor can be safely used by any code that wishes to create a
      * <code>UsernamePasswordAuthenticationToken</code>, as the {@link
      * #isAuthenticated()} will return <code>false</code>.
-     *
      */
     public CommonAuthenticationToken(Object principal, Object credentials) {
         super(null);
@@ -57,7 +56,7 @@ public class CommonAuthenticationToken extends AbstractAuthenticationToken {
 
 
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-        if(isAuthenticated) {
+        if (isAuthenticated) {
             throw new IllegalArgumentException("Cannot set this token to trusted - use constructor which takes a GrantedAuthority list instead");
         } else {
             super.setAuthenticated(false);
