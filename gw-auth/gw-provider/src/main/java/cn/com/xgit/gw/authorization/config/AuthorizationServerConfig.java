@@ -1,3 +1,28 @@
+package cn.com.xgit.gw.authorization.config;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+
+@Configuration
+@EnableAuthorizationServer
+public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        clients.inMemory()
+                .withClient("fbed1d1b4b1449daa4bc49397cbe2350")
+                .authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
+                .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
+                .scopes("read", "write")
+                .secret("fbed1d1b4b1449daa4bc49397cbe2350")
+                .accessTokenValiditySeconds(120)//Access token is only valid for 2 minutes.
+                .refreshTokenValiditySeconds(600)//Refresh token is only valid for 10 minutes.
+                .redirectUris("http://127.0.0.1:9000/session");
+    }
+}
+
+
 //package cn.com.xgit.gw.authorization.config;
 //
 //
