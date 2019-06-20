@@ -8,12 +8,14 @@ import cn.com.xgit.gw.authorization.filter.jwt.JwtAuthenticationTokenFilter;
 import cn.com.xgit.gw.authorization.handler.CommonLoginSuccessHandler;
 import cn.com.xgit.gw.authorization.handler.JwtAuthenticationEntryPoint;
 import cn.com.xgit.gw.authorization.handler.JwtLogoutSuccessHandler;
+import cn.com.xgit.gw.authorization.module.CustomsSecurityProperties;
 import cn.com.xgit.gw.authorization.provider.PhoneAuthenticationProvider;
 import cn.com.xgit.gw.authorization.provider.QrAuthenticationProvider;
 import cn.com.xgit.gw.authorization.userdetails.CommonUserDetailService;
 import cn.com.xgit.gw.authorization.userdetails.PhoneUserDetailService;
 import cn.com.xgit.gw.authorization.userdetails.QrUserDetailService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +32,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import javax.annotation.Resource;
 
@@ -65,6 +66,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationTokenFilter authenticationTokenFilter;
 
 
+    @Autowired
+    private CustomsSecurityProperties customsSecurityProperties;
+
+
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -80,16 +85,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 基于token，所以不需要session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
         //可以配置读取
-        String[] permitUrls = {"/oauth/**", "/login","/phoneLogin", "/api/v1/auth", "/api/v1/signout", "/error/**", "/api/**"};
+        String[] permitUrls = {"/login", "/phoneLogin", "/api/v1/auth", "/api/v1/signout", "/error/**", "/api/**"};
+        if (null != customsSecurityProperties.getPermitAllUrls() && customsSecurityProperties.getPermitAllUrls().length > 0) {
+            permitUrls = customsSecurityProperties.getPermitAllUrls();
+        }
+        //登陆页url
+        String signInPage = StringUtils.isBlank(customsSecurityProperties.getSignInPage()) ? "/login" : customsSecurityProperties.getSignInPage();
+        //退出的链接
+        String signOutPage = StringUtils.isBlank(customsSecurityProperties.getSignOutPage()) ? "/logout" : customsSecurityProperties.getSignOutPage();
         http.authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll().antMatchers(permitUrls).permitAll()
-                .and().formLogin().loginProcessingUrl("/login")
-//                .and().openidLogin().loginProcessingUrl("/openIdLogin").successHandler(commonLoginSuccessHandler)
-//                .and().oauth2Login().loginProcessingUrl("/authLogin").successHandler(commonLoginSuccessHandler)
+                .anyRequest().authenticated()
+                .and().formLogin().loginProcessingUrl(signInPage).permitAll()
+//                .and().openidLogin().loginProcessingUrl("/openIdLogin").permitAll().successHandler(commonLoginSuccessHandler)
+//                .and().oauth2Login().loginProcessingUrl("/authLogin").permitAll().successHandler(commonLoginSuccessHandler)
                 // 登出页
-                .and().logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler)
-                // 其余所有请求全部需要鉴权认证
-                .and().authorizeRequests().anyRequest().authenticated()
-                .and().authorizeRequests().anyRequest().access("@rbacService.hasPermission(request, authentication)");
+                .and().logout().logoutUrl(signOutPage).permitAll().logoutSuccessHandler(logoutSuccessHandler)
+                .and().authorizeRequests()
+                .anyRequest().access("@rbacService.hasPermission(request, authentication)");
         // 禁用缓存
         http.headers().cacheControl();
 

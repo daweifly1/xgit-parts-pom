@@ -11,30 +11,29 @@ import org.springframework.stereotype.Component;
 @Data
 @RefreshScope
 public class CustomsSecurityProperties {
-    //跳转的url
-    private String destinationUrl;
-    //登陆页url
-    private String signInPage;
-
-    //退出的链接
-    private String signOutPage;
-    //退出后的链接
-    private String signOutSuccessUrl;
     //jwt创建者信息
     private String claimKeyCreated;
-
     //jwt秘钥
     private String claimKeySecret;
     //jwt超时时间
     private Long jwtExpiration;
 
-    //登陆url集合
-    private String[] loginUrls;
-    //退出url集合
-    private String[] loginOutUrls;
+    //登陆页url
+    private String signInPage;
+
+    //退出的链接
+    private String signOutPage;
+
+    //不要认证就可以访问的链接
+    private String[] permitAllUrls;
+    //认证后就可以访问的链接
+    private String[] permitAccessUrls;
 
     //登录成功跳转页面
     private String loginSuccRedirectUrl;
+
+    //退出后的链接
+    private String signOutSuccessUrl;
 
     private String redirectErrorPage403;
 

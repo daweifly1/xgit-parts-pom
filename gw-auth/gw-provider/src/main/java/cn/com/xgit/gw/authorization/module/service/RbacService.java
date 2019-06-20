@@ -4,6 +4,8 @@
 package cn.com.xgit.gw.authorization.module.service;
 
 import cn.com.xgit.gw.api.beans.CommonUserDetails;
+import cn.com.xgit.gw.authorization.module.CustomsSecurityProperties;
+import cn.com.xgit.gw.authorization.module.beans.RequestUrlSet;
 import cn.com.xgit.parts.auth.feign.AuthClient;
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.auth.module.role.param.AuthRolePlatformParam;
@@ -18,8 +20,10 @@ import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,6 +35,9 @@ public class RbacService {
 
     @Autowired
     private AuthClient authClient;
+
+    @Autowired
+    private CustomsSecurityProperties customsSecurityProperties;
 
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -46,12 +53,23 @@ public class RbacService {
             if ("admin".equals(baseUser.getUsername())) {
                 return true;
             }
+
+            if (null != customsSecurityProperties.getPermitAccessUrls() && customsSecurityProperties.getPermitAccessUrls().length > 0) {
+                int exLength = customsSecurityProperties.getPermitAccessUrls().length;
+                Set<String> set = new HashSet<>(exLength);
+                set.addAll(Arrays.asList(customsSecurityProperties.getPermitAccessUrls()));
+                if (set.contains(request.getRequestURI())) {
+                    return true;
+                }
+            }
             if (CollectionUtils.isEmpty(baseUser.getRoleIds())) {
                 return false;
             }
-            //鉴权时候，若能根据当前平台过滤掉一部分非当前平台的角色url
-            Set<String> urls = getUrlsByRoles(baseUser.getRoleIds(), getPlatformId(request));
-            for (String url : urls) {
+            RequestUrlSet rSet = getRequestUrlSet(baseUser.getRoleIds(), getPlatformId(request));
+            if (rSet.getUrls().contains(request.getRequestURI())) {
+                return true;
+            }
+            for (String url : rSet.getMatchUrls()) {
                 if (antPathMatcher.match(url, request.getRequestURI())) {
                     return true;
                 }
@@ -85,6 +103,27 @@ public class RbacService {
         }
     }
 
+    /**
+     * 角色对应的权限集合可以考虑cach
+     * @param roleIds
+     * @param platformId
+     * @return
+     */
+    private RequestUrlSet getRequestUrlSet(Set<Long> roleIds, Long platformId) {
+        RequestUrlSet result = new RequestUrlSet();
+        Set<String> set = getUrlsByRoles(roleIds, platformId);
+        result.setMatchUrls(new HashSet<>(set.size()));
+        result.setUrls(new HashSet<>(set.size()));
+        for (String s : set) {
+            if (s.contains("*")) {
+                result.getMatchUrls().add(s);
+            } else {
+                result.getUrls().add(s);
+            }
+        }
+        return result;
+    }
+
     private Set<String> getUrlsByRoles(Set<Long> roleIds, Long platformId) {
         List<Long> roleList = new ArrayList<>(roleIds);
         Collections.sort(roleList, new Comparator<Long>() {
@@ -103,6 +142,4 @@ public class RbacService {
         }
         return Sets.newHashSet();
     }
-
-
 }
