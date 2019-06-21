@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.util.Enumeration;
 
 @Slf4j
 @Component
@@ -30,8 +31,8 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
         if (StringUtils.isNoneBlank(customsSecurityProperties.getNoLoginRedirectUrl())) {
-            String oUrl = request.getRequestURI();
-            String url = StringUtils.isBlank(oUrl) ? customsSecurityProperties.getNoLoginRedirectUrl() : customsSecurityProperties.getNoLoginRedirectUrl() + "oUrl=" + oUrl;
+            String oUrl = request.getRequestURI() + showParams(request);
+            String url = StringUtils.isBlank(oUrl) ? customsSecurityProperties.getNoLoginRedirectUrl() : customsSecurityProperties.getNoLoginRedirectUrl() + "?oUrl=" + oUrl;
             response.sendRedirect(url);
             return;
         }
@@ -42,5 +43,26 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
         String body = FastJsonUtil.toJSONString(ResultMessage.error(403, authException.getMessage()));
         printWriter.write(body);
         printWriter.flush();
+    }
+
+    public String showParams(HttpServletRequest request) {
+        StringBuilder param = new StringBuilder();
+        boolean first = true;
+        Enumeration paramNames = request.getParameterNames();
+        while (paramNames.hasMoreElements()) {
+            String paramName = (String) paramNames.nextElement();
+            String[] paramValues = request.getParameterValues(paramName);
+            if (paramValues.length > 0) {
+                String paramValue = paramValues[0];
+                if (paramValue.length() != 0) {
+                    if (first) {
+                        param.append("&").append(paramName).append("=").append(paramValue);
+                    } else {
+                        param.append("&").append(paramName).append("=").append(paramValue);
+                    }
+                }
+            }
+        }
+        return param.toString();
     }
 }

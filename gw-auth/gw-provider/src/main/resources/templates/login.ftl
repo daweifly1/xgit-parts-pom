@@ -56,7 +56,7 @@
 <body>
 <div class="ui middle aligned center aligned grid">
     <div class="column transition hidden">
-        <form id="form" class="ui large form" action="login" method="post" style="border: 0">
+        <form id="form" class="ui large form"  method="post" style="border: 0">
             <div class="ui stacked segment">
                 <h3 class="title"> 认证中心 </h3>
                 <div class="field item">
@@ -194,14 +194,16 @@
     ;
     $("#submit").click(function () {
         if ($("#username").val() && $("#password").val()) {
-            $("#form").submit();
+console.log("              ooooooooo              "+location.search);
+            $("#form").action("login"+location.search).submit();
         }
     })
     $("#submit1").click(function () {
         if ($("#phone").val() && $("#verifyCode").val()) {
-            $("#form1").submit();
+            $("#form1").action("phoneLogin"+location.search).submit();
         }
     })
+
     /**
      * 账号和验证码切换，点击过快可能渲染出错，加锁
      * @type {boolean}

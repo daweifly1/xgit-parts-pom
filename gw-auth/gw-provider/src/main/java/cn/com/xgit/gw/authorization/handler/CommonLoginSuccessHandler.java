@@ -34,18 +34,15 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         if (null != SecurityContextHolder.getContext() && null != SecurityContextHolder.getContext().getAuthentication()) {
             CommonUserDetails principal = (CommonUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             tokenAuthenticationHandler.saveAfterLogin(principal, response);
-
             if (StringUtils.isNotBlank(customsSecurityProperties.getLoginSuccRedirectUrl())) {
                 String oUrl = request.getParameter("oUrl");
-
                 response.setStatus(302);
                 if (StringUtils.isNotBlank(oUrl)) {
-                    response.sendRedirect(oUrl);
+                    response.sendRedirect(oUrl + showParams(request));
                     return;
                 }
                 response.sendRedirect(customsSecurityProperties.getLoginSuccRedirectUrl());
                 return;
-
             }
             response.setContentType("application/json; charset=utf-8");
             String body = FastJsonUtil.toJSONString(ResultMessage.success(200, "登录成功"));
@@ -57,6 +54,30 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
             printWriter.write(body);
             printWriter.flush();
         }
+    }
+
+    /**
+     * code 授权模式参数
+     *
+     * @param request
+     * @return
+     */
+    public String showParams(HttpServletRequest request) {
+        StringBuilder param = new StringBuilder();
+        if (null != request.getParameter("response_type")) {
+            param.append("?").append("response_type").append("=").append(request.getParameter("response_type"));
+            if (null != request.getParameter("client_id")) {
+                param.append("&").append("client_id").append("=").append(request.getParameter("client_id"));
+            }
+
+            if (null != request.getParameter("redirect_uri")) {
+                param.append("&").append("redirect_uri").append("=").append(request.getParameter("redirect_uri"));
+            }
+            if (null != request.getParameter("scop")) {
+                param.append("&").append("scop").append("=").append(request.getParameter("scop"));
+            }
+        }
+        return param.toString();
     }
 
 

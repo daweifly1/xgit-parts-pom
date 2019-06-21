@@ -35,9 +35,11 @@ public abstract class BaseUserDetailService implements UserDetailsService {
                 return "common";
             }
         };
+        String password = baseUser.getPassword();
         // 返回带有用户权限信息的User
         org.springframework.security.core.userdetails.User user = new org.springframework.security.core.userdetails.User(baseUser.getUsername(),
-                baseUser.getPassword(), true, true, true, true, Arrays.asList(au));
+                password, true, true, true, true, Arrays.asList(au));
+        baseUser.setPassword(null);
         return new CommonUserDetails(baseUser, user);
     }
 

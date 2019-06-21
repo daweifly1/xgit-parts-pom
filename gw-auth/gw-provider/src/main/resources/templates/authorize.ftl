@@ -35,7 +35,7 @@
 <form id="form" action="/oauth/authorize" method='post'>
     <input id="approval" name='user_oauth_approval' value='false' type='hidden'/>
     <input id="approveOrDeny" name='authorize' value='Authorize' type='hidden'/>
-    <input id="scope" name='scope.user' value='true' type='hidden'/>
+    <input id="scope" name='scope.all' value='true' type='hidden'/>
 </form>
 <div class="ui modal" id="modal">
     <div class="header title">授权中心
