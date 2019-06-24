@@ -4,12 +4,15 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.Set;
 
 @Data
 @ToString
 @ApiModel(value = "用户登录信息")
-public class SysUserLoginInfoVO {
+public class SysUserLoginInfoVO implements Serializable {
+
+    private static final long serialVersionUID = -1L;
     //用户id
     private Long id;
     //登录名

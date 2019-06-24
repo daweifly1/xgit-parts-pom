@@ -1,5 +1,6 @@
 package cn.com.xgit.gw.authorization.handler;
 
+import cn.com.xgit.gw.http.CommHttpParam;
 import cn.com.xgit.gw.module.CustomsSecurityProperties;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import cn.com.xgit.parts.common.util.fastjson.FastJsonUtil;
@@ -30,7 +31,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
-        if (StringUtils.isNoneBlank(customsSecurityProperties.getNoLoginRedirectUrl())) {
+        if (!CommHttpParam.isAjax(request) && StringUtils.isNoneBlank(customsSecurityProperties.getNoLoginRedirectUrl())) {
             String oUrl = request.getRequestURI() + showParams(request);
             String url = StringUtils.isBlank(oUrl) ? customsSecurityProperties.getNoLoginRedirectUrl() : customsSecurityProperties.getNoLoginRedirectUrl() + "?oUrl=" + oUrl;
             response.sendRedirect(url);

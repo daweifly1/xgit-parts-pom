@@ -1,7 +1,8 @@
 package cn.com.xgit.gw.authorization.handler;
 
-import cn.com.xgit.gw.security.filter.TokenAuthenticationHandler;
+import cn.com.xgit.gw.http.CommHttpParam;
 import cn.com.xgit.gw.module.CustomsSecurityProperties;
+import cn.com.xgit.gw.security.filter.TokenAuthenticationHandler;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import cn.com.xgit.parts.common.util.fastjson.FastJsonUtil;
 import org.apache.commons.lang.StringUtils;
@@ -26,9 +27,8 @@ public class JwtLogoutSuccessHandler implements LogoutSuccessHandler {
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         tokenAuthenticationHandler.rmAfterLoginOut(response, request);
-        if (StringUtils.isNotBlank(securityProperties.getSignOutSuccessUrl())) {
-            String oUrl = request.getRequestURI();
-            String url = org.apache.commons.lang3.StringUtils.isBlank(oUrl) ? securityProperties.getSignOutSuccessUrl() : securityProperties.getNoLoginRedirectUrl() + "?oUrl=" + oUrl;
+        if (!CommHttpParam.isAjax(request) && StringUtils.isNotBlank(securityProperties.getSignOutSuccessUrl())) {
+            String url = securityProperties.getSignOutSuccessUrl();
             response.sendRedirect(url);
             return;
         }

@@ -1,8 +1,9 @@
 package cn.com.xgit.gw.authorization.handler;
 
 import cn.com.xgit.gw.api.beans.CommonUserDetails;
-import cn.com.xgit.gw.security.filter.TokenAuthenticationHandler;
+import cn.com.xgit.gw.http.CommHttpParam;
 import cn.com.xgit.gw.module.CustomsSecurityProperties;
+import cn.com.xgit.gw.security.filter.TokenAuthenticationHandler;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import cn.com.xgit.parts.common.util.fastjson.FastJsonUtil;
 import org.apache.commons.lang.StringUtils;
@@ -34,7 +35,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         if (null != SecurityContextHolder.getContext() && null != SecurityContextHolder.getContext().getAuthentication()) {
             CommonUserDetails principal = (CommonUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             tokenAuthenticationHandler.saveAfterLogin(principal, response);
-            if (StringUtils.isNotBlank(customsSecurityProperties.getLoginSuccRedirectUrl())) {
+            if (!CommHttpParam.isAjax(request) && StringUtils.isNotBlank(customsSecurityProperties.getLoginSuccRedirectUrl())) {
                 String oUrl = request.getParameter("oUrl");
                 response.setStatus(302);
                 if (StringUtils.isNotBlank(oUrl)) {
