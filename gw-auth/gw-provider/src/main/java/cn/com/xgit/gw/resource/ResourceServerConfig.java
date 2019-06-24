@@ -1,4 +1,4 @@
-package cn.com.xgit.gw.authorization.config;
+package cn.com.xgit.gw.resource;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,12 +11,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.csrf()
-                .disable()
+        http.requestMatchers()
+                .antMatchers("/api/**")
+                .and()
                 .authorizeRequests()
-                .antMatchers("/oauth/**", "/ius/auth/**")
-                .permitAll()
-                .anyRequest()
+                .antMatchers("/api/**")
                 .authenticated();
     }
 }

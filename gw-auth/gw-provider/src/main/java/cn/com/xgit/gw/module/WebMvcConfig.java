@@ -1,4 +1,4 @@
-package cn.com.xgit.gw.provider.config.web;
+package cn.com.xgit.gw.module;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

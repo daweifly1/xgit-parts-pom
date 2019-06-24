@@ -1,11 +1,11 @@
 /**
  *
  */
-package cn.com.xgit.gw.authorization.module.service;
+package cn.com.xgit.gw.module.service;
 
 import cn.com.xgit.gw.api.beans.CommonUserDetails;
-import cn.com.xgit.gw.authorization.module.CustomsSecurityProperties;
-import cn.com.xgit.gw.authorization.module.beans.RequestUrlSet;
+import cn.com.xgit.gw.module.CustomsSecurityProperties;
+import cn.com.xgit.gw.module.beans.RequestUrlSet;
 import cn.com.xgit.parts.auth.feign.AuthClient;
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.auth.module.role.param.AuthRolePlatformParam;

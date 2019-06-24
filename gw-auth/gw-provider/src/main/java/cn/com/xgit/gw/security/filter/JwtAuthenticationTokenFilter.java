@@ -1,4 +1,4 @@
-package cn.com.xgit.gw.authorization.filter.jwt;
+package cn.com.xgit.gw.security.filter;
 
 import cn.com.xgit.gw.authorization.util.http.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;

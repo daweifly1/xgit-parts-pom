@@ -1,8 +1,8 @@
 package cn.com.xgit.gw.authorization.handler;
 
 import cn.com.xgit.gw.api.beans.CommonUserDetails;
-import cn.com.xgit.gw.authorization.filter.jwt.TokenAuthenticationHandler;
-import cn.com.xgit.gw.authorization.module.CustomsSecurityProperties;
+import cn.com.xgit.gw.security.filter.TokenAuthenticationHandler;
+import cn.com.xgit.gw.module.CustomsSecurityProperties;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import cn.com.xgit.parts.common.util.fastjson.FastJsonUtil;
 import org.apache.commons.lang.StringUtils;

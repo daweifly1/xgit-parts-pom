@@ -1,6 +1,6 @@
 package cn.com.xgit.gw.authorization.handler;
 
-import cn.com.xgit.gw.authorization.module.CustomsSecurityProperties;
+import cn.com.xgit.gw.module.CustomsSecurityProperties;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import cn.com.xgit.parts.common.util.fastjson.FastJsonUtil;
 import lombok.extern.slf4j.Slf4j;

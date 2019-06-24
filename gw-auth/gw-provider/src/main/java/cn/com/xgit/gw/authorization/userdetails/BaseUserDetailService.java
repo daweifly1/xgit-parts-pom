@@ -32,7 +32,7 @@ public abstract class BaseUserDetailService implements UserDetailsService {
         GrantedAuthority au = new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return "common";
+                return "USER";
             }
         };
         String password = baseUser.getPassword();

@@ -2,7 +2,6 @@ package cn.com.xgit.gw.token;
 
 
 import cn.com.xgit.gw.api.beans.CommonUserDetails;
-import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.common.util.fastjson.FastJsonUtil;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -29,9 +28,10 @@ public class JwtAccessToken extends JwtAccessTokenConverter {
         DefaultOAuth2AccessToken defaultOAuth2AccessToken = new DefaultOAuth2AccessToken(accessToken);
 
         // 设置额外用户信息
-        SysUserLoginInfoVO baseUser = ((CommonUserDetails) authentication.getPrincipal()).getBaseUser();
+        CommonUserDetails user = (CommonUserDetails) authentication.getPrincipal();
+
         // 将用户信息添加到token额外信息中
-        defaultOAuth2AccessToken.getAdditionalInformation().put(USER_INFO, baseUser);
+        defaultOAuth2AccessToken.getAdditionalInformation().put(USER_INFO, user);
 
         return super.enhance(defaultOAuth2AccessToken, authentication);
     }

@@ -1,4 +1,4 @@
-package cn.com.xgit.gw.authorization.module;
+package cn.com.xgit.gw.module;
 
 
 import lombok.Data;

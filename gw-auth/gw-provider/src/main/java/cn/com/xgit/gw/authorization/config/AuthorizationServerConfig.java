@@ -1,47 +1,100 @@
 package cn.com.xgit.gw.authorization.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
+//
+//    @Autowired
+//    private CommonUserDetailService userDetailsService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
-
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
-        oauthServer
-                // 开启/oauth/token_key验证端口无权限访问
-                .tokenKeyAccess("permitAll()")
-                // 开启/oauth/check_token验证端口认证权限访问
-                .checkTokenAccess("isAuthenticated()");
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        /* 配置token获取合验证时的策略 */
+        security.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()").allowFormAuthenticationForClients();
+//        security.allowFormAuthenticationForClients();
+    }
+
+    @Bean
+    public TokenStore tokenStore() {
+        return new InMemoryTokenStore();
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.authenticationManager(authenticationManager);
+//        endpoints.tokenStore(tokenStore()).authenticationManager(authenticationManager).accessTokenConverter(accessTokenConverter()).
+//                reuseRefreshTokens(false).userDetailsService(userDetailsService);
+
+        endpoints.tokenStore(tokenStore())
+                .accessTokenConverter(accessTokenConverter())
+                .authenticationManager(authenticationManager);
     }
+
+    @Bean
+    public JwtAccessTokenConverter accessTokenConverter() {
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setSigningKey("123");
+        return converter;
+    }
+
+    @Bean
+    @Primary
+    public DefaultTokenServices tokenServices() {
+        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        defaultTokenServices.setTokenStore(tokenStore());
+        defaultTokenServices.setSupportRefreshToken(true);
+        return defaultTokenServices;
+    }
+
+//    /**
+//     * 使用非对称加密算法来对Token进行签名
+//     *
+//     * @return
+//     */
+//    @Bean
+//    public JwtAccessTokenConverter jwtAccessTokenConverter() {
+//
+//        final JwtAccessTokenConverter converter = new JwtAccessToken();
+//        // 导入证书
+//        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("keystore.jks"), "foobar".toCharArray());
+//        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("test"));
+//
+//        return converter;
+//    }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient("fbed1d1b4b1449daa4bc49397cbe2350")
+                .withClient("client")
                 .authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
                 .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
                 .scopes("all")
-                .secret("fbed1d1b4b1449daa4bc49397cbe2350")
+                .secret(passwordEncoder.encode("secret"))
                 .accessTokenValiditySeconds(12000)//Access token is only valid for 200 minutes.
                 .refreshTokenValiditySeconds(60000)//Refresh token is only valid for 1000 minutes.
-                .redirectUris("http://www.baidu.com");
+                .redirectUris("http://127.0.0.1:9001/connect/github");
     }
 }
 

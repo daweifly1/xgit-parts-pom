@@ -1,4 +1,4 @@
-package cn.com.xgit.gw.authorization.filter.jwt;
+package cn.com.xgit.gw.security.filter;
 
 /**
  * jwtCookie中对应的常量

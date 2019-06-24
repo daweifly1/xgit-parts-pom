@@ -1,25 +1,24 @@
-package cn.com.xgit.gw.authorization.config;
+package cn.com.xgit.gw.security;
 
 
 import cn.com.xgit.gw.authorization.filter.CommonUsernamePasswordFilter;
 import cn.com.xgit.gw.authorization.filter.PhoneLoginAuthenticationFilter;
 import cn.com.xgit.gw.authorization.filter.QrLoginAuthenticationFilter;
-import cn.com.xgit.gw.authorization.filter.jwt.JwtAuthenticationTokenFilter;
 import cn.com.xgit.gw.authorization.handler.CommonLoginSuccessHandler;
 import cn.com.xgit.gw.authorization.handler.JwtAuthenticationEntryPoint;
 import cn.com.xgit.gw.authorization.handler.JwtLogoutSuccessHandler;
-import cn.com.xgit.gw.authorization.module.CustomsSecurityProperties;
 import cn.com.xgit.gw.authorization.provider.PhoneAuthenticationProvider;
 import cn.com.xgit.gw.authorization.provider.QrAuthenticationProvider;
 import cn.com.xgit.gw.authorization.userdetails.CommonUserDetailService;
 import cn.com.xgit.gw.authorization.userdetails.PhoneUserDetailService;
 import cn.com.xgit.gw.authorization.userdetails.QrUserDetailService;
+import cn.com.xgit.gw.module.CustomsSecurityProperties;
+import cn.com.xgit.gw.security.filter.JwtAuthenticationTokenFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -28,7 +27,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -37,7 +37,6 @@ import javax.annotation.Resource;
 
 @Slf4j
 @Configuration
-@Order
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // 自动注入UserDetailsService
@@ -93,7 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         String signInPage = StringUtils.isBlank(customsSecurityProperties.getSignInPage()) ? "/login" : customsSecurityProperties.getSignInPage();
         //退出的链接
         String signOutPage = StringUtils.isBlank(customsSecurityProperties.getSignOutPage()) ? "/logout" : customsSecurityProperties.getSignOutPage();
-        http.authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll().antMatchers(permitUrls).permitAll()
+        http.authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll().antMatchers(permitUrls).permitAll().antMatchers("/oauth/**").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().loginProcessingUrl(signInPage).permitAll()
 //                .and().openidLogin().loginProcessingUrl("/openIdLogin").permitAll().successHandler(commonLoginSuccessHandler)
@@ -119,10 +118,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * @param auth
      */
     @Override
-    public void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(phoneAuthenticationProvider());
-        auth.authenticationProvider(daoAuthenticationProvider());
-        auth.authenticationProvider(qrAuthenticationProvider());
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(commonUserDetailService).passwordEncoder(passwordEncoder());
+//
+//        auth.authenticationProvider(phoneAuthenticationProvider());
+//        auth.authenticationProvider(daoAuthenticationProvider());
+//        auth.authenticationProvider(qrAuthenticationProvider());
     }
 
     /**
@@ -142,10 +143,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v2/**");
     }
 
-    @Bean
-    public BCryptPasswordEncoder myEncoder() {
-        return new BCryptPasswordEncoder(6);
-    }
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
@@ -155,10 +152,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 禁止隐藏用户未找到异常
         provider1.setHideUserNotFoundExceptions(false);
         // 使用BCrypt进行密码的hash
-        provider1.setPasswordEncoder(myEncoder());
+        provider1.setPasswordEncoder(passwordEncoder());
         return provider1;
     }
 
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 
     @Bean
     public PhoneAuthenticationProvider phoneAuthenticationProvider() {
@@ -168,7 +170,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 禁止隐藏用户未找到异常
         provider.setHideUserNotFoundExceptions(false);
         // 使用BCrypt进行密码的hash
-        provider.setPasswordEncoder(myEncoder());
+        provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
 
@@ -225,5 +227,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationSuccessHandler(commonLoginSuccessHandler);
         filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error"));
         return filter;
+    }
+
+    public static void main(String[] args) {
+        System.out.println("?:" + PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("admin"));
     }
 }

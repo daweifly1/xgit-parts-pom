@@ -1,4 +1,4 @@
-package cn.com.xgit.gw.provider.config.web;
+package cn.com.xgit.gw.module.controller;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
