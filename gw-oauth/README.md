@@ -1,7 +1,14 @@
 基于springsecurity oauth2 zuul同时依赖用户模块的的feigin实现的具有RBAC权限管理的网关
 同时提供给三方授权功能。
 
-目标
+spring-oauth-client8 为测试ouath2授权的工程，单独maven依赖管理
+gw-oauth-api 网关的api,主要方便下游用户取用户信息
+gw-oauth-server 网关服务
+
+
+
+
+已经完成目标
 1.登录退出功能，登录成功后向response的header和cookie写jwt认证信息,退出时候清空cookie.
 另外可以配置cookie 若超过过期时间一半后自动刷新（用户在连续访问时候不会掉线）
 
@@ -50,8 +57,8 @@ b.未登录的用户使用github登录会获取github的账户信息并且带到
 
 计划目标
 1.计划开发：
-oauth2 授权服务 jwt非对称加密方式
+oauth2 授权服务 jwt非对称加密方式探索
 
-已完成目标
+2.注册功能，前端对接测试
 
-1.预留版本 dev_20190618_a1 功能登录（非security）、鉴权(security)、社交登录（仅github）、动态配置（bus,缺配置调试）
+3.client 管理维护（优先级低）
