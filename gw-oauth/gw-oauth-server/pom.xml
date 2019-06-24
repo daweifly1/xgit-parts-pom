@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>gw-auth</artifactId>
+        <artifactId>gw-oauth</artifactId>
         <groupId>cn.com.xgit</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gw-provider</artifactId>
+    <artifactId>gw-oauth-server</artifactId>
     <description>授权中心服务端</description>
     <packaging>jar</packaging>
 
@@ -18,7 +18,7 @@
         <!--本平台先关jar-->
         <dependency>
             <groupId>cn.com.xgit</groupId>
-            <artifactId>gw-auth-api</artifactId>
+            <artifactId>gw-oauth-api</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <!--本平台先关jar-->

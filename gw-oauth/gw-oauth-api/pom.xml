@@ -3,15 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>gw-auth</artifactId>
+        <artifactId>gw-oauth</artifactId>
         <groupId>cn.com.xgit</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gw-auth-api</artifactId>
+    <artifactId>gw-oauth-api</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <description>网关对外提供的api</description>
+    <description>网关对外提供的api,为zuul下游调用提供接口</description>
     <dependencies>
         <dependency>
             <groupId>cn.com.xgit</groupId>

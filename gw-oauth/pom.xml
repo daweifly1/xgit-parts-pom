@@ -11,12 +11,13 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>gw-auth-api</module>
+        <module>gw-oauth-api</module>
+        <module>gw-oauth-server</module>
     </modules>
 
-    <artifactId>gw-auth</artifactId>
+    <artifactId>gw-oauth</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <description>统一认证授权网关模块</description>
+    <description>基于zuul、security、oauth2统一认证授权网关模块</description>
 
 
 </project>

@@ -64,6 +64,7 @@ public class SysAccountSocialService extends SuperService<SuperMapper<SysAccount
                 r.setName(accountDO.getName());
                 List<Long> roleIds = sysAccountRoleService.querRoleIdsByUserId(null, r.getId());
                 r.setRoleIds(new HashSet<>(roleIds));
+                r.setPassword(sysAccountService.queryDbNomalPsw(r.getId()));
                 return ResultMessage.success(r);
             }
         }
