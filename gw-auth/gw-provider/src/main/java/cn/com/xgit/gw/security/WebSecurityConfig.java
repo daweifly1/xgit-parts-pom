@@ -1,17 +1,17 @@
 package cn.com.xgit.gw.security;
 
 
-import cn.com.xgit.gw.authorization.filter.CommonUsernamePasswordFilter;
-import cn.com.xgit.gw.authorization.filter.PhoneLoginAuthenticationFilter;
-import cn.com.xgit.gw.authorization.filter.QrLoginAuthenticationFilter;
-import cn.com.xgit.gw.authorization.handler.CommonLoginSuccessHandler;
-import cn.com.xgit.gw.authorization.handler.JwtAuthenticationEntryPoint;
-import cn.com.xgit.gw.authorization.handler.JwtLogoutSuccessHandler;
-import cn.com.xgit.gw.authorization.provider.PhoneAuthenticationProvider;
-import cn.com.xgit.gw.authorization.provider.QrAuthenticationProvider;
-import cn.com.xgit.gw.authorization.userdetails.CommonUserDetailService;
-import cn.com.xgit.gw.authorization.userdetails.PhoneUserDetailService;
-import cn.com.xgit.gw.authorization.userdetails.QrUserDetailService;
+import cn.com.xgit.gw.security.filter.CommonUsernamePasswordFilter;
+import cn.com.xgit.gw.security.filter.PhoneLoginAuthenticationFilter;
+import cn.com.xgit.gw.security.filter.QrLoginAuthenticationFilter;
+import cn.com.xgit.gw.security.handler.CommonLoginSuccessHandler;
+import cn.com.xgit.gw.security.handler.JwtAuthenticationEntryPoint;
+import cn.com.xgit.gw.security.handler.JwtLogoutSuccessHandler;
+import cn.com.xgit.gw.security.provider.PhoneAuthenticationProvider;
+import cn.com.xgit.gw.security.provider.QrAuthenticationProvider;
+import cn.com.xgit.gw.security.userdetails.CommonUserDetailService;
+import cn.com.xgit.gw.security.userdetails.PhoneUserDetailService;
+import cn.com.xgit.gw.security.userdetails.QrUserDetailService;
 import cn.com.xgit.gw.module.CustomsSecurityProperties;
 import cn.com.xgit.gw.security.filter.JwtAuthenticationTokenFilter;
 import lombok.extern.slf4j.Slf4j;

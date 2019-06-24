@@ -1,6 +1,8 @@
 package cn.com.xgit.gw.security.filter;
 
-import cn.com.xgit.gw.authorization.util.http.CookieUtil;
+import cn.com.xgit.gw.http.CookieUtil;
+import cn.com.xgit.gw.security.filter.jwt.JWTConsts;
+import cn.com.xgit.gw.security.filter.jwt.TokenAuthenticationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
