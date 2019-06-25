@@ -59,6 +59,11 @@ public class TokenAuthenticationHandler implements Serializable {
         return claims;
     }
 
+    String doGenerateToken(Map<String, Object> claims) {
+        return Jwts.builder().setClaims(claims).setExpiration(generateExpirationDate())
+                .signWith(SignatureAlgorithm.HS512, securityProperties.getClaimKeySecret()).compact();
+    }
+
     private Date generateExpirationDate() {
         return new Date(System.currentTimeMillis() + securityProperties.getJwtExpiration() * 1000L);
     }
@@ -90,10 +95,6 @@ public class TokenAuthenticationHandler implements Serializable {
         return refreshedToken;
     }
 
-    String doGenerateToken(Map<String, Object> claims) {
-        return Jwts.builder().setClaims(claims).setExpiration(generateExpirationDate())
-                .signWith(SignatureAlgorithm.HS512, securityProperties.getClaimKeySecret()).compact();
-    }
 
     /**
      * 认证 返回令牌 cookie过了过期时间一半时候刷新令牌
