@@ -86,8 +86,8 @@ public class HttpClientUtils {
     }
 
     //json字符串转map
-    public static Map<String, String> parseResponseEntityJSON(String responseEntityStr) {
-        Map<String, String> map = new HashMap<>();
+    public static Map<String, Object> parseResponseEntityJSON(String responseEntityStr) {
+        Map<String, Object> map = new HashMap<>();
         JSONObject jsonObject = JSONObject.parseObject(responseEntityStr); //解析json格式的字符串
         Set<Map.Entry<String, Object>> entries = jsonObject.entrySet();
         for (Map.Entry<String, Object> entry : entries) {

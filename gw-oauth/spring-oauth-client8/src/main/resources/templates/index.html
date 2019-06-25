@@ -1,18 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.springframework.org/schema/mvc">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Spring Security SSO</title>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>oauth2授权后的信息</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://cdn.bootcss.com/vue/2.5.17/vue.min.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.min.js"></script>
 </head>
 
 <body>
-<div class="container">
-	<div class="col-sm-12">
-		<h1>Spring Security SSO</h1>
-		<a class="btn btn-primary" href="securedPage">Login</a>
-	</div>
+<div class="login-box" id="app">
+    <el-form method="post" label-position="left" label-width="0px"
+             class="demo-ruleForm login-container">
+        <h2 class="title">oauth2授权后的信息</h2>
+        <el-form-item>
+            <el-input type="text" name="username" v-model="username" auto-complete="off" placeholder="账号"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-input type="text" name="name" v-model="name" auto-complete="off" placeholder="姓名"></el-input>
+        </el-form-item>
+    </el-form>
 </div>
 </body>
+<script th:inline="javascript">
+    var data = {"username": "", "name": ""};
+    var data2 = eval('(' + [[${data}]] + ')')
+    console.log(data2)
+    console.log("data2=========" + data2)
+    if (data2 && data2.username) {
+        data.username = data2.username;
+        data.name = data2.name;
+    }
+    new Vue({
+        el: '#app',
+        data: data,
+        methods: {},
+        created: function () {
+
+        },
+        mounted: function () {
+            if (location.hash.indexOf("#") > -1) {
+                url = "/connect/implicite?" + (location.hash || "").replace(/^\#/, '');
+                axios.get(url)
+                    .then(function (response) {
+                        this.data.username = response.data.username;
+                        this.data.name = response.data.name;
+                        console.log(response);
+                    }).catch(function (err) {
+                    console.error(err);
+                });
+            } else if (data2 && data2.username) {
+                this.data.username = data2.username;
+                this.data.name = data2.name;
+            }
+        }
+    });
+</script>
+
+<style lang="scss" scoped>
+    .login-container {
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        background-clip: padding-box;
+        margin: 100px auto;
+        width: 320px;
+        padding: 35px 35px 15px 35px;
+        background: #fff;
+        border: 1px solid #eaeaea;
+        box-shadow: 0 0 25px #cac6c6;
+    }
+
+    .title {
+        margin: 0px auto 20px auto;
+        text-align: center;
+        color: #505458;
+    }
+</style>
+
 </html>

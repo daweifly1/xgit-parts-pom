@@ -89,9 +89,13 @@ public class MvcController {
         for (int i = 0; i < ll.size(); i++) {
             ClientDetails cc = ll.get(i);
             Map<String, Object> dd = new HashMap<>();
-            dd.put("name", "授权给" + cc.getClientId());
+            dd.put("name", "CODE模式授权给" + cc.getClientId());
             dd.put("webServerRedirectUri", " http://10.3.1.33:9000/oauth/authorize?response_type=code&client_id=" + cc.getClientId() + "&redirect_uri=" + cc.getRegisteredRedirectUri().toArray()[0]);
             client.add(dd);
+            Map<String, Object> dd2 = new HashMap<>();
+            dd2.put("name", "简化模式授权给" + cc.getClientId());
+            dd2.put("webServerRedirectUri", " http://10.3.1.33:9000/oauth/authorize?response_type=token&client_id=" + cc.getClientId() + "&scope=all&redirect_uri=" + cc.getRegisteredRedirectUri().toArray()[0]);
+            client.add(dd2);
         }
         model.put("client", client);
         return new ModelAndView("index", model);
