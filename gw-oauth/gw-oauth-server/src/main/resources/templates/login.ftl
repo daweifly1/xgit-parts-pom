@@ -121,7 +121,7 @@
         <#if RequestParameters.error?? && Session.SPRING_SECURITY_LAST_EXCEPTION??>
             <#if Session.SPRING_SECURITY_LAST_EXCEPTION.message == "Bad credentials">
                 <div class="ui red message">
-                    密码错误
+                    用户名或密码错误
                 </div>
             <#elseif Session.SPRING_SECURITY_LAST_EXCEPTION.message == "Bad verifyCode">
                 <div class="ui red message">
@@ -140,7 +140,7 @@
     </div>
 </div>
 <div style="text-align: center">
-    <a href="http://www.miitbeian.gov.cn/" target="_blank">粤ICP备18027057号</a>
+    <a href="http://www.miitbeian.gov.cn/" target="_blank">苏ICP备16006132号-2</a>
 </div>
 </body>
 <script src="webjars/jquery/3.2.1/jquery.min.js"></script>

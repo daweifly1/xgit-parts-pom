@@ -48,7 +48,7 @@
         <p style="line-height: 2.5">
             客户端应用：<br>
         <#list client as item>
-            <a href="<#if item.webServerRedirectUri??>${item.webServerRedirectUri}<#else>javascript:void(0)</#if>">
+            <a target="_blank" href="<#if item.webServerRedirectUri??>${item.webServerRedirectUri}<#else>javascript:void(0)</#if>">
                 <i class="html5 icon"></i> ${item.name}
             </a><br>
         </#list>

@@ -1,7 +1,10 @@
 package cn.com.xgit.gw.module.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -21,6 +24,9 @@ import java.util.Map;
 @Controller
 @SessionAttributes({"authorizationRequest"})
 public class MvcController {
+
+    @Autowired
+    private JdbcClientDetailsService jdbcClientDetailsService;
 
     /**
      * 登出回调
@@ -76,11 +82,15 @@ public class MvcController {
                 .getPrincipal())
                 .getUsername();
         model.put("userName", userName);
+
+        List<ClientDetails> ll = jdbcClientDetailsService.listClientDetails();
         List<Map<String, Object>> client = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
+
+        for (int i = 0; i < ll.size(); i++) {
+            ClientDetails cc = ll.get(i);
             Map<String, Object> dd = new HashMap<>();
-            dd.put("name", "ooo");
-            dd.put("webServerRedirectUri", "http://www.baidu.com/" + i);
+            dd.put("name", "授权给" + cc.getClientId());
+            dd.put("webServerRedirectUri", " http://127.0.0.1:9000/oauth/authorize?response_type=code&client_id=" + cc.getClientId() + "&redirect_uri=" + cc.getRegisteredRedirectUri().toArray()[0]);
             client.add(dd);
         }
         model.put("client", client);

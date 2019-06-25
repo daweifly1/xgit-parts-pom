@@ -1,9 +1,12 @@
 package cn.com.xgit.gw.security;
 
 
+import cn.com.xgit.gw.module.CustomsSecurityProperties;
 import cn.com.xgit.gw.security.filter.CommonUsernamePasswordFilter;
+import cn.com.xgit.gw.security.filter.JwtAuthenticationTokenFilter;
 import cn.com.xgit.gw.security.filter.PhoneLoginAuthenticationFilter;
 import cn.com.xgit.gw.security.filter.QrLoginAuthenticationFilter;
+import cn.com.xgit.gw.security.handler.CommonLoginFailHandler;
 import cn.com.xgit.gw.security.handler.CommonLoginSuccessHandler;
 import cn.com.xgit.gw.security.handler.JwtAuthenticationEntryPoint;
 import cn.com.xgit.gw.security.handler.JwtLogoutSuccessHandler;
@@ -12,8 +15,6 @@ import cn.com.xgit.gw.security.provider.QrAuthenticationProvider;
 import cn.com.xgit.gw.security.userdetails.CommonUserDetailService;
 import cn.com.xgit.gw.security.userdetails.PhoneUserDetailService;
 import cn.com.xgit.gw.security.userdetails.QrUserDetailService;
-import cn.com.xgit.gw.module.CustomsSecurityProperties;
-import cn.com.xgit.gw.security.filter.JwtAuthenticationTokenFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CommonLoginSuccessHandler commonLoginSuccessHandler;
 
+
+    @Autowired
+    private CommonLoginFailHandler commonLoginFailHandler;
+
     @Resource(name = "restAuthenticationAccessDeniedHandler")
     private AccessDeniedHandler accessDeniedHandler;
 
@@ -81,8 +86,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 由于使用的是JWT，我们这里不需要csrf
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                // 基于token，所以不需要session
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
+                // 基于token，使用session 但是没有用
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER).and();
         //可以配置读取
         String[] permitUrls = {"/login", "/phoneLogin", "/api/v1/auth", "/api/v1/signout", "/error/**", "/api/**"};
         if (null != customsSecurityProperties.getPermitAllUrls() && customsSecurityProperties.getPermitAllUrls().length > 0) {
@@ -199,7 +204,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             log.error("", e);
         }
         filter.setAuthenticationSuccessHandler(commonLoginSuccessHandler);
-        filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error"));
+        SimpleUrlAuthenticationFailureHandler authenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler("/login?error");
+
+        filter.setAuthenticationFailureHandler(authenticationFailureHandler);
         return filter;
     }
 
@@ -212,7 +219,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             log.error("", e);
         }
         filter.setAuthenticationSuccessHandler(commonLoginSuccessHandler);
-        filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error"));
+        SimpleUrlAuthenticationFailureHandler authenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler("/login?error");
+
+        filter.setAuthenticationFailureHandler(authenticationFailureHandler);
         return filter;
     }
 
@@ -225,7 +234,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             log.error("", e);
         }
         filter.setAuthenticationSuccessHandler(commonLoginSuccessHandler);
-        filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error"));
+        SimpleUrlAuthenticationFailureHandler authenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler("/login?error");
+
+        filter.setAuthenticationFailureHandler(authenticationFailureHandler);
         return filter;
     }
 
