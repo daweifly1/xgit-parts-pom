@@ -5,6 +5,6 @@
     <title>绑定GitHub账号失败</title>
 </head>
 <body>
-您绑定GitHub账号失败，原因 <span>${error!'请检查该github账号是否已经绑定其他账号'}</span>
+您绑定GitHub账号失败，<span>${error!'请用其他方式登录并检查该github账号绑定情况'}</span>
 </body>
 </html>

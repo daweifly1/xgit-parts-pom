@@ -1,8 +1,8 @@
 package cn.com.xgit.gw.security.filter.jwt;
 
 import cn.com.xgit.gw.api.beans.CommonUserDetails;
-import cn.com.xgit.gw.module.CustomsSecurityProperties;
 import cn.com.xgit.gw.http.CookieUtil;
+import cn.com.xgit.gw.module.CustomsSecurityProperties;
 import cn.com.xgit.parts.common.util.fastjson.FastJsonUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -106,12 +106,15 @@ public class TokenAuthenticationHandler implements Serializable {
         if (null != claims && null != claims.get(CLAIM_KEY_SUBJECT)) {
             String sub = claims.get(CLAIM_KEY_SUBJECT).toString();
             CommonUserDetails subject = FastJsonUtil.parse(sub, CommonUserDetails.class);
+            long expiration = claims.getExpiration().getTime();
+            long date = System.currentTimeMillis() + (securityProperties.getJwtExpiration() * 1000 >> 1);
+            if (System.currentTimeMillis() > expiration) {
+                //已经过期了
+                return;
+            }
             if (null != subject) {
                 SecurityContextHolder.getContext().setAuthentication(new JWTAuthenticationToken(subject));
             }
-            long expiration = claims.getExpiration().getTime();
-            long date = System.currentTimeMillis() + (securityProperties.getJwtExpiration() * 1000 >> 1);
-
             //距离过期时间还有一半时候刷新token
             if (date > expiration) {
                 token = refreshToken(token);

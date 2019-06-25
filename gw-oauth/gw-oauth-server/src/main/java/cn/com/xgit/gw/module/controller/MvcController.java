@@ -90,7 +90,7 @@ public class MvcController {
             ClientDetails cc = ll.get(i);
             Map<String, Object> dd = new HashMap<>();
             dd.put("name", "授权给" + cc.getClientId());
-            dd.put("webServerRedirectUri", " http://127.0.0.1:9000/oauth/authorize?response_type=code&client_id=" + cc.getClientId() + "&redirect_uri=" + cc.getRegisteredRedirectUri().toArray()[0]);
+            dd.put("webServerRedirectUri", " http://10.3.1.33:9000/oauth/authorize?response_type=code&client_id=" + cc.getClientId() + "&redirect_uri=" + cc.getRegisteredRedirectUri().toArray()[0]);
             client.add(dd);
         }
         model.put("client", client);

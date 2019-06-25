@@ -33,9 +33,9 @@ gw-oauth-server 网关服务
 
 4. oauth2 授权，目前未mysql实现token的管理。如遇到性能需要可以更改为redis管理token,client信息mysql维护（加cache）.
 
-INSERT INTO `parts_rm`.`oauth_client_details` (`client_id`, `resource_ids`, `client_secret`, `scope`, `authorized_grant_types`, `web_server_redirect_uri`, `authorities`, `access_token_validity`, `refresh_token_validity`, `additional_information`, `autoapprove`) VALUES ('client', '', '{bcrypt}$2a$10$9GP0MEEllDFk0bz2RQIlG.53dXnandpjUhwES7kbBLKZoccJvhT2G', 'all', 'password,authorization_code,refresh_token,implicit', 'http://127.0.0.1:9001/connect/github', 'USERS', '3000', '30000', NULL, 'false');
+INSERT INTO `parts_rm`.`oauth_client_details` (`client_id`, `resource_ids`, `client_secret`, `scope`, `authorized_grant_types`, `web_server_redirect_uri`, `authorities`, `access_token_validity`, `refresh_token_validity`, `additional_information`, `autoapprove`) VALUES ('client', '', '{bcrypt}$2a$10$9GP0MEEllDFk0bz2RQIlG.53dXnandpjUhwES7kbBLKZoccJvhT2G', 'all', 'password,authorization_code,refresh_token,implicit', 'http://10.3.1.33:9001/connect/github', 'USERS', '3000', '30000', NULL, 'false');
 
-http://127.0.0.1:9000/oauth/authorize?response_type=code&client_id=client&redirect_uri=http://127.0.0.1:9001/connect/github
+http://10.3.1.33:9000/oauth/authorize?response_type=code&client_id=client&redirect_uri=http://10.3.1.33:9001/connect/github
 
 
 

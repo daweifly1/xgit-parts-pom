@@ -23,6 +23,3 @@ eureka:
 auth:
   feign:
     name: parts-auth-server
-security:
-  basic:
-    enabled: false

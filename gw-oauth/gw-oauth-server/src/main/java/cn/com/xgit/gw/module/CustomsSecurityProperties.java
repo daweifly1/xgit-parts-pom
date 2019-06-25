@@ -46,4 +46,7 @@ public class CustomsSecurityProperties {
     private String redirectErrorPage404;
 
     private String redirectErrorPage500;
+
+    //超级管理员
+    private String[] superAdmins;
 }

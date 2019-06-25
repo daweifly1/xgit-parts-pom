@@ -50,10 +50,15 @@ public class RbacService {
                 return false;
             }
             //TODO若是超级管理员直接放过(内置用户名)
-            if ("admin".equals(baseUser.getUsername())) {
-                return true;
+            String[] sus = customsSecurityProperties.getSuperAdmins();
+            if (null != sus && sus.length > 0) {
+                for (String superAdmin : sus) {
+                    if (StringUtils.isNotBlank(superAdmin) && superAdmin.equals(baseUser.getUsername())) {
+                        return true;
+                    }
+                }
             }
-
+            //认证后不需要鉴权的url
             if (null != customsSecurityProperties.getPermitAccessUrls() && customsSecurityProperties.getPermitAccessUrls().length > 0) {
                 int exLength = customsSecurityProperties.getPermitAccessUrls().length;
                 Set<String> set = new HashSet<>(exLength);

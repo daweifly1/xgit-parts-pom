@@ -26,13 +26,13 @@ public class DemoController {
     @RequestMapping("/connect/refreshToken")
     @ResponseBody
     public Map refreshToken(String refreshToken, HttpServletResponse response) throws Exception { ;
-        String token_url = "http://127.0.0.1:9000/oauth/token";
+        String token_url = "http://10.3.1.33:9000/oauth/token";
         Map<String, Object> map = new HashMap<>();
         map.put("client_id", "client");
         map.put("client_secret", "secret");
         map.put("grant_type", "refresh_token");
         map.put("refresh_token", refreshToken);
-        map.put("redirect_uri", "http://127.0.0.1:9001/connect/github");
+        map.put("redirect_uri", "http://10.3.1.33:9001/connect/github");
         String responseStr = HttpClientUtils.doPost(token_url, map);
         Map<String, Object> m = FastJsonUtil.parseMap(responseStr);
         return m;
@@ -44,20 +44,20 @@ public class DemoController {
             return null;
         }
         try {
-            String token_url = "http://127.0.0.1:9000/oauth/token";
+            String token_url = "http://10.3.1.33:9000/oauth/token";
             Map<String, Object> map = new HashMap<>();
             map.put("client_id", "client");
             map.put("client_secret", "secret");
             map.put("grant_type", "authorization_code");
             map.put("code", code);
-            map.put("redirect_uri", "http://127.0.0.1:9001/connect/github");
+            map.put("redirect_uri", "http://10.3.1.33:9001/connect/github");
             map.put("scope", "all");
 
             String responseStr = HttpClientUtils.doPost(token_url, map);
             System.out.println("  " + responseStr);
             Map<String, Object> m = FastJsonUtil.parseMap(responseStr);
             if (null != m.get("access_token")) {
-                String userinfo_url = "http://127.0.0.1:9000/api/user?access_token=" + m.get("access_token");
+                String userinfo_url = "http://10.3.1.33:9000/api/user?access_token=" + m.get("access_token");
                 responseStr = HttpClientUtils.doGet(userinfo_url);//json
                 Map<String, String> responseMap = HttpClientUtils.parseResponseEntityJSON(responseStr);
                 return responseMap;

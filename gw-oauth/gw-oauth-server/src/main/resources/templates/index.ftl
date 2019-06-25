@@ -54,6 +54,12 @@
         </#list>
         </p>
     </div>
+
+    <div class="content">
+        <p style="line-height: 2.5">
+            <a id="gitHubSub" target="_blank" >绑定gitHub账号</a>
+        </p>
+    </div>
 </div>
 </body>
 <script src="/webjars/jquery/3.2.1/jquery.min.js" ></script>
@@ -63,5 +69,12 @@
     function logout() {
         window.location.replace(url)
     }
+
+
+    $(document).ready(function () {
+        $.get("/connect/githubLink", function (result) {
+            $("#gitHubSub").attr("href", result.data)
+        });
+    });
 </script>
 </html>

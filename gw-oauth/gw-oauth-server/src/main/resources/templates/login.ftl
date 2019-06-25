@@ -210,7 +210,6 @@
     ;
     $("#submit").click(function () {
         if ($("#username").val() && $("#password").val()) {
-            console.log("              ooooooooo              " + location.search);
             $("#form").action("login" + location.search).submit();
         }
     })
