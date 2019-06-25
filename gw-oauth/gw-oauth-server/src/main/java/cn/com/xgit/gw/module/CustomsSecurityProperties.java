@@ -21,6 +21,9 @@ public class CustomsSecurityProperties {
     //登陆页url
     private String signInPage;
 
+    //自定义登陆页url
+    private String customSignInPage;
+
     //退出的链接
     private String signOutPage;
 
