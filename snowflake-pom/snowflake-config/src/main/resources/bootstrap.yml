@@ -1,0 +1,12 @@
+apache:
+  retrypolicy:
+    base-sleep-time: 1000
+    max-retries: 3
+    max-sleep: 2
+  zookeeper:
+    auth-id: username:password
+#    connect-url: '127.0.0.1:2181'
+    connect-url: '10.100.2.109:2181'
+    connection-timeout: 2500
+    scheme: digest
+    session-timeout: 150

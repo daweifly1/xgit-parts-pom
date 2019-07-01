@@ -2,25 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <modules>
-        <module>snowflake-api</module>
-    </modules>
     <parent>
-        <groupId>cn.com.xgit</groupId>
-        <artifactId>xgit-parts-pom</artifactId>
+        <groupId>cn.com.xgit.parts</groupId>
+        <artifactId>snowflake-pom</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>cn.com.xgit.parts</groupId>
-    <artifactId>snowflake-server</artifactId>
+    <artifactId>snowflake-config</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>雪花算法生成id的集群，以来zk自动分布式管理</description>
     <properties>
         <curator-version>4.2.0</curator-version>
     </properties>
-
-
 
     <dependencies>
         <dependency>
@@ -34,7 +29,6 @@
             <artifactId>curator-recipes</artifactId>
             <version>${curator-version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -53,20 +47,6 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-config</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-bus-amqp</artifactId>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-openfeign-core</artifactId>
-            <version>2.1.1.RELEASE</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
