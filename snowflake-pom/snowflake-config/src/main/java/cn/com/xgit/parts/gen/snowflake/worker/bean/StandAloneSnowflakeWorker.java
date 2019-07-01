@@ -43,7 +43,6 @@ public class StandAloneSnowflakeWorker implements ISnowflakeIdWorker {
 
 
     public long nextId() {
-        log.info("StandAloneSnowflakeWorker====");
         return snowflakeIdWorker.nextId();
     }
 
