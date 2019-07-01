@@ -1,9 +1,9 @@
-package cn.com.xgit.parts.config;
+package cn.com.xgit.parts.gen.zk.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-@ConfigurationProperties(prefix = "apache.retrypolicy")
+@ConfigurationProperties(prefix = "apache.zookeeper.retrypolicy")
 @Configuration
 public class ApacheRetryPolicy {
 

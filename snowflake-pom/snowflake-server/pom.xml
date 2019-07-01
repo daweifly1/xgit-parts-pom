@@ -21,6 +21,16 @@
             <groupId>cn.com.xgit.parts</groupId>
             <artifactId>snowflake-config</artifactId>
             <version>0.1-SNAPSHOT</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>org.apache.curator</groupId>
+                                <artifactId>curator-client</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>org.apache.curator</groupId>
+                                <artifactId>curator-recipes</artifactId>
+                            </exclusion>
+                        </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.curator</groupId>

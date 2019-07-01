@@ -1,4 +1,4 @@
-package cn.com.xgit.parts.snowflake;
+package cn.com.xgit.parts.gen.snowflake.worker;
 
 public class SnowflakeIdWorker {
     private final long twepoch = 1483200000000L;

@@ -11,7 +11,7 @@
     <groupId>cn.com.xgit.parts</groupId>
     <artifactId>snowflake-config</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <description>雪花算法生成id的集群，以来zk自动分布式管理</description>
     <properties>
         <curator-version>4.2.0</curator-version>
@@ -22,12 +22,14 @@
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-client</artifactId>
             <version>${curator-version}</version>
+<!--            <scope>compile</scope>-->
         </dependency>
 
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-recipes</artifactId>
-            <version>${curator-version}</version>
+<!--            <version>${curator-version}</version>-->
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -63,15 +65,12 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+
 
 </project>

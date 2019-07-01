@@ -1,24 +1,21 @@
-package cn.com.xgit.parts.snowflake;
+package cn.com.xgit.parts.gen.snowflake.worker.bean;
 
-import com.baomidou.mybatisplus.core.incrementer.IKeyGenerator;
+import cn.com.xgit.parts.gen.snowflake.worker.ISnowflakeIdWorker;
+import cn.com.xgit.parts.gen.snowflake.worker.SnowflakeIdWorker;
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.utils.CloseableUtils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-@Component("mybatisKeyGenerator")
-public class MybatisKeyGenerator implements IKeyGenerator {
 
-    private static final Logger log = LoggerFactory.getLogger(MybatisKeyGenerator.class);
+public class ZkSnowflakeWorker implements ISnowflakeIdWorker {
+
+
+    private static final Logger log = LoggerFactory.getLogger(ZkSnowflakeWorker.class);
     /**
      * 机器id
      */
@@ -32,7 +29,6 @@ public class MybatisKeyGenerator implements IKeyGenerator {
     private String pathPrefix = "/ccc2-";
     private String pathRegistered = null;
 
-    @Autowired
     private CuratorFramework client;
     /**
      * 雪花算法生成
@@ -40,8 +36,8 @@ public class MybatisKeyGenerator implements IKeyGenerator {
     private SnowflakeIdWorker snowflakeIdWorker;
 
 
-    @PostConstruct
-    private void init() {
+    public ZkSnowflakeWorker(CuratorFramework client) {
+        this.client = client;
         try {
             //创建一个机器ID
             machineId = initMachineId();
@@ -54,29 +50,9 @@ public class MybatisKeyGenerator implements IKeyGenerator {
         }
     }
 
-    /**
-     * 容器销毁前清除注册记录,一定需要优雅停机
-     */
-    @PreDestroy
-    public void destroyMachineId() {
-        log.debug("destroyMachineId...........");
-        if (null != pathRegistered) {
-            CloseableUtils.closeQuietly(client);
-        }
-    }
-
-    @Override
-    public String executeSql(String incrementerName) {
-        //多实例时候需要考虑使用一致的服务(此处借助redis实现,借助zk方式实现会更有优势)
-        long uid = 0;
-        if (null == snowflakeIdWorker) {
-            return "select " + uid + " from dual";
-        }
-        uid = snowflakeIdWorker.nextId();
-        return "select " + uid + " from dual";
-    }
 
     public long nextId() {
+        log.info("ZkSnowflakeWorker...........................................");
         return snowflakeIdWorker.nextId();
     }
 
