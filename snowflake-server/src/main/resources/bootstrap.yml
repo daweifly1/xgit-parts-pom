@@ -20,9 +20,9 @@ apache:
   zookeeper:
     auth-id: username:password
     connect-url: '127.0.0.1:2181'
-    connection-timeout: 15000
+    connection-timeout: 15
     scheme: digest
-    session-timeout: 60000
+    session-timeout: 15
 
 server:
   port: 8888

@@ -3,7 +3,9 @@ package cn.com.xgit.parts.snowflake;
 import com.baomidou.mybatisplus.core.incrementer.IKeyGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.utils.CloseableUtils;
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.data.Stat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +28,7 @@ public class MybatisKeyGenerator implements IKeyGenerator {
     private static String localIp;
 
     //工作节点的路径
-    private String pathPrefix = "/test/IDMaker/worker-";
+    private String pathPrefix = "/ccc2-";
     private String pathRegistered = null;
 
     @Autowired
@@ -45,7 +47,8 @@ public class MybatisKeyGenerator implements IKeyGenerator {
             if (machineId > 31L || machineId < 0L) {
                 throw new RuntimeException("节点数量已经达到32个");
             }
-            log.info("初始化 machine_id :{}   ===localIp:{}", machineId, localIp);
+            localIp = getIPAddress();
+            log.info("初始化 machine_id :{}....===localIp:{}............................", machineId, localIp);
             this.snowflakeIdWorker = new SnowflakeIdWorker(machineId, 1L);
         } catch (Exception e) {
             log.error("Fatal Error in initMachineId ", e);
@@ -58,7 +61,10 @@ public class MybatisKeyGenerator implements IKeyGenerator {
      */
     @PreDestroy
     public void destroyMachineId() {
-        log.debug("====");
+        log.debug("destroyMachineId...........");
+        if (null != pathRegistered) {
+            CloseableUtils.closeQuietly(client);
+        }
     }
 
     @Override
@@ -99,30 +105,26 @@ public class MybatisKeyGenerator implements IKeyGenerator {
         // 节点的 payload 为当前worker 实例
         try {
             byte[] payload = "snowflakexx".getBytes();
-
-            pathRegistered = client.create()
-                    .creatingParentsIfNeeded()
-                    .withMode(CreateMode.EPHEMERAL_SEQUENTIAL)
-                    .forPath(pathPrefix, payload);
+            for (int i = 0; i < 32; i++) {
+                String path = pathPrefix + i;
+                Stat r = client.checkExists().forPath(path);
+                if (null == r) {
+                    pathRegistered = client.create()
+                            .creatingParentsIfNeeded()
+                            .withMode(CreateMode.EPHEMERAL)
+                            .forPath(path, payload);
+                    if (null == pathRegistered) {
+                        continue;
+                    } else {
+                        return i;
+                    }
+                }
+            }
+            throw new RuntimeException("节点已经注册饱和");
         } catch (Exception e) {
             log.error("", e);
             throw new RuntimeException(e.getMessage());
         }
-        if (null == pathRegistered) {
-            throw new RuntimeException("节点注册失败");
-        }
-        String sid = null;
-        int index = pathRegistered.lastIndexOf(pathPrefix);
-        log.info("index:{}", index);
-        if (index >= 0) {
-            index += pathPrefix.length();
-            sid = index <= pathRegistered.length() ? pathRegistered.substring(index) : null;
-        }
-
-        if (null == sid) {
-            throw new RuntimeException("节点ID生成失败");
-        }
-        return Integer.parseInt(sid);
     }
 
 }
