@@ -16,9 +16,6 @@
     <properties>
         <curator-version>4.2.0</curator-version>
     </properties>
-
-
-
     <dependencies>
         <dependency>
             <groupId>cn.com.xgit.parts</groupId>

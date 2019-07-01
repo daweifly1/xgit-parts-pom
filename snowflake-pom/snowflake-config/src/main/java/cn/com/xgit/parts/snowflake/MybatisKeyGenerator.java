@@ -1,11 +1,12 @@
 package cn.com.xgit.parts.snowflake;
 
 import com.baomidou.mybatisplus.core.incrementer.IKeyGenerator;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.utils.CloseableUtils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,10 +15,10 @@ import javax.annotation.PreDestroy;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-@Slf4j
 @Component("mybatisKeyGenerator")
 public class MybatisKeyGenerator implements IKeyGenerator {
 
+    private static final Logger log = LoggerFactory.getLogger(MybatisKeyGenerator.class);
     /**
      * 机器id
      */
