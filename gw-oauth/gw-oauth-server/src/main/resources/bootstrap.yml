@@ -8,7 +8,7 @@ spring:
         serviceId: config-server
       enabled: true
       name: parts-auth-gateway
-      profile: dev
+      profile: test
 
 eureka:
   client:
