@@ -30,7 +30,12 @@
 /.idea/*.xml
 
 
+.idea
+node_modules
+dist
+.vscode
 
+/*/node_modules
 
 target/
 */target
