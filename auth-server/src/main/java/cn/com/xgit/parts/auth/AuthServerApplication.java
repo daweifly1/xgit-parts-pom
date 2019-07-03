@@ -5,7 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @EnableFeignClients
@@ -18,7 +19,7 @@ public class AuthServerApplication {
 
 
     @Bean
-    public BCryptPasswordEncoder myEncoder() {
-        return new BCryptPasswordEncoder(6);
+    public PasswordEncoder myEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }

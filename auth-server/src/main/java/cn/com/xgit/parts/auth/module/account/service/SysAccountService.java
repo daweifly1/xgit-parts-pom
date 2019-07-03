@@ -10,6 +10,7 @@ import cn.com.xgit.parts.auth.module.account.entity.SysAccount;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccountRole;
 import cn.com.xgit.parts.auth.module.account.entity.SysPassword;
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
+import cn.com.xgit.parts.auth.module.account.param.UserLoginVO;
 import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
 import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
 import cn.com.xgit.parts.auth.module.account.vo.SysPasswordVO;
@@ -23,7 +24,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +42,7 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
     private String defaultPsw;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private SysPasswordService sysPasswordService;
@@ -68,9 +69,22 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
         return null;
     }
 
-    public boolean checkLoginPsw(Long userId, String password) {
+    public boolean checkLoginPsw2(Long userId, SysPasswordVO userLoginVO) {
         String dbNomalPsw = queryDbNomalPsw(userId);
-        return StringUtils.isNoneBlank(dbNomalPsw) && dbNomalPsw.equals(cryptoPassword(password, userId));
+        boolean r = StringUtils.isNoneBlank(dbNomalPsw) && passwordEncoder.matches(userLoginVO.getPassword(), dbNomalPsw);
+        if (r) {
+            userLoginVO.setPassword(dbNomalPsw);
+        }
+        return r;
+    }
+
+    public boolean checkLoginPsw(Long userId, UserLoginVO userLoginVO) {
+        String dbNomalPsw = queryDbNomalPsw(userId);
+        boolean r = StringUtils.isNoneBlank(dbNomalPsw) && passwordEncoder.matches(userLoginVO.getPassword(), dbNomalPsw);
+        if (r) {
+            userLoginVO.setPassword(dbNomalPsw);
+        }
+        return r;
     }
 
     public String queryDbNomalPsw(Long userId) {

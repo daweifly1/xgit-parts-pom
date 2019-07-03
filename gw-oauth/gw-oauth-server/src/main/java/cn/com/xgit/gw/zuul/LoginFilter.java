@@ -69,18 +69,20 @@ public class LoginFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         try {
             SysUserLoginInfoVO sysUserLoginInfoVO = postUserLogin(ctx);
-            GrantedAuthority au = new GrantedAuthority() {
-                @Override
-                public String getAuthority() {
-                    return "USER";
-                }
-            };
-            org.springframework.security.core.userdetails.User user = new org.springframework.security.core.userdetails.User(sysUserLoginInfoVO.getUsername(),
-                    sysUserLoginInfoVO.getPassword(), true, true, true, true, Arrays.asList(au));
-            sysUserLoginInfoVO.setPassword(null);
-            //登陆成功
-            CommonUserDetails commonUserDetails = new CommonUserDetails(sysUserLoginInfoVO, user);
-            tokenAuthenticationHandler.saveAfterLogin(commonUserDetails, ctx.getResponse());
+            if (null != sysUserLoginInfoVO) {
+                GrantedAuthority au = new GrantedAuthority() {
+                    @Override
+                    public String getAuthority() {
+                        return "USER";
+                    }
+                };
+                org.springframework.security.core.userdetails.User user = new org.springframework.security.core.userdetails.User(sysUserLoginInfoVO.getUsername(),
+                        sysUserLoginInfoVO.getPassword(), true, true, true, true, Arrays.asList(au));
+                sysUserLoginInfoVO.setPassword(null);
+                //登陆成功
+                CommonUserDetails commonUserDetails = new CommonUserDetails(sysUserLoginInfoVO, user);
+                tokenAuthenticationHandler.saveAfterLogin(commonUserDetails, ctx.getResponse());
+            }
         } catch (Exception exc) {
             log.error("failed to process things", exc);
         }

@@ -2,10 +2,12 @@ package cn.com.xgit.parts.auth.module.role.mapper;
 
 import cn.com.xgit.parts.auth.common.base.SuperMapper;
 import cn.com.xgit.parts.auth.module.role.entity.SysRoleAuth;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+@Mapper
 public interface SysRoleAuthMapper extends SuperMapper<SysRoleAuth> {
 
     /**
@@ -27,5 +29,5 @@ public interface SysRoleAuthMapper extends SuperMapper<SysRoleAuth> {
      */
     List<SysRoleAuth> queryRoleAuthJoin(@Param("platformId") Long platformId, @Param("roleIds") List<Long> roleIds, @Param("onlyMenu") boolean onlyMenu);
 
-    List<SysRoleAuth> queryAuthIdList(@Param("roleIdList") List<Long> roleIdList,@Param("platformId") Long platformId);
+    List<SysRoleAuth> queryAuthIdList(@Param("roleIdList") List<Long> roleIdList, @Param("platformId") Long platformId);
 }

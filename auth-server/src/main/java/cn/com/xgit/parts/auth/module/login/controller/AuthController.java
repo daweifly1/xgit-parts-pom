@@ -5,6 +5,8 @@ import cn.com.xgit.parts.auth.exception.AuthException;
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.auth.module.account.param.UserLoginVO;
 import cn.com.xgit.parts.auth.module.account.param.UserRegistVO;
+import cn.com.xgit.parts.auth.module.account.service.SysAccountService;
+import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
 import cn.com.xgit.parts.auth.module.account.vo.SysPasswordVO;
 import cn.com.xgit.parts.auth.module.login.facade.UserInfoFacade;
 import cn.com.xgit.parts.common.result.ResultMessage;
@@ -40,6 +42,9 @@ public class AuthController extends BasicController {
     @Autowired
     private UserInfoFacade userInfoFacade;
 
+    @Autowired
+    private SysAccountService sysAccountService;
+
     /**
      * 登录若失败一定次数返回验证码
      *
@@ -65,6 +70,19 @@ public class AuthController extends BasicController {
     public ResultMessage logout() {
         log.info("{} -  {} 退出登录", getUserId(), getUserName());
         return ResultMessage.success();
+    }
+
+
+    @RequestMapping(value = {"/userInfo"})
+    public ResultMessage<SysAccountVO> userInfo(HttpServletRequest request) {
+        if (null == getUserId()) {
+            return ResultMessage.error(2, "未登陆");
+        }
+        SysAccountVO r = sysAccountService.queryAccountByIdOrLoginName(getUserId(), null, null);
+        if (null == r) {
+            return ResultMessage.error("用户查询失败");
+        }
+        return ResultMessage.success(r);
     }
 
 

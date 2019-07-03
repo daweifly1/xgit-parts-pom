@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +53,7 @@ public class UserInfoFacade {
     private Long dynamicPswTime;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     DefaultKaptcha defaultKaptcha;
@@ -107,6 +107,8 @@ public class UserInfoFacade {
             r.setId(accountDO.getId());
             r.setUsername(accountDO.getUsername());
             r.setName(accountDO.getName());
+            //此处密码无用
+            r.setPassword(UUID.randomUUID().toString());
             List<Long> roleIds = sysAccountRoleService.querRoleIdsByUserId(null, r.getId());
             r.setRoleIds(new HashSet<>(roleIds));
             return r;
@@ -139,7 +141,7 @@ public class UserInfoFacade {
             String psw = redisClient.get(dynamicPswPrefix + userLoginVO.getUsername());
             return StringUtils.isNoneBlank(psw) && passwordEncoder.matches(psw, userLoginVO.getPassword());
         }
-        return sysAccountService.checkLoginPsw(userId, userLoginVO.getPassword());
+        return sysAccountService.checkLoginPsw(userId, userLoginVO);
     }
 
     private boolean checkCode(UserLoginVO userLoginVO) {
@@ -261,6 +263,6 @@ public class UserInfoFacade {
             }
             throw new CommonException("动态密码输入错误");
         }
-        return sysAccountService.checkLoginPsw(sysPasswordVO.getUserId(), sysPasswordVO.getPassword());
+        return sysAccountService.checkLoginPsw2(sysPasswordVO.getUserId(), sysPasswordVO);
     }
 }
