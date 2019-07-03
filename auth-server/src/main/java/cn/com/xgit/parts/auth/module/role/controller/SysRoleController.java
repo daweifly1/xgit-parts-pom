@@ -68,7 +68,7 @@ public class SysRoleController extends BasicController {
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ApiOperation(value = "根据id查询角色信息表详情")
-    public ResultMessage<String> delete(@RequestBody String[] ids) {
+    public ResultMessage<String> delete(@RequestBody Long[] ids) {
         return sysRoleService.deleteByIds(new ArrayList(Arrays.asList(ids)));
     }
 

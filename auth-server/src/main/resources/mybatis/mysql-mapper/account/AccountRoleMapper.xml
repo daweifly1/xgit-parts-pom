@@ -12,7 +12,7 @@
     <select id="queryListByRoleIds" resultMap="BaseResultMap">
         select
         id,user_id,role_id
-        from IUS_ACCOUNT
+        from sys_account_role
         where role_id in
         <foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
             #{roleId}

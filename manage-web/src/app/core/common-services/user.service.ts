@@ -18,7 +18,8 @@ export namespace UserServiceNs {
   }
 
   export interface UfastHttpAnyResModel extends HttpUtilNs.UfastHttpRes {
-    value: any;
+    value?: any;
+    data?:any;
   }
 
   export interface AuthInfoResModel extends HttpUtilNs.UfastHttpRes {
