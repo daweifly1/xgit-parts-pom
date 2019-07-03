@@ -2,10 +2,12 @@ package cn.com.xgit.gw.module.controller;
 
 import cn.com.xgit.gw.api.beans.CommonUserDetails;
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 public class UserController {
 
@@ -24,4 +26,9 @@ public class UserController {
         return null;
     }
 
+    @RequestMapping("/logout")
+    public String logout() {
+        log.info("logout..............");
+        return "success";
+    }
 }

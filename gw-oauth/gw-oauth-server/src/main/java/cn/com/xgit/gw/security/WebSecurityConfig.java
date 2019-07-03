@@ -64,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private AccessDeniedHandler accessDeniedHandler;
 
     @Autowired
-    private JwtLogoutSuccessHandler logoutSuccessHandler;
+    private JwtLogoutSuccessHandler jwtLogoutSuccessHandler;
 
     @Autowired
     private JwtAuthenticationTokenFilter authenticationTokenFilter;
@@ -103,7 +103,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .and().openidLogin().loginProcessingUrl("/openIdLogin").permitAll().successHandler(commonLoginSuccessHandler)
 //                .and().oauth2Login().loginProcessingUrl("/authLogin").permitAll().successHandler(commonLoginSuccessHandler)
                 // 登出页
-                .and().logout().logoutUrl(signOutPage).permitAll().logoutSuccessHandler(logoutSuccessHandler)
+                .and().logout().logoutUrl(signOutPage).logoutSuccessHandler(jwtLogoutSuccessHandler)
                 .and().authorizeRequests()
                 .anyRequest().access("@rbacService.hasPermission(request, authentication)");
         // 禁用缓存

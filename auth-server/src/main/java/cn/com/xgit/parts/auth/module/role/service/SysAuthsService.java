@@ -83,10 +83,9 @@ public class SysAuthsService extends SuperService<SuperMapper<SysAuths>, SysAuth
                     sysAuthsDO.getChildren().add(child);
                 }
             }
+        } else {
+            sysAuthsDO.setLeaf(1);
         }
-//        } else {
-//            sysAuthsDO.setLeaf(1);
-//        }
     }
 
     @Transactional
