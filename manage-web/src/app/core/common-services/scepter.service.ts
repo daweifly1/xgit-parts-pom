@@ -18,6 +18,7 @@ export namespace ScepterServiceNs {
     deptId?: string;
     deptName?: string;
     id?: string;
+    platformId?: number;
     name: string;
     remark?: string;
     spaceId?: string;

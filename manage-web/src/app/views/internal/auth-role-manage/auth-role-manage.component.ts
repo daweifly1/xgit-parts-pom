@@ -4,6 +4,7 @@ import {ShowMessageService} from '../../../widget/show-message/show-message';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ScepterServiceNs} from '../../../core/common-services/scepter.service';
 import {AuthServiceNs} from '../../../core/common-services/auth.service';
+import {PlatformList} from "../../../../environments/actionCode";
 import SysAuthsItemModel = AuthServiceNs.SysAuthsItemModel;
 
 @Component({
@@ -12,6 +13,8 @@ import SysAuthsItemModel = AuthServiceNs.SysAuthsItemModel;
   styleUrls: ['./auth-role-manage.component.scss']
 })
 export class AuthRoleManageComponent implements OnInit {
+  // 过滤参数
+  filters: any;
   rolesList: RoleServiceNs.SysRoleReqModel[];
   selectedRolesId: string[];
   privilegeRole: RoleServiceNs.SysRoleReqModel;
@@ -24,6 +27,7 @@ export class AuthRoleManageComponent implements OnInit {
   addRoleForm: FormGroup;
   menuCodeObj: any;
   authCodeObj: any;
+  platformList = PlatformList;
 
   constructor(private roleService: RoleService, private showMessageService: ShowMessageService,
               private formBuilder: FormBuilder) {
@@ -33,20 +37,27 @@ export class AuthRoleManageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.filters = {platformId: 1};
     this.getPageList();
     this.addRoleForm = this.formBuilder.group({
-      roleName: ['', [Validators.required, Validators.maxLength(20)]],
-      roleRemark: ['', [Validators.maxLength(50)]]
+      name: ['', [Validators.required, Validators.maxLength(20)]],
+      remark: ['', [Validators.maxLength(50)]],
+      platformId: ['', [Validators.maxLength(10)]]
     });
   }
 
-  public switchTab(type: 'addRole' | 'editRole' | 'privilege' | '', role: ScepterServiceNs.RoleModel = {name: '', remark: ''}) {
+  public switchTab(type: 'addRole' | 'editRole' | 'privilege' | '', role: ScepterServiceNs.RoleModel = {
+    name: '',
+    remark: '',
+    platformId: 1
+  }) {
     this.tabPage = type;
     this.tabIndex = 1;
     this.privilegeRole = {};
     if (type === 'editRole' || type === 'addRole') {
       this.privilegeRole.name = role.name;
       this.privilegeRole.remark = role.remark;
+      this.privilegeRole.platformId = role.platformId;
       this.privilegeRole.id = role.id || undefined;
     } else {
       this.getDetail(role.id);
@@ -56,8 +67,8 @@ export class AuthRoleManageComponent implements OnInit {
   private getDetail(roleId: string) {
     this.roleService.getSysRoleDetail(roleId)
       .subscribe((resData: RoleServiceNs.RoleHttpAnyResModel<any>) => {
-        if (resData.code === 0) {
-          this.privilegeRole = resData.value;
+        if (resData.status === 0) {
+          this.privilegeRole = resData.data;
           this.authTree = this.privilegeRole.treeAuthList;
           return;
         }
@@ -79,7 +90,7 @@ export class AuthRoleManageComponent implements OnInit {
       }
       this.roleService.deleteSysRole(this.selectedRolesId)
         .subscribe((resData: any) => {
-          if (resData.code !== 0) {
+          if (resData.status !== 0) {
             this.showMessageService.showToastMessage(resData.message, 'error');
             return;
           }
@@ -132,7 +143,7 @@ export class AuthRoleManageComponent implements OnInit {
       }
       this.roleService.deleteSysRole([role.id])
         .subscribe((resData: any) => {
-          if (resData.code !== 0) {
+          if (resData.status !== 0) {
             this.showMessageService.showToastMessage(resData.message, 'error');
             return;
           }
@@ -156,7 +167,7 @@ export class AuthRoleManageComponent implements OnInit {
     console.log(this.privilegeRole);
     sub = this.roleService.saveSysRole(this.privilegeRole);
     sub.subscribe((resData: RoleServiceNs.RoleHttpAnyResModel<any>) => {
-      if (resData.code === 0) {
+      if (resData.status === 0) {
         this.getPageList();
       } else {
         this.showMessageService.showAlertMessage('', resData.message, 'warning');
@@ -174,9 +185,9 @@ export class AuthRoleManageComponent implements OnInit {
       this.authCodeObj = {};
       this.menuCodeObj = {};
     } else {
-      for (const key of Object.keys(this.addRoleForm.controls)) {
-        this.addRoleForm.controls[key].reset();
-      }
+      // for (const key of Object.keys(this.addRoleForm.controls)) {
+      //   this.addRoleForm.controls[key].reset();
+      // }
     }
     this.tabPage = '';
   }
@@ -261,7 +272,7 @@ export class AuthRoleManageComponent implements OnInit {
 
   setAuthSubmit() {
     let sub: any = null;
-    sub = this.roleService.saveSysRole(this.privilegeRole);
+    sub = this.roleService.saveRoleAuth(this.privilegeRole);
     sub.subscribe((resData: RoleServiceNs.RoleHttpAnyResModel<any>) => {
       if (resData.code === 0) {
         this.cancelTabPage();
@@ -274,7 +285,7 @@ export class AuthRoleManageComponent implements OnInit {
   }
 
   private getPageList() {
-    this.roleService.getSysRoleList({})
+    this.roleService.getSysRoleList(this.filters)
       .subscribe((resData: RoleServiceNs.RoleHttpAnyResModel<any>) => {
         if (resData.status === 0) {
           this.rolesList = resData.data.records;

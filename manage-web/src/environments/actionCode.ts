@@ -548,3 +548,6 @@ factoryDivisionDel: 110806,              // 厂矿分工删除
 };
 
 
+export const PlatformList = [{label: '基础平台', value: 1}, {label: '电商平台', value: 2}, {label: '仓储平台', value: 3}];
+
+

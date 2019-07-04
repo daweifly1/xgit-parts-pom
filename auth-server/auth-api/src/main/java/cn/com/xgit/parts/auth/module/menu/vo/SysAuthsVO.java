@@ -47,4 +47,7 @@ public class SysAuthsVO implements Serializable {
 
     @ApiModelProperty(value = "1叶子")
     private int leaf;
+
+    @ApiModelProperty(value = "是否选择")
+    private boolean checked;
 }

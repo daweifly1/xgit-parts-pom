@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService, AuthServiceNs} from '../../../core/common-services/auth.service';
 import {ShowMessageService} from '../../../widget/show-message/show-message';
+import {PlatformList} from '../../../../environments/actionCode';
 
 enum TabPageType {
   ManagePage = 0,
@@ -22,7 +23,7 @@ interface TypeItem {
 export class AuthComponent implements OnInit {
   // 过滤参数
   filters: any;
-  platformList: any[];
+  platformList = PlatformList;
   tabPageType: TabPageType;
   topNode: AuthServiceNs.SysAuthsItemModel;
   authDataList: AuthServiceNs.SysAuthsItemModel[];
@@ -39,7 +40,6 @@ export class AuthComponent implements OnInit {
     this.authDataList = [];
     this.addOrEditName = '';
     this.filters = {platformId: 1};
-    this.platformList = [{label: '基础平台', value: 1}, {label: '电商平台', value: 2}, {label: '仓储平台', value: 3}];
   }
 
   ngOnInit() {

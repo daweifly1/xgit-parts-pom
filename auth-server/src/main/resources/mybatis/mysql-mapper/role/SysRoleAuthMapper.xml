@@ -45,4 +45,17 @@
         </if>
 
     </select>
+
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into `sys_role_auth` (
+        role_id,auth_id,platform_id
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.roleId,jdbcType=BIGINT},#{item.authId,jdbcType=BIGINT},#{item.platformId,jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
+
 </mapper>

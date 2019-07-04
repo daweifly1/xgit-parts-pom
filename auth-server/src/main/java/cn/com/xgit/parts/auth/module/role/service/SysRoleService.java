@@ -28,7 +28,8 @@ public class SysRoleService extends SuperService<SuperMapper<SysRole>, SysRole> 
     private SysAccountRoleService sysAccountRoleService;
 
     public SysRole selectById(Long id) {
-        return baseMapper.selectById(id);
+        SysRole r = baseMapper.selectById(id);
+        return r;
     }
 
     @Transactional

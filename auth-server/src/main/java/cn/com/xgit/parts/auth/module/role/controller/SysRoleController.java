@@ -2,7 +2,12 @@ package cn.com.xgit.parts.auth.module.role.controller;
 
 import cn.com.xgit.parts.auth.common.base.BasicController;
 import cn.com.xgit.parts.auth.exception.code.ErrorCode;
+import cn.com.xgit.parts.auth.module.menu.vo.SysAuthsVO;
+import cn.com.xgit.parts.auth.module.role.entity.SysAuths;
 import cn.com.xgit.parts.auth.module.role.entity.SysRole;
+import cn.com.xgit.parts.auth.module.role.facade.MenuFacade;
+import cn.com.xgit.parts.auth.module.role.service.SysAuthsService;
+import cn.com.xgit.parts.auth.module.role.service.SysRoleAuthService;
 import cn.com.xgit.parts.auth.module.role.service.SysRoleService;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * SysRole Controller 实现类
@@ -31,6 +37,15 @@ import java.util.Arrays;
 public class SysRoleController extends BasicController {
     @Autowired
     private SysRoleService sysRoleService;
+
+    @Autowired
+    private SysRoleAuthService sysRoleAuthService;
+
+    @Autowired
+    private MenuFacade menuFacade;
+
+    @Autowired
+    private SysAuthsService sysAuthsService;
 
     @GetMapping("/list")
     @ApiOperation("角色信息表分页列表信息")
@@ -46,12 +61,31 @@ public class SysRoleController extends BasicController {
             return ResultMessage(ErrorCode.IllegalArument);
         }
         Long uid = getUserId();
+        boolean r;
         if (null == sysRole.getId()) {
             sysRole.setCreatedBy(uid);
+            r = sysRoleService.save(sysRole);
         } else {
             sysRole.setUpdatedBy(uid);
+            r = sysRoleService.updateByVO(sysRole);
         }
-        boolean r = sysRoleService.save(sysRole);
+        if (r) {
+            return ResultMessage.success();
+        }
+        return ResultMessage.error();
+    }
+
+    @RequestMapping(value = "/saveRoleAuth", method = RequestMethod.POST)
+    @ApiOperation(value = "角色权限关系信息表-保存")
+    public ResultMessage<ErrorCode> saveRoleAuth(@RequestBody SysRole sysRole, HttpServletRequest req) {
+        if (null == sysRole) {
+            return ResultMessage(ErrorCode.IllegalArument);
+        }
+        boolean r;
+        if (null == sysRole.getId()) {
+            return ResultMessage.error("需要先创建角色");
+        }
+        r = sysRoleAuthService.saveRoleAuth(sysRole);
         if (r) {
             return ResultMessage.success();
         }
@@ -63,6 +97,10 @@ public class SysRoleController extends BasicController {
     @ApiOperation(value = "根据id查询角色信息表详情")
     public ResultMessage<SysRole> item(Long id) {
         SysRole sysRole = sysRoleService.selectById(id);
+        SysAuths condition = new SysAuths();
+        condition.setPlatformId(sysRole.getPlatformId());
+        List<SysAuthsVO> menuDisplayVOList = sysAuthsService.roleTreeList(sysRole, false);
+        sysRole.setTreeAuthList(menuDisplayVOList);
         return ResultMessage(sysRole);
     }
 

@@ -111,7 +111,7 @@ export class RoleManageComponent implements OnInit {
       }
       this.scepterService.deleteRoles([role.id])
         .subscribe((resData: ScepterServiceNs.ScepterResModelT<any>) => {
-          if (resData.code !== 0) {
+          if (resData.status !== 0) {
             this.showMessageService.showToastMessage(resData.message, 'error');
             return;
           }
@@ -137,7 +137,7 @@ export class RoleManageComponent implements OnInit {
       }
       this.scepterService.deleteRoles(this.selectedRolesId)
         .subscribe((resData: ScepterServiceNs.ScepterResModelT<any>) => {
-          if (resData.code !== 0) {
+          if (resData.status !== 0) {
             this.showMessageService.showToastMessage(resData.message, 'error');
             return;
           }
@@ -207,7 +207,7 @@ export class RoleManageComponent implements OnInit {
       sub = this.scepterService.editRoles(this.addRoleData);
     }
     sub.subscribe((resData: ScepterServiceNs.ScepterResModelT<any>) => {
-      if (resData.code === 0) {
+      if (resData.status === 0) {
         this.getRolesList();
       } else {
         this.showMessageService.showAlertMessage('', resData.message, 'warning');
@@ -226,8 +226,6 @@ export class RoleManageComponent implements OnInit {
   // }
 
   private setAuthInit(roleId: string) {
-
-
     Observable.forkJoin([this.scepterService.getMenuShown(), this.scepterService.getMenusAuths(roleId)])
       .subscribe((resData: ScepterServiceNs.ScepterResModelT<any>[]) => {
         if (resData[0].code !== 0 || resData[1].code !== 0) {

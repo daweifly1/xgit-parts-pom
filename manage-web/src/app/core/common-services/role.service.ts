@@ -16,6 +16,7 @@ export namespace RoleServiceNs {
   export interface SysRoleReqModel {
     // 角色ID
     id?: string;
+    platformId?: number;
     // 角色名称
     name?: string;
     // 9:系统默认，用户不能删除
@@ -54,6 +55,12 @@ export namespace RoleServiceNs {
     public saveSysRole(data): Observable<UfastHttpResT<any>> {
       return this.http.Post<UfastHttpResT<any>>('/sysRole/save', data, this.defaultConfig);
     }
+
+    /**新增保存 */
+    public saveRoleAuth(data): Observable<UfastHttpResT<any>> {
+      return this.http.Post<UfastHttpResT<any>>('/sysRole/saveRoleAuth', data, this.defaultConfig);
+    }
+
 
     /**详情 */
     public getSysRoleDetail(id: string): Observable<UfastHttpResT<SysRoleReqModel>> {

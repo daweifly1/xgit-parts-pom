@@ -703,4 +703,3 @@ export const attrInputType = {
   1: '从列表中选取'
 };
 
-

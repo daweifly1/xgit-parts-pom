@@ -1,12 +1,16 @@
 package cn.com.xgit.parts.auth.module.role.entity;
 
+import cn.com.xgit.parts.auth.module.menu.vo.SysAuthsVO;
 import cn.com.xgit.parts.common.base.entity.CommEntity;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+
+import java.util.List;
 
 @Data
 @ToString(callSuper = true)
@@ -29,4 +33,8 @@ public class SysRole extends CommEntity {
 
     @ApiModelProperty(value = "备注信息", name = "remark")
     private String remark;
+
+    @ApiModelProperty(value = "角色所拥有的权限信息")
+    @TableField(exist = false)
+    private List<SysAuthsVO> treeAuthList;
 }

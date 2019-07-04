@@ -5,6 +5,7 @@ import cn.com.xgit.parts.auth.common.base.SuperService;
 import cn.com.xgit.parts.auth.exception.CommonException;
 import cn.com.xgit.parts.auth.module.menu.vo.SysAuthsVO;
 import cn.com.xgit.parts.auth.module.role.entity.SysAuths;
+import cn.com.xgit.parts.auth.module.role.entity.SysRole;
 import cn.com.xgit.parts.auth.module.role.mapper.SysAuthsMapper;
 import cn.com.xgit.parts.common.util.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -15,9 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * SysAuths 后台接口实现类
@@ -101,4 +104,28 @@ public class SysAuthsService extends SuperService<SuperMapper<SysAuths>, SysAuth
         }
     }
 
+    public List<SysAuthsVO> roleTreeList(SysRole sysRole, boolean onlyMenu) {
+        SysAuths c = new SysAuths();
+        c.setPlatformId(sysRole.getPlatformId());
+        List<SysAuthsVO> treeList = treeList(c, onlyMenu);
+        //根据roleId查询拥有的权限码（权限id）
+        Set<Long> hasAuthCode = sysRoleAuthService.queryAuthIdSet(sysRole.getPlatformId(), Arrays.asList(sysRole.getId()), onlyMenu);
+        checkTreeList(hasAuthCode, treeList);
+        return treeList;
+    }
+
+    private void checkTreeList(Set<Long> hasAuthCode, List<SysAuthsVO> treeList) {
+        if (CollectionUtils.isNotEmpty(treeList)) {
+            for (SysAuthsVO vo : treeList) {
+                if (hasAuthCode.contains(vo.getId())) {
+                    vo.setChecked(true);
+                } else {
+                    vo.setChecked(false);
+                }
+                if (null != vo.getChildren()) {
+                    checkTreeList(hasAuthCode, vo.getChildren());
+                }
+            }
+        }
+    }
 }
