@@ -230,10 +230,15 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
             sysAccount = queryByLoginNameOrMobi(loginName);
         }
         sysAccountVO = BeanUtil.do2bo(sysAccount, SysAccountVO.class);
-        if (null != sysAccountVO && null != platformId) {
+        if (null != sysAccountVO) {
             //根据用户id、平台查询角色列表
             List<SysRole> roles = sysAccountRoleService.querRolesByUserId(platformId, sysAccount.getId());
             sysAccountVO.setRoles(BeanUtil.do2bo4List(roles, SysRoleVO.class));
+            List<Long> rIds = new ArrayList<>(roles.size());
+            for (SysRole r : roles) {
+                rIds.add(r.getId());
+            }
+            sysAccountVO.setRoleIds(rIds);
         }
         return sysAccountVO;
     }
@@ -313,7 +318,7 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
 
     @Transactional
     public boolean updateAccountByVO(SysAccountVO accountVO) {
-        boolean r = updateAccountByVO(accountVO);
+        boolean r = updateByVO(accountVO);
         if (r) {
             SysAccountRole ar = new SysAccountRole();
             ar.setUserId(accountVO.getId());
@@ -325,7 +330,7 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
                     if (null == sr) {
                         throw new AuthException("有角色不存在");
                     }
-                    if (r) {
+                    if (!r) {
                         throw new AuthException("保存用户角色关系错误");
                     }
                     SysAccountRole vv = new SysAccountRole();
@@ -336,7 +341,7 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
                 }
             }
         }
-        if (r) {
+        if (!r) {
             throw new AuthException("保存错误");
         }
         return r;
