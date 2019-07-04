@@ -24,7 +24,7 @@ public class RestAuthenticationAccessDeniedHandler implements AccessDeniedHandle
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
         PrintWriter printWriter = response.getWriter();
-        String body = FastJsonUtil.toJSONString(ResultMessage.error(403, e.getMessage()));
+        String body = FastJsonUtil.toJSONString(ResultMessage.error(2, e.getMessage()));
         printWriter.write(body);
         printWriter.flush();
     }

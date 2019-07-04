@@ -33,6 +33,7 @@ export class AuthComponent implements OnInit {
   addOrEditName: string;
   show = true;
   authType: TypeItem[] = [{id: 1, name: '菜单', selected: false}, {id: 2, name: '按钮', selected: false}];
+  exportTsUrl: string;
 
   constructor(private authService: AuthService, private messageService: ShowMessageService) {
     this.tabPageType = TabPageType.ManagePage;
@@ -40,6 +41,7 @@ export class AuthComponent implements OnInit {
     this.authDataList = [];
     this.addOrEditName = '';
     this.filters = {platformId: 1};
+    this.exportTsUrl='/site/ius/sysAuths/exportTs';
   }
 
   ngOnInit() {

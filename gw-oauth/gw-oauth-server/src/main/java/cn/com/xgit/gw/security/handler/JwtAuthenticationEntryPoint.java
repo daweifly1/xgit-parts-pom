@@ -41,7 +41,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
         PrintWriter printWriter = response.getWriter();
-        String body = FastJsonUtil.toJSONString(ResultMessage.error(403, authException.getMessage()));
+        String body = FastJsonUtil.toJSONString(ResultMessage.error(2, authException.getMessage()));
         printWriter.write(body);
         printWriter.flush();
     }

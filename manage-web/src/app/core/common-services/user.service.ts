@@ -19,7 +19,7 @@ export namespace UserServiceNs {
 
   export interface UfastHttpAnyResModel extends HttpUtilNs.UfastHttpRes {
     value?: any;
-    data?:any;
+    data?: any;
   }
 
   export interface AuthInfoResModel extends HttpUtilNs.UfastHttpRes {
@@ -89,7 +89,8 @@ export namespace UserServiceNs {
     roleVOs?: any[];
     type?: number;
     status?: number;
-    userId?: string;
+    userId?: number;
+    id?: number;
     superiorId?: string;
     superiorName?: string;
   }
@@ -189,7 +190,7 @@ export namespace UserServiceNs {
     public updateUserInfo(userInfo: UserInfoModel): Observable<UfastHttpAnyResModel> {
       const config: HttpUtilNs.UfastHttpConfig = {};
       config.gateway = HttpUtilNs.GatewayKey.Ius;
-      return this.http.Post('/profile/updateUserInfo', userInfo, config);
+      return this.http.Post('/sysAccount/update', userInfo, config);
     }
 
     public resetPassword(userIdList: string[]): Observable<UfastHttpAnyResModel> {
@@ -204,13 +205,13 @@ export namespace UserServiceNs {
       return this.http.Post('/profile/remove', userIdList, config);
     }
 
-    public getUserDetail(userId: string): Observable<UfastHttpResT<UserInfoModel>> {
+    public getUserDetail(userId: number): Observable<UfastHttpResT<UserInfoModel>> {
       const config: HttpUtilNs.UfastHttpConfig = {};
       config.gateway = HttpUtilNs.GatewayKey.Ius;
-      return this.http.Get('/profile/detail', {userId: userId}, config);
+      return this.http.Get('/sysAccount/queryAccountById', {userId: userId}, config);
     }
 
-    public getUserList(filter: { filters: any, pageNum: number, pageSize: number }): Observable<UfastHttpAnyResModel> {
+    public getUserList(filter: { filters: any, current: number, pageSize: number }): Observable<UfastHttpAnyResModel> {
       const config: HttpUtilNs.UfastHttpConfig = {};
       config.gateway = HttpUtilNs.GatewayKey.Ius;
       return this.http.Get('/sysAccount/list', filter, config);

@@ -14,11 +14,13 @@
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-control nzSpan="16">
+          <nz-form-control nzSpan="24">
             <button nz-button nzType="info" (click)="getTreeList()">刷新</button>
             <button nz-button nzType="info" (click)="addOrEditAuth(1,topNode)">新增顶级节点</button>
+            <button nz-button nzType="info" appDownload [downloadUrl]="exportTsUrl" fileName="authCode.ts" reqMethod="post"
+                    [reqParam]="filters">导出ts</button>
           </nz-form-control>
-        </nz-form-item>
+        </nz-form-item>Ts
 
       </form>
     </div>
@@ -28,7 +30,7 @@
                 [nzLoading]="loading">
         <thead>
         <tr>
-          <th [nzWidth]="'75%'">资源信息</th>
+          <th [nzWidth]="'75%'">资源信息(code为该该操作的权限码)</th>
           <th [nzWidth]="'25%'">操作</th>
         </tr>
         </thead>
@@ -40,7 +42,7 @@
                  *ngIf="oneLevel.leaf === 0 && !oneLevel.expand"></i>
               <i class="anticon anticon-minus-square-o" (click)="expandAuth(oneLevel)"
                  *ngIf="oneLevel.leaf === 0 && oneLevel.expand"></i>
-              <span><b>{{oneLevel.name}}</b></span>
+              <span><b>{{oneLevel.name}}</b></span> <span><b>(code：{{oneLevel.id}})</b></span>
               <!--<span>类型：{{oneLevel.type| map:'authType'}}</span>-->
               <span *ngIf="oneLevel.url"><b>URL：</b>{{oneLevel.url}}</span>
             </td>
@@ -59,7 +61,7 @@
                   <i class="anticon anticon-minus-square-o" (click)="expandAuth(twoLevel)"
                      *ngIf="twoLevel.leaf === 0 && twoLevel.expand"></i>
 
-                  <span><b>{{twoLevel.name}}</b></span>
+                  <span><b>{{twoLevel.name}}</b></span> <span><b>(code：{{twoLevel.id}})</b></span>
                   <!--<span>类型：{{twoLevel.type| map:'authType'}}</span>-->
                   <span *ngIf="twoLevel.url"><b>URL：</b>{{twoLevel.url}}</span>
                 </td>
@@ -78,7 +80,7 @@
                       <i class="anticon anticon-minus-square-o" (click)="expandAuth(threeLevel)"
                          *ngIf="threeLevel.leaf === 0 && threeLevel.expand"></i>
 
-                      <span><b>{{threeLevel.name}}</b></span>
+                      <span><b>{{threeLevel.name}}</b></span><span><b>(code：{{threeLevel.id}})</b></span>
                       <!--<span>类型：{{threeLevel.type| map:'authType'}}</span>-->
                       <span *ngIf="threeLevel.url"><b>URL：</b>{{threeLevel.url}}</span>
                     </td>
@@ -94,7 +96,7 @@
                     <ng-container *ngFor="let fourLevel of threeLevel.children;trackBy:trackById;">
                       <tr>
                         <td [ngStyle]="{paddingLeft:'90px'}">
-                          <span><b>{{fourLevel.name}}</b></span>
+                          <span><b>{{fourLevel.name}}</b></span><span> <b>(code：{{fourLevel.id}})</b></span>
                           <!--<span>类型：{{fourLevel.type| map:'authType'}}</span>-->
                           <span *ngIf="fourLevel.url"><b>URL：</b>{{fourLevel.url}}</span>
                         </td>

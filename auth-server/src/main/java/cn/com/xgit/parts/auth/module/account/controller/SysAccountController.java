@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,10 +41,10 @@ public class SysAccountController extends BasicController {
         return ResultMessage.success(sysAccountService.page(getPagination(), new QueryWrapper<>(condition)));
     }
 
-    @PutMapping("add")
-    @ApiOperation("查询用户列表")
-    public ResultMessage<String> account(@RequestBody SysAccount accountVO) {
-        if (sysAccountService.updateByVO(accountVO)) {
+    @PostMapping("/update")
+    @ApiOperation("更新用户")
+    public ResultMessage<String> account(@RequestBody SysAccountVO accountVO) {
+        if (sysAccountService.updateAccountByVO(accountVO)) {
             return ResultMessage.success();
         }
         return actionErrorResult("保存失败");
@@ -85,7 +84,7 @@ public class SysAccountController extends BasicController {
 
 
     @GetMapping("/queryAccountById")
-    public ResultMessage<SysAccountVO> queryAccountById(@RequestParam(value = "userId") Long userId, @RequestParam(value = "platformId") Long platformId) {
+    public ResultMessage<SysAccountVO> queryAccountById(@RequestParam(value = "userId") Long userId, @RequestParam(value = "platformId", required = false) Long platformId) {
         SysAccountVO ret = sysAccountService.queryAccountByIdOrLoginName(userId, null, platformId);
         return ResultMessage(ret);
     }

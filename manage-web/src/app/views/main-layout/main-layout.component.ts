@@ -42,7 +42,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
         return;
       }
       this.sideMenu = presentMenu[0];
-      console.log( JSON.stringify(this.sideMenu))
+      // console.log( JSON.stringify(this.sideMenu))
       this.hideSideMenu = false;
       this.selectedItem = this.sideMenu.url;
     });

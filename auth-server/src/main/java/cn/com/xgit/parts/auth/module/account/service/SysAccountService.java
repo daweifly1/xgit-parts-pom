@@ -16,6 +16,7 @@ import cn.com.xgit.parts.auth.module.account.vo.SysAccountVO;
 import cn.com.xgit.parts.auth.module.account.vo.SysPasswordVO;
 import cn.com.xgit.parts.auth.module.menu.vo.SysRoleVO;
 import cn.com.xgit.parts.auth.module.role.entity.SysRole;
+import cn.com.xgit.parts.auth.module.role.service.SysRoleService;
 import cn.com.xgit.parts.common.util.AccountValidatorUtil;
 import cn.com.xgit.parts.common.util.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -49,6 +51,9 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
 
     @Autowired
     private SysAccountRoleService sysAccountRoleService;
+
+    @Autowired
+    private SysRoleService sysRoleService;
 
     public SysAccount queryByLoginNameOrMobi(String loginNameOrMobi) {
         SysAccount sysAccount = new SysAccount();
@@ -304,5 +309,36 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
         }
         sysUserLoginInfoVO.setRoleIds(new HashSet<>(sysAccountRoleService.querRoleIdsByUserId(null, ddo.getId())));
         return sysUserLoginInfoVO;
+    }
+
+    @Transactional
+    public boolean updateAccountByVO(SysAccountVO accountVO) {
+        boolean r = updateAccountByVO(accountVO);
+        if (r) {
+            SysAccountRole ar = new SysAccountRole();
+            ar.setUserId(accountVO.getId());
+            r = sysAccountRoleService.remove(new QueryWrapper<SysAccountRole>(ar));
+            if (r && CollectionUtils.isNotEmpty(accountVO.getRoleIds())) {
+                Map<Long, SysRole> roleMap = sysRoleService.queryMap(accountVO.getRoleIds());
+                for (Long roleId : accountVO.getRoleIds()) {
+                    SysRole sr = roleMap.get(roleId);
+                    if (null == sr) {
+                        throw new AuthException("有角色不存在");
+                    }
+                    if (r) {
+                        throw new AuthException("保存用户角色关系错误");
+                    }
+                    SysAccountRole vv = new SysAccountRole();
+                    vv.setUserId(accountVO.getId());
+                    vv.setRoleId(roleId);
+                    vv.setPlatformId(sr.getPlatformId());
+                    r = sysAccountRoleService.save(vv);
+                }
+            }
+        }
+        if (r) {
+            throw new AuthException("保存错误");
+        }
+        return r;
     }
 }

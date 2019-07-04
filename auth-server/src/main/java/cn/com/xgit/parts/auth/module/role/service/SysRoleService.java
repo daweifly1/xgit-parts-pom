@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * SysRole 后台接口实现类
@@ -46,6 +48,18 @@ public class SysRoleService extends SuperService<SuperMapper<SysRole>, SysRole> 
         }
         return ResultMessage.success();
     }
+
+    public Map<Long, SysRole> queryMap(List<Long> roleIds) {
+        Map<Long, SysRole> r = new HashMap<>();
+        List<SysRole> list = (List<SysRole>) listByIds(roleIds);
+        if(CollectionUtils.isNotEmpty(list)){
+            for(SysRole sr:list){
+                r.put(sr.getId(),sr);
+            }
+        }
+        return r;
+    }
+
 
 //
 //    @Autowired

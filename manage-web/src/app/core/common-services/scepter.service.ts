@@ -67,7 +67,7 @@ export namespace ScepterServiceNs {
     public getRoles(): Observable<GetRoleResModel> {
       const config: HttpUtilNs.UfastHttpConfig = {};
       config.gateway = HttpUtilNs.GatewayKey.Ius;
-      return this.http.Get<GetRoleResModel>('/sysRole/list', null, config);
+      return this.http.Get<GetRoleResModel>('/sysRole/list', {platformId: 1}, config);
     }
 
     public addRole(role: RoleModel) {

@@ -43,7 +43,7 @@ export class UserManageComponent implements OnInit {
   departmentOptions: any[];
   roleIdList: ScepterServiceNs.RoleModel[];
   editUserInitDeptId: string;
-  operateUserId: string;
+  operateUserId: number;
   addOrEditTitle: string;
   selectedList: number[];
   @ViewChild('operationTpl') operationTpl: TemplateRef<any>;
@@ -107,7 +107,7 @@ export class UserManageComponent implements OnInit {
 
   getUserList = () => {
     const filter = {
-      pageNum: this.userTableConfig.pageNum,
+      current: this.userTableConfig.pageNum,
       pageSize: this.userTableConfig.pageSize,
       filters: this.filterData,
       orderBy: this.orderBy
@@ -123,7 +123,7 @@ export class UserManageComponent implements OnInit {
       this.userTableConfig.total = resData.data.total;
       this.actionStatus = {};
       this.userDataList.forEach((item) => {
-        this.actionStatus[item.userId] = {
+        this.actionStatus[item.id] = {
           edit: true,
           resetPassword: true,
           del: true,
@@ -183,7 +183,7 @@ export class UserManageComponent implements OnInit {
 
   }
 
-  public addOrEditUserTab(type: number, userId?: string) {
+  public addOrEditUserTab(type: number, userId?: number) {
     this.tabPageType = type;
     this.tabPageIndex = 1;
 
@@ -197,26 +197,26 @@ export class UserManageComponent implements OnInit {
       this.getRoleIds();
       this.userInfoForm.get('username').disable();
       this.userService.getUserDetail(userId).subscribe((resData: UserServiceNs.UfastHttpAnyResModel) => {
-        if (resData.code !== 0) {
+        if (resData.status !== 0) {
           this.messageService.showToastMessage(resData.message, 'warning');
         }
         this.userInfoForm.patchValue(<any>{
-          name: resData.value.name,
-          username: resData.value.username,
-          nickname: resData.value.nickname,
-          mobile: resData.value.mobile,
-          telephone: resData.value.telephone,
-          email: resData.value.email,
-          code: resData.value.code,
-          erpCode: resData.value.erpCode,
-          locked: resData.value.locked,
-          sex: resData.value.locked,
-          roleIds: resData.value.roleIds,
-          deptId: resData.value.deptName,
-          superiorId: resData.value.superiorId,
-          superiorName: resData.value.superiorName
+          name: resData.data.name,
+          username: resData.data.username,
+          nickname: resData.data.nickname,
+          mobile: resData.data.mobile,
+          telephone: resData.data.telephone,
+          email: resData.data.email,
+          code: resData.data.code,
+          erpCode: resData.data.erpCode,
+          locked: resData.data.locked,
+          sex: resData.data.locked,
+          roleIds: resData.data.roleIds,
+          deptId: resData.data.deptName,
+          superiorId: resData.data.superiorId,
+          superiorName: resData.data.superiorName
         });
-        this.editUserInitDeptId = resData.value.deptId;
+        this.editUserInitDeptId = resData.data.deptId;
       }, (error: any) => {
         this.messageService.showAlertMessage('', error.message, 'error');
       });
@@ -238,7 +238,7 @@ export class UserManageComponent implements OnInit {
   public toggleManagePage() {
     this.tabPageType = TabPageType.ManagePage;
     this.tabPageIndex = 0;
-    this.operateUserId = '';
+    this.operateUserId = 0;
   }
 
   private commonResDeal(observer: Observable<any>, refresh: boolean = true) {
@@ -303,11 +303,11 @@ export class UserManageComponent implements OnInit {
 
   public getRoleIds() {
     this.scepterService.getRoles().subscribe((resData: ScepterServiceNs.ScepterResModelT<ScepterServiceNs.RoleModel[]>) => {
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'warning');
         return;
       }
-      this.roleIdList = resData.value;
+      this.roleIdList = resData.data.records;
 
     }, (error: any) => {
       this.messageService.showAlertMessage('', error.message, 'error');
@@ -339,7 +339,7 @@ export class UserManageComponent implements OnInit {
       email: userInfo.email,
       roleIds: userInfo.roleIds,
       deptId: userInfo.deptId instanceof Array ? userInfo.deptId[userInfo.deptId.length - 1] : this.editUserInitDeptId,
-      userId: this.operateUserId,
+      id: this.operateUserId,
       superiorId: userInfo.superiorId,
       superiorName: userInfo.superiorName
     };
@@ -354,7 +354,7 @@ export class UserManageComponent implements OnInit {
     }
 
     observer.subscribe((resData: UserServiceNs.UfastHttpAnyResModel) => {
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'error');
         return;
       }
@@ -383,7 +383,7 @@ export class UserManageComponent implements OnInit {
 
   public getSuperiorList = () => {
     const filter = {
-      pageNum: this.superiorListTableConfig.pageNum,
+      current: this.superiorListTableConfig.pageNum,
       pageSize: this.superiorListTableConfig.pageSize,
       filters: {
         // deptId: this.userInfoForm.controls['deptId'].value
@@ -397,8 +397,8 @@ export class UserManageComponent implements OnInit {
         this.messageService.showToastMessage(resData.message, 'error');
         return;
       }
-      this.superiorListTableConfig.total = resData.value.total;
-      resData.value.list.forEach((item) => {
+      this.superiorListTableConfig.total = resData.data.total;
+      resData.data.list.forEach((item) => {
         this.superiorList.push({
           name: item.name,
           userId: item.userId
@@ -429,11 +429,11 @@ export class UserManageComponent implements OnInit {
     this.userInfoForm = this.formBuilder.group({
       username: [null, [Validators.required, Validators.maxLength(20)]],
       name: [null, [Validators.required, Validators.maxLength(20)]],
-      code: [null, [Validators.required, Validators.maxLength(20)]],
-      erpCode: [null, [Validators.required, Validators.maxLength(20)]],
+      code: [null, [ Validators.maxLength(20)]],
+      erpCode: [null, [Validators.maxLength(20)]],
       nickname: [null, Validators.maxLength(20)],
       sex: [null, Validators.required],
-      deptId: [[], [Validators.required]],
+      deptId: [null],
       roleIds: [[], [Validators.required]],
       telephone: [null, [this.validator.telephoneValidator()]],
       mobile: [null, [Validators.maxLength(11), Validators.minLength(11)]],
