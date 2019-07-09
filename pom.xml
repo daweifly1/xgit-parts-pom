@@ -183,13 +183,13 @@
     <repositories>
         <repository>
             <id>local-maven</id>
-            <url>http://10.100.2.80:8081/repository/maven-public/</url>
+            <url>http://10.100.2.109:8081/repository/maven-public/</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
             <id>local-maven</id>
-            <url>http://10.100.2.80:8081/repository/maven-public/</url>
+            <url>http://10.100.2.109:8081/repository/maven-public/</url>
         </pluginRepository>
     </pluginRepositories>
 
@@ -197,12 +197,12 @@
         <repository>
             <id>maven-releases</id>
             <name>Internal Releases</name>
-            <url>http://10.100.2.80:8081/repository/maven-releases</url>
+            <url>http://10.100.2.109:8081/repository/maven-releases</url>
         </repository>
         <snapshotRepository>
             <id>maven-snapshots</id>
             <name>Internal snapshots</name>
-            <url>http://10.100.2.80:8081/repository/maven-snapshots</url>
+            <url>http://10.100.2.109:8081/repository/maven-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
     <build>

@@ -240,7 +240,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
-    public static void main(String[] args) {
-        System.out.println("?:" + PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("secret"));
-    }
 }

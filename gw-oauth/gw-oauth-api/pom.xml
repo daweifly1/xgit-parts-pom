@@ -8,8 +8,9 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <groupId>cn.com.xgit</groupId>
     <artifactId>gw-oauth-api</artifactId>
+    <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
     <description>网关对外提供的api,为zuul下游调用提供接口</description>
     <dependencies>

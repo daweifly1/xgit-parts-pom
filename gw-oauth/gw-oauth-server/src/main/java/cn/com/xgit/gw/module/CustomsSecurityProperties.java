@@ -49,4 +49,8 @@ public class CustomsSecurityProperties {
 
     //超级管理员
     private String[] superAdmins;
+    //网管的i地址
+    private String gwUrl;
+    //对称加密密钥
+    private String aesSeed;
 }

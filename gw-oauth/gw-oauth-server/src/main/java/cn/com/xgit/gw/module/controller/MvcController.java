@@ -1,5 +1,6 @@
 package cn.com.xgit.gw.module.controller;
 
+import cn.com.xgit.gw.module.CustomsSecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +28,9 @@ public class MvcController {
 
     @Autowired
     private JdbcClientDetailsService jdbcClientDetailsService;
+
+    @Autowired
+    private CustomsSecurityProperties customsSecurityProperties;
 
     /**
      * 登出回调
@@ -90,11 +94,11 @@ public class MvcController {
             ClientDetails cc = ll.get(i);
             Map<String, Object> dd = new HashMap<>();
             dd.put("name", "CODE模式授权给" + cc.getClientId());
-            dd.put("webServerRedirectUri", " http://10.3.1.33:9000/oauth/authorize?response_type=code&client_id=" + cc.getClientId() + "&redirect_uri=" + cc.getRegisteredRedirectUri().toArray()[0]);
+            dd.put("webServerRedirectUri", this.customsSecurityProperties.getGwUrl() + "/oauth/authorize?response_type=code&client_id=" + cc.getClientId() + "&redirect_uri=" + cc.getRegisteredRedirectUri().toArray()[0]);
             client.add(dd);
             Map<String, Object> dd2 = new HashMap<>();
             dd2.put("name", "简化模式授权给" + cc.getClientId());
-            dd2.put("webServerRedirectUri", " http://10.3.1.33:9000/oauth/authorize?response_type=token&client_id=" + cc.getClientId() + "&scope=all&redirect_uri=" + cc.getRegisteredRedirectUri().toArray()[0]);
+            dd2.put("webServerRedirectUri", this.customsSecurityProperties.getGwUrl() + "/oauth/authorize?response_type=token&client_id=" + cc.getClientId() + "&scope=all&redirect_uri=" + cc.getRegisteredRedirectUri().toArray()[0]);
             client.add(dd2);
         }
         model.put("client", client);
