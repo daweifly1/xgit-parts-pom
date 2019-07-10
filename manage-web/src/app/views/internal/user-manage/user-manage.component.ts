@@ -307,7 +307,7 @@ export class UserManageComponent implements OnInit {
         this.messageService.showToastMessage(resData.message, 'warning');
         return;
       }
-      this.roleIdList = resData.data.records;
+      this.roleIdList = resData.data["records"];
 
     }, (error: any) => {
       this.messageService.showAlertMessage('', error.message, 'error');
