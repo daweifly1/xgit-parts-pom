@@ -20,8 +20,8 @@
         <docker.plugin.version>1.0.0</docker.plugin.version>
         <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
 
-        <mybatis.version>2.0.0</mybatis.version>
-        <mybatis-plus.version>3.0.7</mybatis-plus.version>
+        <mybatis.version>2.0.1</mybatis.version>
+        <mybatis-plus.version>3.1.1</mybatis-plus.version>
         <lombok.version>1.18.0</lombok.version>
         <flyway.version>5.2.4</flyway.version>
         <swagger.version>2.9.2</swagger.version>
