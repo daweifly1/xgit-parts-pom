@@ -107,6 +107,9 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
       .subscribe((menuData: MenuServiceNs.UfastHttpAnyResModel) => {
         this.messageService.closeLoading();
         if (menuData.status !== 0) {
+          if (menuData.status === 2) {
+            //没有访问
+          }
           this.messageService.showAlertMessage(menuData.message, '', 'warning');
           return;
         }

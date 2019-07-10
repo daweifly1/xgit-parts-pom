@@ -105,7 +105,7 @@ export class QualFileComponent implements OnInit {
         this.messageService.showLoading('');
         this.supplierInfoService.delTempQualFile(id, this._supplierId).subscribe((resData: SupplierInfoNs.SupplierResModelT<any>) => {
           this.messageService.closeLoading();
-          if (resData.code !== 0) {
+          if (resData.status !== 0) {
             this.messageService.showToastMessage(resData.message, 'error');
             return;
           }
@@ -144,7 +144,7 @@ export class QualFileComponent implements OnInit {
     this.messageService.showLoading('');
     submitHandler.subscribe((resData: SupplierInfoNs.SupplierResModelT<any>) => {
       this.messageService.closeLoading();
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'error');
         return;
       }
@@ -165,11 +165,11 @@ export class QualFileComponent implements OnInit {
     this.dataList = [];
     this.supplierInfoService.getTempQualFile(this._supplierId).subscribe((resData: SupplierInfoNs.SupplierResModelT<any>) => {
       this.tableConfig.loading = false;
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'error');
         return;
       }
-      this.dataList = resData.value || [];
+      this.dataList = resData.data || [];
       this.dataList.forEach((item) => {
         if (item.credentialType === SupplierInfoNs.QualFileType.Other) {
           return;

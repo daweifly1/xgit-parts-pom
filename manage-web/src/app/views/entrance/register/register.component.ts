@@ -53,7 +53,7 @@ export class RegisterComponent implements OnInit {
     this.messageService.showLoading('');
     this.supplierInfoService.registerSupplier(this.registerInfo).subscribe((resData: SupplierInfoNs.SupplierResModelT<any>) => {
       this.messageService.closeLoading();
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'error');
         this.refreshVerify();
         return;
@@ -75,14 +75,14 @@ export class RegisterComponent implements OnInit {
   }
   ngOnInit() {
     this.infoForm = this.formBuilder.group({
-      companyName: [null, [Validators.required, Validators.maxLength(MaxInputLen.CompanyName)]],
-      socialCreditCode: [null, [Validators.required, Validators.maxLength(MaxInputLen.CreditCode)]],
+      // companyName: [null, [Validators.required, Validators.maxLength(MaxInputLen.CompanyName)]],
+      // socialCreditCode: [null, [Validators.required, Validators.maxLength(MaxInputLen.CreditCode)]],
       username: [null, [Validators.required, Validators.maxLength(MaxInputLen.Account)]],
       password: [null, [Validators.required, this.ufastValidatorsService.passwordValidator()]],
       confirmPw: [null, [Validators.required, this.confirmPwValidator]],
-      userName: [null, [Validators.maxLength(MaxInputLen.Name)]],
-      phone: [null, [Validators.required, this.ufastValidatorsService.mobileValidator()]],
-      verifyCode: [null, [Validators.required]]
+      name: [null, [Validators.maxLength(MaxInputLen.Name)]],
+      mobile: [null, [Validators.required, this.ufastValidatorsService.mobileValidator()]],
+      code: [null, [Validators.required]]
     });
     this.refreshVerify();
   }

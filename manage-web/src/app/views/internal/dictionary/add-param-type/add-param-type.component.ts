@@ -41,7 +41,7 @@ export class AddParamTypeComponent implements OnInit {
     this.messageService.showLoading();
     submit.subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
       this.messageService.closeLoading();
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showAlertMessage('', resData.message, 'warning');
         return;
       }

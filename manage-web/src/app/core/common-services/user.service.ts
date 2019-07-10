@@ -18,7 +18,6 @@ export namespace UserServiceNs {
   }
 
   export interface UfastHttpAnyResModel extends HttpUtilNs.UfastHttpRes {
-    value?: any;
     data?: any;
   }
 
@@ -131,7 +130,7 @@ export namespace UserServiceNs {
       config.gateway = HttpUtilNs.GatewayKey.Ius;
       return this.http.Post<AuthAnyResModel>('/auth/login', loginData, config)
         .pipe(map((resData: AuthAnyResModel) => {
-          if (resData.code === 0) {
+          if (resData.status === 0) {
             this.userInfo.username = loginData.username;
           }
           return resData;
@@ -143,7 +142,7 @@ export namespace UserServiceNs {
       config.gateway = HttpUtilNs.GatewayKey.Ius;
       return this.http.Get('/auth/logout', null, config)
         .pipe(map((resData: AuthAnyResModel) => {
-          if (resData.code === 0) {
+          if (resData.status === 0) {
             this.userInfo.username = '';
           }
           return resData;

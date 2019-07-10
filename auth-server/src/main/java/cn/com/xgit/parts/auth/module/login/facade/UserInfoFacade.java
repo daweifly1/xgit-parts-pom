@@ -90,7 +90,7 @@ public class UserInfoFacade {
         if (accountDO == null) {
             throw new CommonException("用户不存在或者密码错误");
         }
-        if (accountDO.getLocked() == 1) {
+        if (null != accountDO.getLocked() && accountDO.getLocked() == 1) {
             throw new CommonException("用户被锁定");
         }
         //非手机动态验证码时候，错误一定次数后要求输入验证码
@@ -129,7 +129,7 @@ public class UserInfoFacade {
             userLoginVO.setPswType(PasswordType.NORMAL.getType());
         }
         if (StringUtils.isNoneBlank(userLoginVO.getCode())) {
-            boolean codeIsTrue = checkCode(userLoginVO);
+            boolean codeIsTrue = checkCode(userLoginVO.getAuthId(), userLoginVO.getCode());
             if (!codeIsTrue) {
                 throw new CommonException("验证码错误");
             }
@@ -144,13 +144,13 @@ public class UserInfoFacade {
         return sysAccountService.checkLoginPsw(userId, userLoginVO);
     }
 
-    private boolean checkCode(UserLoginVO userLoginVO) {
-        if (null == userLoginVO || null == userLoginVO.getAuthId()) {
+    private boolean checkCode(String authId, String code2) {
+        if (null == authId || null == code2) {
             return false;
         }
-        String code = redisClient.get(userLoginVO.getAuthId());
-        if (StringUtils.isNoneBlank(code) && userLoginVO.getCode().equals(code)) {
-            redisClient.delete(userLoginVO.getAuthId());
+        String code = redisClient.get(authId);
+        if (StringUtils.isNoneBlank(code) && code2.equals(code)) {
+            redisClient.delete(authId);
             return true;
         }
         return false;
@@ -158,11 +158,11 @@ public class UserInfoFacade {
 
     @Transactional
     public UserRegistVO regist(UserRegistVO userRegistVO, String ip) {
-        if (null == userRegistVO || null == userRegistVO.getSysAccountVO() || null == userRegistVO.getUserLoginVO()
-                || StringUtils.isBlank(userRegistVO.getUserLoginVO().getUsername())) {
+        if (null == userRegistVO || null == userRegistVO.getPswType() || null == userRegistVO.getPassword()
+                || StringUtils.isBlank(userRegistVO.getUsername())) {
             throw new AuthException("注册信息不能为空");
         }
-        boolean codeIsTrue = checkCode(userRegistVO.getUserLoginVO());
+        boolean codeIsTrue = checkCode(userRegistVO.getAuthId(), userRegistVO.getCode());
         if (!codeIsTrue) {
             throw new AuthException("验证码错误");
         }
@@ -175,7 +175,7 @@ public class UserInfoFacade {
             throw new CommonException("验证码错误");
         }
         //校验验证码
-        boolean codeIsTrue = checkCode(userLoginVO);
+        boolean codeIsTrue = checkCode(userLoginVO.getAuthId(), userLoginVO.getCode());
         if (!codeIsTrue) {
             throw new CommonException("验证码错误");
         }
@@ -191,7 +191,7 @@ public class UserInfoFacade {
             throw new CommonException("验证码错误");
         }
         //校验验证码
-        boolean codeIsTrue = checkCode(userLoginVO);
+        boolean codeIsTrue = checkCode(userLoginVO.getAuthId(), userLoginVO.getCode());
         if (!codeIsTrue) {
             throw new CommonException("验证码错误");
         }

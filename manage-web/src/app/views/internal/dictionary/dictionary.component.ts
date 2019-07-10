@@ -61,17 +61,17 @@ export class DictionaryComponent implements OnInit {
     this.tableConfig.loading = true;
     this.dictionaryService.getdataDictionaryList(filter).subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
       this.tableConfig.loading = false;
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showAlertMessage('', resData.message, 'warning');
         return;
       }
-      resData.value.list.forEach((item) => {
+      resData.data.list.forEach((item) => {
         let temp = <any>{};
         temp = item;
         temp['_this'] = temp;
         this.dataDictionaryList.push(temp);
       });
-      this.tableConfig.total = resData.value.total;
+      this.tableConfig.total = resData.data.total;
     }, (error: any) => {
       this.tableConfig.loading = false;
       this.messageService.showAlertMessage('', error.message, 'error');

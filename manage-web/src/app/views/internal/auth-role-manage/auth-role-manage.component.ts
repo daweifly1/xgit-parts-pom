@@ -274,7 +274,7 @@ export class AuthRoleManageComponent implements OnInit {
     let sub: any = null;
     sub = this.roleService.saveRoleAuth(this.privilegeRole);
     sub.subscribe((resData: RoleServiceNs.RoleHttpAnyResModel<any>) => {
-      if (resData.code === 0) {
+      if (resData.status === 0) {
         this.cancelTabPage();
       } else {
         this.showMessageService.showAlertMessage('', resData.message, 'warning');

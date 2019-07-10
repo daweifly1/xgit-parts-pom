@@ -100,12 +100,12 @@ export class SupplierInfoRecordComponent implements OnInit, OnDestroy {
     this.dataTableConfig.loading = true;
     this.supplierInfoService.getInfoChangeList(filters).subscribe((resData: SupplierInfoNs.SupplierResModelT<any>) => {
       this.dataTableConfig.loading = false;
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'error');
         return;
       }
-      this.dataList = resData.value.list || [];
-      this.dataTableConfig.total = resData.value.total;
+      this.dataList = resData.data.list || [];
+      this.dataTableConfig.total = resData.data.total;
       this.dataList.forEach((item, index: number) => {
         item['index'] = index;
         if (item.type === this.ChangeTypeEnum.BasicInfo) {

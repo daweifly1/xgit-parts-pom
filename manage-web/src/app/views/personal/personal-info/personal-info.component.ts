@@ -41,7 +41,7 @@ export class PersonalInfoComponent implements OnInit {
       reqData[item] = this.personalForm.value[item];
     }
     this.userService.updatePersonInfo(reqData).subscribe((resData: UserServiceNs.UfastHttpAnyResModel) => {
-      if (resData.code === 0) {
+      if (resData.status === 0) {
         this.messageService.showToastMessage('操作成功', 'success');
         this.personalForm.reset();
         this.getPersonalInfo();
@@ -55,20 +55,20 @@ export class PersonalInfoComponent implements OnInit {
 
   public getPersonalInfo() {
     this.userService.getLogin().subscribe((resData: UserServiceNs.UfastHttpAnyResModel) => {
-      if (resData.code === 0) {
+      if (resData.status === 0) {
         this.userInfo = {
-          locked: resData.value.locked,
-          username: resData.value.username,
-          name: resData.value.name,
-          roleIds: resData.value.roleIds,
-          sex: resData.value.sex,
-          deptId: resData.value.deptId,
-          nickname: resData.value.nickname,
-          deptName: resData.value.deptName,
-          email: resData.value.email,
-          mobile: resData.value.mobile,
-          telephone: resData.value.telephone,
-          roleNames: resData.value.roleNames
+          locked: resData.data.locked,
+          username: resData.data.username,
+          name: resData.data.name,
+          roleIds: resData.data.roleIds,
+          sex: resData.data.sex,
+          deptId: resData.data.deptId,
+          nickname: resData.data.nickname,
+          deptName: resData.data.deptName,
+          email: resData.data.email,
+          mobile: resData.data.mobile,
+          telephone: resData.data.telephone,
+          roleNames: resData.data.roleNames
         };
         this.personalForm.setValue({
           name: this.userInfo.name,

@@ -31,7 +31,7 @@ export namespace HttpUtilNs {
   }
 
   export interface UfastHttpRes {
-    code: number;
+    // code: number;
     status?: number;
     message: string;
   }
@@ -153,7 +153,7 @@ export namespace HttpUtilNs {
       }
       return methodHandler().pipe(switchMap((data: UfastHttpResT<any>) => {
         this.closeLoading(config.delayLoading, loaderSub);
-        if (data.code !== 0 && config.isCatchUfastError) {
+        if (data.status !== 0 && config.isCatchUfastError) {
           this.messageService.showToastMessage(data.message, 'error');
           return empty();
         }

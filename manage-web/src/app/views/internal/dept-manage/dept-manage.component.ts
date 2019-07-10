@@ -53,7 +53,7 @@ export class DeptManageComponent implements OnInit {
     this.loading = true;
     this.deptService.getDeptList(id).subscribe((resData: DeptServiceNs.UfastHttpAnyResModel) => {
       this.loading = false;
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showAlertMessage('', resData.message, 'error');
         return;
       }
@@ -74,7 +74,7 @@ export class DeptManageComponent implements OnInit {
     this.messageService.showLoading('');
     this.deptService.insertDept(parentId, name).subscribe((resData: any) => {
       this.messageService.closeLoading();
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showAlertMessage('', resData.message, 'error');
         return;
       }
@@ -109,7 +109,7 @@ export class DeptManageComponent implements OnInit {
           return;
         }
         this.deptService.removeDept(item.id).subscribe((resData: any) => {
-          if (resData.code !== 0) {
+          if (resData.status !== 0) {
             this.messageService.showAlertMessage('', resData.message, 'error');
             return;
           }
@@ -132,7 +132,7 @@ export class DeptManageComponent implements OnInit {
     this.messageService.showLoading('');
     this.deptService.updateDept(dept.id, name).subscribe((resData: any) => {
       this.messageService.closeLoading();
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showAlertMessage('', resData.message, 'error');
       } else {
         dept.name = name;

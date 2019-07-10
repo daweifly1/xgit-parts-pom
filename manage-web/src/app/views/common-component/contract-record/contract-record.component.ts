@@ -34,12 +34,12 @@ export class ContractRecordComponent implements OnInit, OnDestroy {
       }
     };
     this.supplierInfoService.getProblemRecordList(filters).subscribe((resData: SupplierInfoNs.SupplierResModelT<any>) => {
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'error');
         return;
       }
-      this.dataList = resData.value.list || [];
-      this.dataTableConfig.total = resData.value.total;
+      this.dataList = resData.data.list || [];
+      this.dataTableConfig.total = resData.data.total;
       this.dataList.forEach((item, index: number) => {
         item['index'] = index + 1;
         item['operateTime'] = item['updateDate'] || item['createDate'];

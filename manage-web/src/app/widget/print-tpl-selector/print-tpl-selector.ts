@@ -72,7 +72,7 @@ export class PrintTplSelectorComponent {
     this.templateList = [];
     this.selectedIndex = 0;
     this.printService.getTemplateList(filterBody).subscribe((resData: PrintServiceNs.UfastHttpRes) => {
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.msgService.showAlertMessage('', resData.message, 'error');
         return;
       }

@@ -247,7 +247,7 @@ export class TemplateConfigComponent implements OnInit {
       observe = this.printService.insertTemplate(this.submitData);
     }
     observe.subscribe((resData: PrintServiceNs.UfastHttpRes) => {
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showAlertMessage('', resData.message, 'error');
         return;
       }
@@ -349,7 +349,7 @@ export class TemplateConfigComponent implements OnInit {
     this.setViewTplData();
     if (this.templateId) {
       this.printService.getTemplateItem(this.templateId).subscribe((resData: PrintServiceNs.UfastHttpRes) => {
-        if (resData.code !== 0) {
+        if (resData.status !== 0) {
           this.messageService.showAlertMessage('', resData.message, 'error');
           return;
         }

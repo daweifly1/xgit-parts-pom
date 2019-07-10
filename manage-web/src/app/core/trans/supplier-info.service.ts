@@ -5,22 +5,23 @@ import {Observable} from 'rxjs/Observable';
 
 export namespace SupplierInfoNs {
   export interface SupplierResModelT<T> extends HttpUtilNs.UfastHttpRes {
-    value: T;
+    data: T;
   }
+
   export interface CompanyTypeItem {
     id: number;
     name: string;
   }
+
   export interface RegisterInfo {
-    companyName: string;
-    socialCreditCode: string;
-    account: string;
+    username: string;
     password: string;
-    userName: string;
-    phone: string;
-    verifyCode?: string;
+    name: string;
+    mobi: string;
+    code?: string;
     authId: string;
   }
+
   export interface SupplierAllInfo {
     businessType: number;
     createDate: any;
@@ -35,6 +36,7 @@ export namespace SupplierInfoNs {
     supplierBasicVO: SupplierBasicInfo;
     supplierId: string;
   }
+
   export interface SupplierBasicInfo {
     bankOfDeposit: string;   // 开户行 ,
     bankOfDepositAccount: string;   // 开户行帐号 ,
@@ -69,6 +71,7 @@ export namespace SupplierInfoNs {
     workAreaCode: string;   // 办公地区编码 ,
     workDetailsAddress: string;   // 工作详细地址
   }
+
   export interface SupplierContact {
     supplierId?: string; // 公司Id ,
     createDate?: string;
@@ -82,6 +85,7 @@ export namespace SupplierInfoNs {
     position?: string; // 职务
     remark?: string;
   }
+
   export interface QualFileItem {
     createDate?: string;  //
     credentialName: string;  // 证件名称 ,
@@ -96,24 +100,29 @@ export namespace SupplierInfoNs {
     validityPeriodEnd: any;  // 有效期止 ,
     validityPeriodStart: any;  // 有效期始
   }
+
   export interface Filters<T> {
     pageSize: number;
     pageNum: number;
     filters: T;
   }
+
   export enum isCommonlyUser {
     Flase,
     True
   }
+
   export enum QualFileType {
     License = 1,
     SurveyTable,
     Other
   }
+
   export enum ProblemRecordType {
     ContractProblem = '0',
     QualityProblem = '1'
   }
+
   export interface ProblemRecordItem {
     content: string;
     title: string;
@@ -123,10 +132,12 @@ export namespace SupplierInfoNs {
     recordTime: any;
     orgId?: string;
   }
+
   export class SupplierInfoServiceClass {
     private http: HttpUtilService;
     private defaultConfig: HttpUtilNs.UfastHttpConfig;
     private fileTypeList: CompanyTypeItem[];
+
     constructor(private injector: Injector) {
       this.http = this.injector.get(HttpUtilService);
       this.defaultConfig = {
@@ -140,109 +151,134 @@ export namespace SupplierInfoNs {
     }
 
     public registerSupplier(info: RegisterInfo): Observable<any> {
-      return this.http.Post('/supplierFactory/regist', info, this.defaultConfig);
+      const config: HttpUtilNs.UfastHttpConfig = {};
+      config.gateway = HttpUtilNs.GatewayKey.Ius;
+      return this.http.Post('/auth/regist', info, config);
     }
+
     public getLoginerBasicInfo(): Observable<SupplierResModelT<SupplierAllInfo>> {
       return this.http.Get('/supplierFactory/loginSupplierInfo', null, this.defaultConfig);
     }
+
     public getSupplierBasicInfo(id: string): Observable<any> {
       return this.http.Get('/supplierBasic/item', {id: id}, this.defaultConfig);
     }
+
     public saveSupplierBasicInfo(data: SupplierBasicInfo): Observable<any> {
       return this.http.Post('/supplierBasic/save', data, this.defaultConfig);
     }
+
     public getContactBySupplier(supplierId: string): Observable<SupplierResModelT<any>> {
       return this.http.Get('/supplierContact/listBySupplierId', {supplierId: supplierId}, this.defaultConfig);
     }
+
     public getTempSupplierContact(supplierId: string): Observable<SupplierResModelT<any>> {
       return this.http.Get('/tempSupplierContact/listBySupplierId', {supplierId: supplierId}, this.defaultConfig);
     }
+
     public getTempSupplierBasic(supplierId: string): Observable<SupplierResModelT<any>> {
       return this.http.Get('/tempSupplierBasic/item', {id: supplierId}, this.defaultConfig);
     }
+
     public updateTempContact(data: SupplierContact): Observable<SupplierResModelT<any>> {
       return this.http.Post('/tempSupplierContact/update', data, this.defaultConfig);
     }
+
     public updateTempSupplierBasic(data: SupplierContact): Observable<SupplierResModelT<any>> {
       return this.http.Post('/tempSupplierBasic/update', data, this.defaultConfig);
     }
+
     public addTempContact(data: SupplierContact): Observable<SupplierResModelT<any>> {
       return this.http.Post('/tempSupplierContact/insert', data, this.defaultConfig);
     }
+
     public delTempContact(id: string, supplierId: string): Observable<SupplierResModelT<any>> {
       return this.http.Post('/tempSupplierContact/delete', {id: id, supplierId: supplierId}, this.defaultConfig);
     }
+
     /**
      * 供应商新增资质文件
      * */
     public addTempQualFile(data: QualFileItem): Observable<SupplierResModelT<any>> {
       return this.http.Post('/tempSupplierFile/insert', data, this.defaultConfig);
     }
+
     /**
      * 更新资质文件
      * */
     public updateTempQualFile(data: QualFileItem): Observable<SupplierResModelT<any>> {
       return this.http.Post('/tempSupplierFile/update', data, this.defaultConfig);
     }
+
     /**
      * 删除资质文件
      * */
     public delTempQualFile(id: string, supplierId: string): Observable<SupplierResModelT<any>> {
       return this.http.Post('/tempSupplierFile/delete', {id: id, supplierId: supplierId}, this.defaultConfig);
     }
+
     /**
      * 获取资质文件列表
      * */
     public getTempQualFile(supplierId: string): Observable<SupplierResModelT<any>> {
       return this.http.Get('/tempSupplierFile/listBySupplierId', {supplierId: supplierId}, this.defaultConfig);
     }
+
     /**
      * 管理科拉取资质文件列表
      * */
-    public  getQualFileBySupplier(supplierId: string): Observable<SupplierResModelT<SupplierInfoNs.QualFileItem>> {
+    public getQualFileBySupplier(supplierId: string): Observable<SupplierResModelT<SupplierInfoNs.QualFileItem>> {
       return this.http.Get('/supplierFile/listBySupplierId', {supplierId: supplierId}, this.defaultConfig);
     }
+
     /**
      * 根据id获取供应商评级信息
      * */
     public getGradeInfoListById(id: string): Observable<SupplierResModelT<any>> {
       return this.http.Get('/supplierRatingInfo/item', {id: id}, this.defaultConfig);
     }
+
     /**
      * 获取供应商评级信息
      * */
     public getGradeInfoList(filters: Filters<any>): Observable<SupplierResModelT<any>> {
       return this.http.Post('/supplierRatingInfo/list', filters, this.defaultConfig);
     }
+
     /**
      * 获取历史文件列表
      * */
     public getHistoryList(filters: Filters<any>): Observable<SupplierResModelT<any>> {
       return this.http.Post('/supplierHistoryFile/list', filters, this.defaultConfig);
     }
+
     /**
      * 获取合同和质量问题记录列表
      * */
     public getProblemRecordList(filters: Filters<any>): Observable<SupplierResModelT<any>> {
       return this.http.Post('/supplierProblemRecord/list', filters, this.defaultConfig);
     }
+
     /**
      * 保存合同和质量问题记录
      * */
     public saveProblemRecord(data: ProblemRecordItem): Observable<SupplierResModelT<any>> {
       return this.http.Post('/supplierProblemRecord/save', data, this.defaultConfig);
     }
+
     /**
      * 删除合同和质量问题记录*/
     public delProblemRecord(ids: string[]): Observable<SupplierResModelT<any>> {
       return this.http.Post('/supplierProblemRecord/delete', {listId: ids}, this.defaultConfig);
     }
+
     /**
      * 获取信息变更记录列表
      * */
     public getInfoChangeList(filter: Filters<any>): Observable<SupplierResModelT<any>> {
       return this.http.Post('/supplierInfoChange/listAllDetails', filter, this.defaultConfig);
     }
+
     /**
      * 资质文件类型列表
      * */
@@ -251,6 +287,7 @@ export namespace SupplierInfoNs {
     }
   }
 }
+
 @Injectable()
 export class SupplierInfoService extends SupplierInfoNs.SupplierInfoServiceClass {
 

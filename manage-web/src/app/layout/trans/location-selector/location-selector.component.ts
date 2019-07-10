@@ -296,11 +296,11 @@ export class LocationSelectorComponent implements OnInit, ControlValueAccessor {
     this.tabLoading = true;
     this.warehouseService.getLocationList(this.filterData).subscribe((resData: WarehouseServiceNs.UfastHttpAnyResModel) => {
       this.tabLoading = false;
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'error');
         return;
       }
-      this.tabList[index].contentList = resData.value.list;
+      this.tabList[index].contentList = resData.data.list;
 
       const selectedItem = this.tabList[index].contentList.find( item => item.code === this.tabList[index].selectedCode);
       if (selectedItem) {

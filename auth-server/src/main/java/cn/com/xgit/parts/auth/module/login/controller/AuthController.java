@@ -1,6 +1,7 @@
 package cn.com.xgit.parts.auth.module.login.controller;
 
 import cn.com.xgit.parts.auth.common.base.BasicController;
+import cn.com.xgit.parts.auth.enums.PasswordType;
 import cn.com.xgit.parts.auth.exception.AuthException;
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import cn.com.xgit.parts.auth.module.account.param.UserLoginVO;
@@ -144,6 +145,7 @@ public class AuthController extends BasicController {
     public ResultMessage<String> regist(@RequestBody UserRegistVO userRegistVO, HttpServletRequest request) {
         try {
             String ip = getRemoteIp(request);
+            userRegistVO.setPswType(PasswordType.NORMAL.getType());
             userInfoFacade.regist(userRegistVO, ip);
             return ResultMessage.success("注册成功");
         } catch (AuthException e) {

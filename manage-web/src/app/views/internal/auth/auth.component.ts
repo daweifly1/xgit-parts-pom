@@ -125,7 +125,7 @@ export class AuthComponent implements OnInit {
           return;
         }
         this.authService.removeAuth(item.id).subscribe((resData: any) => {
-          if (resData.code !== 0) {
+          if (resData.status !== 0) {
             this.messageService.showAlertMessage('', resData.message, 'error');
             return;
           }

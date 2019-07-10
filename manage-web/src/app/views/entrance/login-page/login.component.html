@@ -17,7 +17,7 @@
     <nz-form-item>
       <nz-form-label nzSpan="4">验证码</nz-form-label>
       <nz-form-control nzSpan="14">
-        <input nz-input formControlName="verifyCode" nzSize="default" [(ngModel)]="loginReqData.code" spellcheck="false" />
+        <input nz-input formControlName="verifyCode" nzSize="default" [(ngModel)]="loginReqData.status" spellcheck="false" />
       </nz-form-control>
       <nz-form-extra nzSpan="6" (click)="refreshVerify()">
         <img [src]="verifyImgUrl" alt="加载失败"/>

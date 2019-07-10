@@ -4,7 +4,6 @@ import {
   HttpClient,
   HttpErrorResponse,
   HttpEvent,
-  HttpEventType,
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
@@ -82,7 +81,12 @@ export class UfastCodeInterceptor implements HttpInterceptor {
       const onCancel = (observer: any) => {
       };
 
-      if (event.type !== HttpEventType.Response || (event.body.status + '') !== '2') {
+      console.log(JSON.stringify(event))
+      // if (event.type !== HttpEventType.Response || (event.body.status + '') !== '2') {
+      //
+      // }
+
+      if (!(event.url && event.url.indexOf("/auth") > 0 && (event.status === 401 || event.body.status === 2))) {
         return Observable.of(event);
       }
 

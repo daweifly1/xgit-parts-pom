@@ -245,14 +245,13 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
 
     @Transactional
     public void addRegistUser(UserRegistVO userRegistVO) {
-        if (StringUtils.isBlank(userRegistVO.getUserLoginVO().getPassword())) {
-            userRegistVO.getUserLoginVO().setPassword("123456");
+        if (StringUtils.isBlank(userRegistVO.getPassword())) {
+            userRegistVO.setPassword("123456");
         }
-        SysAccountVO account = userRegistVO.getSysAccountVO();
-        account.setUsername(userRegistVO.getUserLoginVO().getUsername());
+        SysAccountVO account = BeanUtil.do2bo(userRegistVO, SysAccountVO.class);
         boolean ec = saveRegist(account);
         if (ec && null != account.getId()) {
-            saveRegistPassword(account.getId(), userRegistVO.getUserLoginVO().getPassword());
+            saveRegistPassword(account.getId(), userRegistVO.getPassword());
             if (CollectionUtils.isNotEmpty(account.getRoles())) {
                 List<SysAccountRole> rs = getRolesFromRoles(account.getRoles(), account.getId());
                 sysAccountRoleService.saveBatch(rs);

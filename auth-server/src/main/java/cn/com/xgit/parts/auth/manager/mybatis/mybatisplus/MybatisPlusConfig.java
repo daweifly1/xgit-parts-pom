@@ -1,6 +1,8 @@
 package cn.com.xgit.parts.auth.manager.mybatis.mybatisplus;
 
 import cn.com.xgit.parts.auth.manager.mybatis.datasource.DatasourceConfig;
+import cn.com.xgit.parts.auth.manager.mybatis.mybatisplus.handler.MetaObjectHandlerConfig;
+import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.core.parser.ISqlParser;
 import com.baomidou.mybatisplus.extension.injector.LogicSqlInjector;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
@@ -21,7 +23,7 @@ import java.util.List;
 @Slf4j
 @Configuration
 @Import({DatasourceConfig.class, TableInfoExHelperConfig.class})
-@MapperScan("${auth.mybatis.mapper-scan:cn.com.xgit.parts.auth.**.mapper}")
+@MapperScan("${auth.mybatis.mapper-scan:cn.com.xgit.**.mapper}")
 @AutoConfigureBefore(value = {DataSourceAutoConfiguration.class, DatasourceConfig.class})
 public class MybatisPlusConfig {
 
@@ -68,14 +70,14 @@ public class MybatisPlusConfig {
         return new LogicSqlInjector();
     }
 
-//    /**
-//     * mybatis-plus自动填充
-//     *
-//     * @return
-//     */
-//    @Bean
-//    @ConditionalOnMissingBean
-//    public MetaObjectHandler mybatisMetaObjectHandler() {
-//        return new MetaObjectHandlerConfig();
-//    }
+    /**
+     * mybatis-plus自动填充
+     *
+     * @return
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public MetaObjectHandler mybatisMetaObjectHandler() {
+        return new MetaObjectHandlerConfig();
+    }
 }

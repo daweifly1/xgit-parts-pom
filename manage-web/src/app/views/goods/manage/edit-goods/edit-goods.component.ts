@@ -156,11 +156,11 @@ export class EditGoodsComponent implements OnInit {
 
   saveStep2() {
     this.goodsAttributeService.getPageList({pageNum: 1, pageSize: 100}).subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showAlertMessage('', resData.message, 'warning');
         return;
       }
-      this.attrCatlist = resData.value.list;
+      this.attrCatlist = resData.data.list;
       this.tabPageType = PageTypeEnum.Step3Page;
       this.handleGoodsAttrChange();
     }, (error: any) => {
@@ -181,11 +181,11 @@ export class EditGoodsComponent implements OnInit {
     const param = {pageNum: 1, pageSize: 100, filters: {type: type, goodsAttributeCategoryId: value}};
     if (0 === type) {
       this.goodsAttributeService.getAttrPageList(param).subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
-          if (resData.code !== 0) {
+          if (resData.status !== 0) {
             this.messageService.showAlertMessage('', resData.message, 'warning');
             return;
           }
-          const list = resData.value.list;
+          const list = resData.data.list;
 
           this.selectGoodsAttr = [];
           for (let i = 0; i < list.length; i++) {
@@ -238,11 +238,11 @@ export class EditGoodsComponent implements OnInit {
       );
     } else {
       this.goodsAttributeService.getParamPageList(param).subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
-          if (resData.code !== 0) {
+          if (resData.status !== 0) {
             this.messageService.showAlertMessage('', resData.message, 'warning');
             return;
           }
-          const list = resData.value.list;
+          const list = resData.data.list;
           this.selectGoodsParam = [];
           for (let i = 0; i < list.length; i++) {
             const value2 = this.getEditParamValue(list[i].id);
@@ -497,7 +497,7 @@ export class EditGoodsComponent implements OnInit {
     this.messageService.showLoading();
     submit.subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
       this.messageService.closeLoading();
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showAlertMessage('', resData.message, 'warning');
         return;
       }

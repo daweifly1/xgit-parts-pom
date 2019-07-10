@@ -192,7 +192,7 @@ export class UfastTableNavComponent implements OnInit {
     this.basicService.setTableConfig({id: this.tableId, tableCol: JSON.stringify(tempConfig), tableName: this._tableConfig.id})
       .subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
         this.messageService.closeLoading();
-        if (resData.code !== 0) {
+        if (resData.status !== 0) {
           this.messageService.showToastMessage(resData.message, 'error');
           return;
         }
@@ -226,11 +226,11 @@ export class UfastTableNavComponent implements OnInit {
   }
   private getConfig() {
     // this.basicService.getTableConfig(this._tableConfig.id).subscribe((resData: UserServiceNs.UfastHttpResT<any>) => {
-    //   if (resData.code !== 0 || !resData.value) {
+    //   if (resData.status !== 0 || !resData.value) {
     //     return;
     //   }
-    //   this.tableId = resData.value.id;
-    //   const tableConfig: UfastTableNs.TableConfig = JSON.parse(resData.value.tableCol);
+    //   this.tableId = resData.data.id;
+    //   const tableConfig: UfastTableNs.TableConfig = JSON.parse(resData.data.tableCol);
     //   if (!tableConfig || !tableConfig.headers) {
     //     return;
     //   }

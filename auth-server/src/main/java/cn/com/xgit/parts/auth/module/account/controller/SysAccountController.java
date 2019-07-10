@@ -92,14 +92,13 @@ public class SysAccountController extends BasicController {
     @RequestMapping(value = {"/addUser"}, method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     @ApiOperation("用户添加用户")
     public ResultMessage<String> addUser(@RequestBody UserRegistVO userRegistVO) {
-        if (null == userRegistVO || null == userRegistVO.getSysAccountVO() || null == userRegistVO.getUserLoginVO()
-                || StringUtils.isBlank(userRegistVO.getUserLoginVO().getUsername())) {
+        if (null == userRegistVO || StringUtils.isBlank(userRegistVO.getUsername())) {
             throw new AuthException("用户信息不能为空");
         }
         try {
             Long userId = getUserId();
             if (null != userId) {
-                userRegistVO.getSysAccountVO().setCreatedBy(userId);
+                userRegistVO.setCreatedBy(userId);
             }
             sysAccountService.addRegistUser(userRegistVO);
             return ResultMessage.success();

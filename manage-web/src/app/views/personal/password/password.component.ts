@@ -31,7 +31,7 @@ export class PasswordComponent implements OnInit {
     }
     this.userService.modifyPassword(this.passwordForm.value.oldPassword, this.passwordForm.value.newPassword)
       .subscribe((resData: any) => {
-        if (resData.code === 0) {
+        if (resData.status === 0) {
           this.userService.logout();
           this.messageService.showAlertMessage('', '修改密码成功,请重新登录.', 'success').afterClose.subscribe(() => {
             window.location.href = environment.otherData.defaultPath;

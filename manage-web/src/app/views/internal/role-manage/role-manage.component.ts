@@ -228,8 +228,8 @@ export class RoleManageComponent implements OnInit {
   private setAuthInit(roleId: string) {
     Observable.forkJoin([this.scepterService.getMenuShown(), this.scepterService.getMenusAuths(roleId)])
       .subscribe((resData: ScepterServiceNs.ScepterResModelT<any>[]) => {
-        if (resData[0].code !== 0 || resData[1].code !== 0) {
-          const message = resData[0].code !== 0 ? resData[0].message : resData[1].message;
+        if (resData[0].status !== 0 || resData[1].status !== 0) {
+          const message = resData[0].status !== 0 ? resData[0].message : resData[1].message;
           this.showMessageService.showAlertMessage('', message, 'warning');
           return;
         }
@@ -289,7 +289,7 @@ export class RoleManageComponent implements OnInit {
     }
     this.scepterService.addMenusAuths(reqData)
       .subscribe((resData: ScepterServiceNs.ScepterResModelT<any>) => {
-        if (resData.code !== 0) {
+        if (resData.status !== 0) {
           this.showMessageService.showAlertMessage('', resData.message, 'warning');
           return;
         }

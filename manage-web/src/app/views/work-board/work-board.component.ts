@@ -54,8 +54,8 @@ export class WorkBoardComponent implements OnInit {
     };
     this.dataList = [];
     this.workBoardService.getDataList(filter).subscribe((resData: WorkBoardServiceNs.UfastHttpAnyResModel) => {
-      this.dataList = resData.value.taskList;
-      this.tableConfig.total = resData.value.totalCount;
+      this.dataList = resData.data.taskList;
+      this.tableConfig.total = resData.data.totalCount;
       this.actionStatus = {};
       this.dataList.forEach((item) => {
         Object.keys(item.titleParams || {}).forEach((key) => {
@@ -98,10 +98,10 @@ export class WorkBoardComponent implements OnInit {
       filters: {type: type}
     };
     // this.newService.getNewsList(filter).subscribe((resData: any) => {
-    //   if (resData.code !== 0) {
+    //   if (resData.status !== 0) {
     //     return;
     //   }
-    //   targetList.push(...resData.value.list);
+    //   targetList.push(...resData.data.list);
     // });
   }
   public getOptions() {
@@ -208,7 +208,7 @@ export class WorkBoardComponent implements OnInit {
     };
     // this.getDataList();
     // this.userService.getLogin().subscribe((resData) => {
-    //   if (resData.code !== 0) {
+    //   if (resData.status !== 0) {
     //     return;
     //   }
     //   this.userInfo = resData.value;

@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.Arrays;
 
 /**
@@ -82,6 +84,15 @@ public class LoginFilter extends ZuulFilter {
                 //登陆成功
                 CommonUserDetails commonUserDetails = new CommonUserDetails(sysUserLoginInfoVO, user);
                 tokenAuthenticationHandler.saveAfterLogin(commonUserDetails, ctx.getResponse());
+            } else {
+                HttpServletResponse response = ctx.getResponse();
+                response.setStatus(401);
+                response.setCharacterEncoding("UTF-8");
+                response.setContentType("application/json; charset=utf-8");
+                PrintWriter printWriter = response.getWriter();
+                String body = FastJsonUtil.toJSONString(ResultMessage.error("登陆失败"));
+                printWriter.write(body);
+                printWriter.flush();
             }
         } catch (Exception exc) {
             log.error("failed to process things", exc);

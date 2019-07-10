@@ -23,7 +23,7 @@ export namespace InvoiceServiceNs {
     COMPLETE = 'COMPLETE', // '审批完成'
   }
   export interface UfastHttpResT<T> {
-    code: number;
+    status: number;
     message: string;
     value: T;
   }

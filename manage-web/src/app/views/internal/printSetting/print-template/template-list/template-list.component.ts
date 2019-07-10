@@ -67,7 +67,7 @@ export class TemplateListComponent implements OnInit {
     this.tplTableConfig.loading = true;
     this.printService.removeTemplate(id).subscribe((resData: PrintServiceNs.UfastHttpRes) => {
       this.tplTableConfig.loading = false;
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.message.showAlertMessage('', resData.message, 'error');
         return;
       }
@@ -81,7 +81,7 @@ export class TemplateListComponent implements OnInit {
   public setDefaultTpl(id: string) {
     this.printService.setDefTemplate(id).subscribe((resData: PrintServiceNs.UfastHttpRes) => {
       this.tplTableConfig.loading = false;
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.message.showAlertMessage('', resData.message, 'error');
         return;
       }
@@ -109,7 +109,7 @@ export class TemplateListComponent implements OnInit {
     this.tplTableConfig.loading = true;
     this.printService.getTemplateList(this.filterBody).subscribe((resData: PrintServiceNs.UfastHttpRes) => {
       this.tplTableConfig.loading = false;
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.message.showAlertMessage('', resData.message, 'error');
       } else {
         this.templateList = resData.value;

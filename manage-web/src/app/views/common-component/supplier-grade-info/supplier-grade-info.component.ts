@@ -30,11 +30,11 @@ export class SupplierGradeInfoComponent implements OnInit, OnDestroy {
       }
     };
     this.supplierInfoService.getGradeInfoList(filters).subscribe((resData: SupplierInfoNs.SupplierResModelT<any>) => {
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'error');
         return;
       }
-      this.dataList = resData.value.list || [];
+      this.dataList = resData.data.list || [];
       this.dataList.forEach((item, index: number) => {
         item['index'] = index + 1;
       });

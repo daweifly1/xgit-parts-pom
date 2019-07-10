@@ -116,7 +116,7 @@ export namespace MenuServiceNs {
     //
     //   return this.http.get('ius', '/menu/authorized')
     //     .pipe(map((menuData: UfastHttpAnyResModel) => {
-    //       if (menuData.code === 0) {
+    //       if (menuData.status === 0) {
     //         this.modifyMenu(menuData.value);
     //         this.menuList = menuData.value;
     //       }

@@ -43,7 +43,7 @@ export class PurchaseAuditProcessComponent implements OnInit {
   public getAuditProcess() {
     this.wordBoardService.getApproveHistory(this.processId).subscribe((resData: any) => {
       this.auditProcessList = [];
-      resData.value.forEach((item) => {
+      resData.data.forEach((item) => {
         this.auditProcessList.push({
           auditDept: item.nodeName,
           auditPerson: item.userName,

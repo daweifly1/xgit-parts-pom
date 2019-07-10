@@ -117,11 +117,11 @@ export class ListComponent implements OnInit {
     this.tableConfig.loading = true;
     this.goodsAttributeService.getAttrPageList(filter).subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
       this.tableConfig.loading = false;
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showAlertMessage('', resData.message, 'warning');
         return;
       }
-      resData.value.list.forEach((item) => {
+      resData.data.list.forEach((item) => {
         let temp = <any>{};
         temp = item;
         if (this.goodsAttributeCategory) {
@@ -130,7 +130,7 @@ export class ListComponent implements OnInit {
         temp['_this'] = item;
         this.pageDataList.push(temp);
       });
-      this.tableConfig.total = resData.value.total;
+      this.tableConfig.total = resData.data.total;
       // console.log(this.pageDataList);
     }, (error: any) => {
       this.tableConfig.loading = false;
@@ -161,7 +161,7 @@ export class ListComponent implements OnInit {
     this.messageService.showLoading();
     submit.subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
       this.messageService.closeLoading();
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showAlertMessage('', resData.message, 'warning');
         return;
       }
@@ -182,7 +182,7 @@ export class ListComponent implements OnInit {
     this.messageService.showLoading();
     submit.subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
       this.messageService.closeLoading();
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showAlertMessage('', resData.message, 'warning');
         return;
       }

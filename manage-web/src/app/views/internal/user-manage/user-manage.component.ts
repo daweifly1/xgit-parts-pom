@@ -207,7 +207,7 @@ export class UserManageComponent implements OnInit {
           mobile: resData.data.mobile,
           telephone: resData.data.telephone,
           email: resData.data.email,
-          code: resData.data.code,
+          code: resData.data.status,
           erpCode: resData.data.erpCode,
           locked: resData.data.locked,
           sex: resData.data.locked,
@@ -243,7 +243,7 @@ export class UserManageComponent implements OnInit {
 
   private commonResDeal(observer: Observable<any>, refresh: boolean = true) {
     observer.subscribe((resData: UserServiceNs.UfastHttpAnyResModel) => {
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'warning');
         return;
       }
@@ -276,12 +276,12 @@ export class UserManageComponent implements OnInit {
 
   private getDepartmentList(id: string, targetList?: any[]) {
     this.userService.getDepartment(id).subscribe((resData: UserServiceNs.UfastHttpAnyResModel) => {
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'warning');
         return;
       }
 
-      const modelList: UserServiceNs.DepartmentModel[] = <UserServiceNs.DepartmentModel[]>resData.value;
+      const modelList: UserServiceNs.DepartmentModel[] = <UserServiceNs.DepartmentModel[]>resData.data;
       const tempList = targetList || [];
 
       for (let i = 0, len = modelList.length; i < len; i++) {

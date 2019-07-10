@@ -70,11 +70,11 @@ export class AreaSelectorComponent implements OnInit, OnDestroy, ControlValueAcc
     return new Promise((resolve, reject) => {
       this.dictService.getAreaList(node.value).subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
         node.children = [];
-        if (resData.code !== 0) {
+        if (resData.status !== 0) {
           this.messageService.showToastMessage(resData.message, 'error');
           return;
         }
-        resData.value.forEach((item: DictionaryServiceNs.AreaInfoItemModel) => {
+        resData.data.forEach((item: DictionaryServiceNs.AreaInfoItemModel) => {
           node.children.push({
             label: item.name,
             value: item.code,
@@ -98,11 +98,11 @@ export class AreaSelectorComponent implements OnInit, OnDestroy, ControlValueAcc
   }
   private getAreaList(children: any[], index: number, code?: string, ) {
     this.dictService.getAreaList(code).subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'error');
         return;
       }
-      resData.value.forEach((item: DictionaryServiceNs.AreaInfoItemModel) => {
+      resData.data.forEach((item: DictionaryServiceNs.AreaInfoItemModel) => {
         const temp = {
           value: item.code,
           label: item.name,

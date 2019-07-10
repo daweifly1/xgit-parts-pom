@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
       .subscribe((resData: UserServiceNs.AuthAnyResModel) => {
         this.loading = false;
 
-        if (resData.code !== 0) {
+        if (resData.status !== 0) {
           this.remark = resData.message;
           this.refreshVerify();
           return;

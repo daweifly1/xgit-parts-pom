@@ -121,11 +121,11 @@ export class BasicInfoComponent implements OnInit, AfterViewInit {
   }
   private submitCheckQualFiel() {
     return this.supplierInfoService.getTempQualFile(this.supplierId).pipe(switchMap((resData) => {
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         return Observable.throw({message: resData.message});
       }
-      resData.value = resData.value || [];
-      const fileTypeList = resData.value.map(item => item.credentialType);
+      resData.data = resData.data || [];
+      const fileTypeList = resData.data.map(item => item.credentialType);
       if (fileTypeList.indexOf(SupplierInfoNs.QualFileType.License) === -1 ||
         fileTypeList.indexOf(SupplierInfoNs.QualFileType.SurveyTable) === -1) {
         return Observable.throw({message: '必须上传营业执照和调查表'});
@@ -166,7 +166,7 @@ export class BasicInfoComponent implements OnInit, AfterViewInit {
       this.messageService.showLoading('');
       this.supplierManageService.supplierUpdateInfo(submitData).subscribe((resData: SupplierManageNs.SupplierResModelT<any>) => {
         this.messageService.closeLoading();
-        if (resData.code !== 0) {
+        if (resData.status !== 0) {
           this.messageService.showAlertMessage('', resData.message, 'error');
           return;
         }
@@ -251,7 +251,7 @@ export class BasicInfoComponent implements OnInit, AfterViewInit {
     this.messageService.showLoading('');
     submitHandler.subscribe((resData: SupplierInfoNs.SupplierResModelT<any>) => {
       this.messageService.closeLoading();
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'error');
         return;
       }
@@ -276,7 +276,7 @@ export class BasicInfoComponent implements OnInit, AfterViewInit {
         this.messageService.showLoading('');
         this.supplierInfoService.delTempContact(id, this.supplierId).subscribe((resData: SupplierInfoNs.SupplierResModelT<any>) => {
           this.messageService.closeLoading();
-          if (resData.code !== 0) {
+          if (resData.status !== 0) {
             this.messageService.showToastMessage(resData.message, 'error');
             return;
           }
@@ -292,11 +292,11 @@ export class BasicInfoComponent implements OnInit, AfterViewInit {
   private getContactList() {
     this.supplierInfoService.getTempSupplierContact(this.supplierId)
       .subscribe((resData: SupplierInfoNs.SupplierResModelT<any>) => {
-        if (resData.code !== 0) {
+        if (resData.status !== 0) {
           this.messageService.showToastMessage(resData.message, 'error');
           return;
         }
-        this.contactList = resData.value || [];
+        this.contactList = resData.data || [];
       }, (error) => {
         this.messageService.showAlertMessage('', error.message, 'error');
       });
@@ -323,7 +323,7 @@ export class BasicInfoComponent implements OnInit, AfterViewInit {
     newInfo['id'] = this.basicInfo.id;
     this.supplierInfoService.updateTempSupplierBasic(newInfo).subscribe((resData: SupplierInfoNs.SupplierResModelT<any>) => {
       this.messageService.closeLoading();
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'error');
         return;
       }
@@ -338,11 +338,11 @@ export class BasicInfoComponent implements OnInit, AfterViewInit {
   public getSupplierBasic() {
     this.basicInfo = {};
     this.supplierInfoService.getTempSupplierBasic(this.supplierId).subscribe((resData: SupplierInfoNs.SupplierResModelT<any>) => {
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'error');
         return;
       }
-      this.basicInfo = resData.value || {};
+      this.basicInfo = resData.data || {};
       this.basicInfo.registAddressAll = `${this.basicInfo.registAreaName ?
         this.basicInfo.registAreaName : ''} ${this.basicInfo.registDetailsAddress ? this.basicInfo.registDetailsAddress : ''}`;
       this.basicInfo.workAddressAll = `${this.basicInfo.workAreaName ?
@@ -440,11 +440,11 @@ export class BasicInfoComponent implements OnInit, AfterViewInit {
     this.messageService.showLoading('');
     this.supplierInfoService.getLoginerBasicInfo().subscribe((resData: SupplierInfoNs.SupplierResModelT<any>) => {
       this.messageService.closeLoading();
-      if (resData.code !== 0) {
+      if (resData.status !== 0) {
         this.messageService.showToastMessage(resData.message, 'error');
         return;
       }
-      this.supplierId = resData.value;
+      this.supplierId = resData.data;
       this.getSupplierBasic();
       this.getContactList();
     }, () => {
