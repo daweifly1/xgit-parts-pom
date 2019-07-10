@@ -231,6 +231,13 @@ export namespace UserServiceNs {
       config.gateway = HttpUtilNs.GatewayKey.Ius;
       return this.http.Get('/department/list', {id: id}, config);
     }
+
+
+    public register(registerInfo: any): Observable<any> {
+      const config: HttpUtilNs.UfastHttpConfig = {};
+      config.gateway = HttpUtilNs.GatewayKey.Ius;
+      return this.http.Get('/auth/regist', registerInfo, config);
+    }
   }
 }
 
