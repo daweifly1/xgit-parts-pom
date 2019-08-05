@@ -43,11 +43,9 @@ export namespace HttpUtilNs {
   }
 
   export interface UfastHttpResT<T> {
-    code: number;
     status?: number;
     message: string;
     data?: T;
-    value: T;
   }
 
   export const GatewayKey = gatewayKey;

@@ -19,7 +19,7 @@ auth-api 对外提供接口（feigin）
 
 **snowflake-pom** 以来zk 实现自动分配机器id的雪花算法
 
-**misc** 基础的公共依赖
+**misc** 基础的公共依赖，以jar 引用方式被使用
 
 
 

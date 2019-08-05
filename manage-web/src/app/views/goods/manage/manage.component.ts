@@ -201,7 +201,7 @@ export class ManageComponent implements OnInit {
         this.messageService.showAlertMessage('', resData.message, 'warning');
         return;
       }
-      this.editData = resData.value;
+      this.editData = resData.data;
       this.currentPage = this.tabPageType.EditPage;
     }, (error: any) => {
       this.tableConfig.loading = false;

@@ -130,6 +130,7 @@ export class EditGoodsComponent implements OnInit {
       this.paramTypeForm.reset();
     }
 
+    console.log(JSON.stringify(this.editData));
     if (!this.editData.skuStockList) {
       this.editData.skuStockList = [];
     }
@@ -155,7 +156,10 @@ export class EditGoodsComponent implements OnInit {
   }
 
   saveStep2() {
-    this.goodsAttributeService.getPageList({pageNum: 1, pageSize: 100}).subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
+    this.goodsAttributeService.getPageList({
+      pageNum: 1,
+      pageSize: 100
+    }).subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
       if (resData.status !== 0) {
         this.messageService.showAlertMessage('', resData.message, 'warning');
         return;
@@ -333,7 +337,11 @@ export class EditGoodsComponent implements OnInit {
                     }
                   );
                   f = false;
-                  this.selectGoodsAttrPics.push({color: values[ii].id, pic: this.editData.goodsAttributeImgs[j].pic, fileList: fileList});
+                  this.selectGoodsAttrPics.push({
+                    color: values[ii].id,
+                    pic: this.editData.goodsAttributeImgs[j].pic,
+                    fileList: fileList
+                  });
                   break;
                 }
               }

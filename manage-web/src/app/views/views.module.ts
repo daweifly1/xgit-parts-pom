@@ -36,3 +36,5 @@ import { NgxEchartsModule } from 'ngx-echarts';
 })
 export class ViewsModule {
 }
+
+

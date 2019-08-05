@@ -19,15 +19,10 @@ import {RouteReuseStrategy} from '@angular/router';
 import {UfastReuseStrategy, UfastTabsetRouteService} from './infra/ufast-tabset-route.service';
 import {NewsService} from './common-services/news.service';
 import {NavigationService} from './trans/navigation.service';
-import {IndexpicService} from './trans/indexpic.service';
 import {UfastUtilService} from './infra/ufast-util.service';
 import {LodopPrintService} from './infra/lodop-print.service';
 import {PrintService} from './trans/print.service';
-
-
-import {WorkBoardService} from './trans/work-board.service';
 import {AuthService} from './common-services/auth.service';
-import {UserLeaveService} from './trans/internal/user-leave.service';
 import {RoleService} from './common-services/role.service';
 import {GoodsCategoryService} from './common-services/goods-category.service';
 import {GoodsAttributeService} from './common-services/goods-attribute.service';
@@ -61,14 +56,11 @@ const httpInterceptorProvider = [
     UfastValidatorsService,
     UfastValidatorsRuleService,
     UfastTabsetRouteService,
-    IndexpicService,
     UfastUtilService,
     NavigationService,
     LodopPrintService,
     PrintService,
     DictionaryService,
-    WorkBoardService,
-    UserLeaveService,
     AuthService,
     RoleService,
     GoodsCategoryService,

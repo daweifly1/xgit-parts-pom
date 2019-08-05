@@ -21,7 +21,6 @@ import { NormalTicketTplComponent } from './print-template/normal-ticket-tpl/nor
 import { InvoiceContactTplComponent } from './print-template/invoice-contact-tpl/invoice-contact-tpl.component';
 import { UfastSelectComponent } from './ufast-select/ufast-select.component';
 import { NormalLocationTplComponent } from './print-template/normal-location-tpl/normal-location-tpl.component';
-import { LocationSelectorComponent } from './trans/location-selector/location-selector.component';
 import { ActionGroupComponent } from './table-action/action-group.component';
 import { ActionComponent } from './table-action/action/action.component';
 import { AreaSelectorComponent } from './area-selector/area-selector.component';
@@ -29,8 +28,6 @@ import { UfastFormDetailComponent } from './ufast-form-detail/ufast-form-detail.
 // import { DeptSelectorComponent } from './trans/dept-selector/dept-selector.component';
 import { ClipTextComponent } from './clip-text/clip-text.component';
 import { DispatchBillTplComponent } from './print-template/dispatch-bill-tpl/dispatch-bill-tpl.component';
-import { TrustSignPdfComponent } from './trans/trust-sign-pdf/trust-sign-pdf.component';
-import {PurchaseAuditProcessComponent} from './trans/purchase-audit-process/purchase-audit-process.component';
 
 @NgModule({
   imports: [
@@ -54,16 +51,13 @@ import {PurchaseAuditProcessComponent} from './trans/purchase-audit-process/purc
     NormalTicketTplComponent,
     InvoiceContactTplComponent,
     NormalLocationTplComponent,
-    LocationSelectorComponent,
     ActionGroupComponent,
     ActionComponent,
     AreaSelectorComponent,
     UfastFormDetailComponent,
     PrintOrderTplComponent,
     DispatchBillTplComponent,
-    TrustSignPdfComponent,
-    ClipTextComponent,
-    PurchaseAuditProcessComponent
+    ClipTextComponent
     // DeptSelectorComponent
   ],
   exports: [
@@ -79,15 +73,12 @@ import {PurchaseAuditProcessComponent} from './trans/purchase-audit-process/purc
     NormalTicketTplComponent,
     InvoiceContactTplComponent,
     NormalLocationTplComponent,
-    LocationSelectorComponent,
     ActionGroupComponent,
     ActionComponent,
     AreaSelectorComponent,
     UfastFormDetailComponent,
     ClipTextComponent,
-    DispatchBillTplComponent,
-    TrustSignPdfComponent,
-    PurchaseAuditProcessComponent
+    DispatchBillTplComponent
   ],
   entryComponents: [
     PrintOrderTplComponent,

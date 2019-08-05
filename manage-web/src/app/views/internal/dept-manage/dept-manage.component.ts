@@ -58,10 +58,10 @@ export class DeptManageComponent implements OnInit {
         return;
       }
       if (dept) {
-        dept.children = resData.value;
+        dept.children = resData.data;
         dept.expand = true;
       } else {
-        this.deptDataList = resData.value;
+        this.deptDataList = resData.data;
       }
     }, (error: any) => {
       this.loading = false;
