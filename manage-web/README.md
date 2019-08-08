@@ -161,4 +161,4 @@
     
 
 新建模块
-ng g component  my-new-component
+ng g component  views/entrance/shop-index

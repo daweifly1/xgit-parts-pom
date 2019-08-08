@@ -34,7 +34,7 @@
 node_modules
 dist
 .vscode
-
+logs/
 /*/node_modules
 
 target/
