@@ -18,6 +18,9 @@ public class SysAuths extends CommEntity {
 
     @ApiModelProperty(value = "平台id", name = "platform_id", example = "1")
     private Long platformId;
+
+    @ApiModelProperty(value = "商店ID，具体的角色作用对象", name = "shop_id")
+    private Long shopId;
     //名称
     @ApiModelProperty(value = "名称", name = "name")
     private String name;

@@ -42,6 +42,23 @@ public class MenuController extends BasicController {
         return ResultMessage(menuDisplayVOList);
     }
 
+
+
+//    @GetMapping("/tree")
+//    @ApiOperation("查询菜单集合（树形结构）")
+//    public ResultMessage<List<SysAuthsVO>> menuTreeList(SysAuths condition, HttpServletRequest request) {
+//        if (null == condition) {
+//            return ResultMessage.error("参数异常");
+//        }
+//        if (null == condition.getPlatformId()) {
+//            return ResultMessage.error("平台信息异常");
+//        }
+//
+//        List<SysAuthsVO> menuDisplayVOList = menuFacade.menuTreeList(condition, getUserId());
+//        return ResultMessage(menuDisplayVOList);
+//    }
+
+    
     @PostMapping("/getAuthIds")
     @ApiOperation("查询权限码集合--feign接口")
     public ResultMessage<List<Long>> getAuthIds(@RequestBody SysAuthsParam sysAuthsParam, HttpServletRequest request) {

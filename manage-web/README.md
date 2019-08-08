@@ -159,3 +159,6 @@
         └─global-styles                             #全局样式
                 default.scss
     
+
+新建模块
+ng g component  my-new-component

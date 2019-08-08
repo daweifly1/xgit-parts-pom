@@ -64,6 +64,9 @@ public class SysRoleController extends BasicController {
         boolean r;
         if (null == sysRole.getId()) {
             sysRole.setCreatedBy(uid);
+            if(null==sysRole.getOrgId()){
+                sysRole.setOrgId(0L);
+            }
             r = sysRoleService.save(sysRole);
         } else {
             sysRole.setUpdatedBy(uid);

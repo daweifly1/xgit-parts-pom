@@ -19,6 +19,9 @@ public class SysRoleVO implements Serializable {
     @ApiModelProperty(value = "平台id", name = "platform_id")
     private Long platformId;
 
+    @ApiModelProperty(value = "添加单位,例如某个店铺的主店，默认0", name = "org_id")
+    private Long orgId;
+
     //角色名称
     @ApiModelProperty(value = "角色名称", name = "name")
     private String name;

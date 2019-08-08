@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 根据角色ID集合、平台id查询参数
+ * 根据角色ID集合、平台id、添加单位ID 查询参数
  */
 @Data
 @ToString
@@ -16,6 +16,7 @@ public class AuthRolePlatformParam implements Serializable {
     private static final long serialVersionUID = -1L;
     @ApiModelProperty(value = "平台id", required = false)
     private Long platformId;
+
     @ApiModelProperty(value = "角色id集合")
     private List<Long> roleIdList;
 
