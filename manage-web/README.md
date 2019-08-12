@@ -162,3 +162,7 @@
 
 新建模块
 ng g component  views/entrance/shop-index
+
+ng g m  views/shop
+
+ng g component  views/shop/shop-index

@@ -9,9 +9,10 @@ import {LayoutModule} from '../layout/layout.module';
 import {MainLayoutComponent} from './main-layout/main-layout.component';
 import {LoginComponent} from './entrance/login-page/login.component';
 import {WorkBoardComponent} from './work-board/work-board.component';
-import { DefaultComponent } from './default/default.component';
-import { RegisterComponent } from './entrance/register/register.component';
-import { NgxEchartsModule } from 'ngx-echarts';
+import {DefaultComponent} from './default/default.component';
+import {RegisterComponent} from './entrance/register/register.component';
+import {NgxEchartsModule} from 'ngx-echarts';
+
 
 @NgModule({
   imports: [
@@ -22,14 +23,14 @@ import { NgxEchartsModule } from 'ngx-echarts';
     CoreModule,
     LayoutModule,
     FormsModule,
-    NgxEchartsModule
+    NgxEchartsModule,
   ],
   declarations: [
     MainLayoutComponent,
     LoginComponent,
     WorkBoardComponent,
     DefaultComponent,
-    RegisterComponent,
+    RegisterComponent
   ],
 
   exports: [ViewsRoutingModule]

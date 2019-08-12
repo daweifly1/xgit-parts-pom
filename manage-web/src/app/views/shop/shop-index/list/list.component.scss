@@ -1,0 +1,23 @@
+.section{
+  flex: 1;
+  display: flex;
+  flex-flow: column nowrap;
+  overflow: hidden;
+}
+.card-header{
+  cursor: pointer;
+  &:hover{
+    /*color: #1890ff;*/
+    color: #000;
+  }
+}
+.card-body{
+  min-height: 70px;
+  .item{
+    margin-bottom: 5px;
+    color: #999;
+    &.reason{
+      color: red;
+    }
+  }
+}

@@ -1,0 +1,27 @@
+
+<div class="container">
+  <div class="header">
+    <div class="header-title">
+      <a [routerLink]="['/']" [class]="'logo'" >Logo</a>
+      <nz-divider nzType="vertical"></nz-divider>
+      <h2 class="title">选择店铺</h2>
+    </div>
+
+
+    <div class="user">
+      <div class="mobile">{{userService.userInfo.username}}</div>
+      <a class="log-out" href="javascript:;" >退出</a>
+    </div>
+  </div>
+
+  <div class="main">
+    <app-list [username]="userService.userInfo.username"></app-list>
+  </div>
+  <div class="footer">
+    <span>&copy; XCMG  江苏徐工信息技术股份有限公司版权所有</span>
+  </div>
+</div>
+
+
+
+

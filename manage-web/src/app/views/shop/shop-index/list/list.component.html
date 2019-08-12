@@ -1,0 +1,59 @@
+<div class="section">
+  <nz-list [nzItemLayout]="'horizontal'" style="margin-bottom: 20px;">
+    <nz-list-item>
+      <nz-list-item-meta
+        [nzTitle]="nzTitle"
+        [nzAvatar]="nzAvatar"
+        [nzDescription]="'江苏省徐州市鼓楼区科技路6号'"
+      >
+        <ng-template #nzAvatar>
+          <nz-avatar [nzShape]="'square'" style="width:56px;height:56px"
+                     nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
+        </ng-template>
+        <ng-template #nzTitle>
+          <a href="https://ng.ant.design">{{ username}}</a>
+        </ng-template>
+      </nz-list-item-meta>
+
+
+      <a nz-button nzType="primary" [routerLink]="['/shop/save']">创建店铺</a>
+    </nz-list-item>
+  </nz-list>
+
+
+  <nz-list [nzDataSource]="shops" [nzRenderItem]="item" [nzGrid]="{ gutter: 16, span: 8,column:3 }">
+    <ng-template #item let-item>
+      <nz-list-item [nzContent]="nzContent">
+        <ng-template #nzContent>
+          <nz-card [nzTitle]="item.title" [nzActions]="[ actionEdit, actionDelete]">
+            <div slot="title" class="card-header">{{item.title }}</div>
+            <div class="card-body">
+              <div class="item" *ngIf="item.status === 100">主体信息：>去认证</div>
+              <div class="item" *ngIf="item.status === 200">主体信息：<span>审核中</span></div>
+              <div class="item" *ngIf="item.status === 300">主体信息：已认证</div>
+              <div *ngIf="item.status === 400">
+                <div class="item">主体信息：未通过，请重新<a>提交资料</a></div>
+                <div class="item reason">未通过原因：<span class="item-text">图片上传不清晰</span></div>
+              </div>
+            </div>
+          </nz-card>
+
+          <ng-template #actionEdit>
+            <i nz-icon nzType="edit"></i>修改
+          </ng-template>
+          <ng-template #actionDelete>
+            <i nz-icon nzType="delete"></i>删除
+          </ng-template>
+
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+  </nz-list>
+
+
+  <div class="empty-container" *ngIf="shops.size<1">
+    <p class="empty-text">尚未创建店铺，快去创建吧~</p>
+    <a nz-button nzType="default" [routerLink]="['/shop/save']">立即创建 <i nz-icon nzType="arrow-right"></i> </a>
+  </div>
+
+</div>

@@ -10,6 +10,7 @@ const routes: Routes = [
   // {path: '', redirectTo: 'main', pathMatch: 'full'},
   {path: 'login', component: LoginComponent, data: {cache: false}},
   {path: 'register', component: RegisterComponent},
+  {path: 'shop', loadChildren: "./shop/shop.module#ShopModule"},
   {
     path: 'main', component: MainLayoutComponent, children: [
       {path: '', redirectTo: 'workBoard', pathMatch: 'full'},
@@ -21,7 +22,7 @@ const routes: Routes = [
       {path: 'shops', loadChildren: './shops/shops.module#ShopsModule'}
     ]
   },
-  {path: '**', component: DefaultComponent}
+  {path: '**', redirectTo: 'shop', pathMatch: 'full'}
 ];
 
 

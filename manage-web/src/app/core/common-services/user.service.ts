@@ -238,6 +238,16 @@ export namespace UserServiceNs {
       config.gateway = HttpUtilNs.GatewayKey.Ius;
       return this.http.Get('/auth/regist', registerInfo, config);
     }
+
+    public getCurrentUsername(): void {
+      if (!this.userInfo.username) {
+        this.getLogin().subscribe((data: UfastHttpAnyResModel) => {
+          return data.data.username;
+        }, (error: UserServiceNs.HttpError) => {
+          return null;
+        });
+      }
+    }
   }
 }
 

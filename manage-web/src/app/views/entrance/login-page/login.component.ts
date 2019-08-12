@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit {
           this.refreshVerify();
           return;
         }
-        this.router.navigate(['../main/workBoard'], {
+        this.router.navigate(['../shop'], {
           relativeTo: this.activeRouter
         });
       }, (error: UserServiceNs.HttpError) => {
