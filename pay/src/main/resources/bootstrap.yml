@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: parts-pay
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        serviceId: config-server
+      enabled: true
+      name: ${COMMON:common},${SERVICE_CONFIG:${spring.application.name}},${REDIS:redis},${RABBITMQ:rabbitmq},${SWAGGER:swagger}
+      profile: dev
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 8
+    service-url:
+      defaultZone: http://10.100.2.109:18100/eureka/
+
+
