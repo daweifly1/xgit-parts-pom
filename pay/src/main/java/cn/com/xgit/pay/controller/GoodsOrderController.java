@@ -4,7 +4,11 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeWapPayModel;
+import com.alipay.api.request.AlipayFundTransToaccountTransferRequest;
+import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
+import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -111,5 +115,56 @@ public class GoodsOrderController {
         }
         return null;
     }
+
+
+    @RequestMapping(value = "/queryPay/{goodsOrderId}", method = RequestMethod.GET)
+    @ResponseBody
+    public String queryPay(@PathVariable("goodsOrderId") String goodsOrderId, HttpServletResponse resp) throws AlipayApiException, IOException {
+        //实例化客户端
+        AlipayClient alipayClient = new DefaultAlipayClient(APP_ALI_GATEWAY, APP_ID, APP_PRIVATE_KEY, "json",
+                CHARSET, ALIPAY_PUBLIC_KEY, "RSA2");
+
+        AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
+
+        request.setBizContent("{" +
+                "\"out_trade_no\":\"" + goodsOrderId + "\" }");
+        AlipayTradeQueryResponse response = alipayClient.execute(request);
+        if (response.isSuccess()) {
+            System.out.println("调用成功");
+        } else {
+            System.out.println("调用失败");
+        }
+        System.out.println(response);
+        return response.getBody();
+    }
+
+
+    @RequestMapping(value = "/fundTransfer/{orderNum}", method = RequestMethod.GET)
+    @ResponseBody
+    public String fundTransfer(@PathVariable("orderNum") String orderNum, HttpServletResponse resp) throws AlipayApiException, IOException {
+        //实例化客户端
+        AlipayClient alipayClient = new DefaultAlipayClient(APP_ALI_GATEWAY, APP_ID, APP_PRIVATE_KEY, "json",
+                CHARSET, ALIPAY_PUBLIC_KEY, "RSA2");
+
+        AlipayFundTransToaccountTransferRequest request = new AlipayFundTransToaccountTransferRequest();
+        request.setBizContent("{" +
+                "\"out_biz_no\":\"" + orderNum + "\"," +
+                "\"payee_type\":\"ALIPAY_LOGONID\"," +
+                "\"payee_account\":\"smkprg0419@sandbox.com\"," +
+                "\"amount\":\"0.01\"," +
+                "\"payer_show_name\":\"上海交通卡退款\"," +
+                "\"payee_real_name\":\"沙箱环境\"," +
+                "\"remark\":\"转账备注\"" +
+                "  }");
+        AlipayFundTransToaccountTransferResponse response = alipayClient.execute(request);
+        if (response.isSuccess()) {
+            System.out.println("调用成功");
+        } else {
+            System.out.println("调用失败");
+        }
+        return response.getBody();
+    }
+
+
 
 }
