@@ -1,7 +1,15 @@
 package cn.com.xgit.gw.http;
 
+import cn.com.xgit.gw.http.consts.ZuulRequestHeader;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 import javax.servlet.http.HttpServletRequest;
 
+@Slf4j
 public class HttpUtil {
     /**
      * 获取用户真实IP地址，不使用request.getRemoteAddr();的原因是有可能用户使用了代理软件方式避免真实IP地址,
@@ -42,4 +50,41 @@ public class HttpUtil {
         return false;
     }
 
+    public static HttpServletRequest getHttpRequest() {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        return requestAttributes != null ? ((ServletRequestAttributes) requestAttributes).getRequest() : null;
+    }
+
+    public static String getRequestHeader(String header) {
+        HttpServletRequest request = getHttpRequest();
+        return request != null ? request.getHeader(header) : null;
+    }
+
+    public static Long getPlatformId() {
+        String spId = getRequestHeader(ZuulRequestHeader.SYSTEM);
+        return getLongParam(spId);
+
+    }
+
+    private static Long getLongParam(String spId) {
+        if (StringUtils.isBlank(spId)) {
+            return null;
+        }
+        try {
+            return Long.parseLong(spId.trim());
+        } catch (Exception e) {
+            log.warn("", e);
+        }
+        return null;
+    }
+
+    public static Long getStoreId() {
+        String spId = getRequestHeader(ZuulRequestHeader.STORE_ID);
+        return getLongParam(spId);
+    }
+
+    public static Long getShopId() {
+        String spId = getRequestHeader(ZuulRequestHeader.SHOP_ID);
+        return getLongParam(spId);
+    }
 }

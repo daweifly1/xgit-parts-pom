@@ -1,0 +1,38 @@
+logging:
+    file: ${LOG_TEMP:./logs}/${spring.application.name}.log
+    level:
+        cn.com.xgit: debug
+management:
+    endpoints:
+        web:
+            exposure:
+                include: bus-refresh,health,info
+spring:
+    cloud:
+        bus:
+            enabled: true
+            trace:
+                enabled: true
+    datasource:
+        driverClassName: com.mysql.jdbc.Driver
+        password: xgit123
+        url: jdbc:mysql://10.100.2.119:3306/xxpaydb?characterEncoding=UTF-8
+        username: root
+    rabbitmq:
+        host: 10.100.2.109
+        password: admin
+        port: 5672
+        username: admin
+    session:
+        store-type: none
+
+auth:
+  feign:
+    name: parts-auth-server
+    
+eureka:
+  instance:
+    lease-expiration-duration-in-seconds: 12
+    lease-renewal-interval-in-seconds: 4
+    prefer-ip-address: true
+    ip-address: 10.3.1.21

@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: center-server
+  profiles:
+    active: native
+    include: eureka,config
+  cloud:
+    inetutils:
+      preferred-networks:
+        10.100
+management:
+  context-path: /cccc
+server:
+  port: 18001
+hh: www

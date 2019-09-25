@@ -23,6 +23,16 @@ public class SysUserLoginInfoVO implements Serializable {
     //密碼
     private String password;
 
-    Set<Long> roleIds;
+    //当前平台
+    private Long platformId;
+    //当前总店
+    private Long storeId;
+    //当前分店
+    private Long shopId;
 
+    //根据平台查询拥有的角色
+    private Set<Long> roleIds;
+
+    //根据平台和当前数据信息筛选后的角色（storeId、shopId）
+    private Set<Long> curRoleIds;
 }

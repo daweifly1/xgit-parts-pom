@@ -1,0 +1,20 @@
+server:
+    port: 17003
+spring:
+    datasource:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        password: 123456
+        url: jdbc:mysql://10.100.2.109:3306/parts_rm?characterEncoding=UTF-8
+        username: mall
+    profiles:
+        active: mysql
+    redis:
+        host: 10.100.2.106
+        lettuce:
+            pool:
+                max-active: 8
+                max-idle: 8
+                min-idle: 0
+        port: 6379
+test-env: true
+version: 1.0.1-SNAPSHOT

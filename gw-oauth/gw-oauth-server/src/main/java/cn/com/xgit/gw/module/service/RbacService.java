@@ -4,6 +4,8 @@
 package cn.com.xgit.gw.module.service;
 
 import cn.com.xgit.gw.api.beans.CommonUserDetails;
+import cn.com.xgit.gw.enums.SystemEnum;
+import cn.com.xgit.gw.http.HttpUtil;
 import cn.com.xgit.gw.module.CustomsSecurityProperties;
 import cn.com.xgit.gw.module.beans.RequestUrlSet;
 import cn.com.xgit.parts.auth.feign.AuthClient;
@@ -70,7 +72,17 @@ public class RbacService {
             if (CollectionUtils.isEmpty(baseUser.getRoleIds())) {
                 return false;
             }
-            RequestUrlSet rSet = getRequestUrlSet(baseUser.getRoleIds(), getPlatformId(request));
+            RequestUrlSet rSet = null;
+            Long platformId = HttpUtil.getPlatformId();
+            if (null != platformId && SystemEnum.SHOP.getLongCode() == platformId.longValue()) {
+                if (CollectionUtils.isEmpty(baseUser.getCurRoleIds())) {
+                    return false;
+                }
+                rSet = getRequestUrlSet(baseUser.getCurRoleIds(), getPlatformId(request));
+            } else {
+                rSet = getRequestUrlSet(baseUser.getRoleIds(), getPlatformId(request));
+            }
+
             if (rSet.getUrls().contains(request.getRequestURI())) {
                 return true;
             }
