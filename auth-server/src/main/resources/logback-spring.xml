@@ -65,7 +65,7 @@
         <appender-ref ref="commonAppender"/>
     </appender>
 
-    <logger name="com.xgit.bj.auth.user.dao.mapper" level="debug" additivity="true">
+    <logger name="com.xgit.bj.auth.user.dao.mapper" level="info" additivity="true">
         <appender-ref ref="common_log"/>
         <appender-ref ref="warn_log"/>
     </logger>

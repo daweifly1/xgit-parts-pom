@@ -12,13 +12,13 @@ import java.util.Properties;
 @Configuration
 @ServletComponentScan
 public class DatasourceConfig {
-    @Value("${spring.datasource.driverClassName}")
+    @Value(value = "${spring.datasource.driver-class-name}")
     private String driverClassName;
-    @Value("${spring.datasource.url}")
+    @Value(value = "${spring.datasource.url}")
     private String url;
-    @Value("${spring.datasource.username}")
+    @Value(value = "${spring.datasource.username}")
     private String username;
-    @Value("${spring.datasource.password}")
+    @Value(value = "${spring.datasource.password}")
     private String password;
 
     @Bean

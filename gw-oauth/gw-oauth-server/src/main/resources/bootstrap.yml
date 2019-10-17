@@ -2,24 +2,30 @@ spring:
   application:
     name: gw-provider
   cloud:
-    config:
+    nacos:
       discovery:
-        enabled: true
-        serviceId: config-server
-      enabled: true
-      name: parts-auth-gateway
-      profile: test
+        server-addr: ${NACOS_DISCOVERY_ADDRESS:${NACOS_HOST:10.100.2.109}:${NACOS_PORT:8848}}
+        cluster-name: ${NACOS_DISCOVERY_CLUSTER:}
+        namespace: ${NACOS_DISCOVERY_NAMESPACE:12c825eb-55f3-4391-919b-90e06d1415f1}
+        secure: ${NACOS_DISCOVERY_SECURE:false}
+        accessKey: ${NACOS_DISCOVERY_ACCESSKEY:}
+        secretKey: ${NACOS_DISCOVERY_SECRETKEY:}
+        heart-beat-interval: ${NACOS_DISCOVERY_HEART_BEAT:}
+        heart-beat-timeout: ${NACOS_DISCOVERY_HEART_TIMEOUT:}
+        ip-delete-timeout: ${NACOS_DISCOVERY_IP_DELETE:}
+      config:
+        server-addr: ${NACOS_CONFIG_ADDRESS:${spring.cloud.nacos.discovery.server-addr:}}
+        cluster-name: ${NACOS_CONFIG_CLUSTER:${spring.cloud.nacos.discovery.cluster-name:}}
+        namespace: ${NACOS_CONFIG_NAMESPACE:${spring.cloud.nacos.discovery.namespace:}}
+        group: ${NACOS_CONFIG_GROUP:DEFAULT_GROUP}
+        prefix: ${NACOS_CONFIG_PREFIX:${spring.application.name:}}
+        file-extension: ${NACOS_CONFIG_FILE_EXT:yml}
+        shared-dataids: ${NACOS_CONFIG_SHARED_DATAIDS:${REDIS:redis.yml},${MYSQL:mysql.yml}}
+        refreshable-dataids: ${NACOS_CONFIG_REFRESHABLE_DATAIDS:${spring.cloud.nacos.config.shared-dataids:}}
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  main:
+    allow-bean-definition-overriding: true
 
-eureka:
-  client:
-    registry-fetch-interval-seconds: 8
-    service-url:
-      defaultZone: http://10.100.2.109:18100/eureka/
-  instance:
-    lease-expiration-duration-in-seconds: 12
-    lease-renewal-interval-in-seconds: 4
-    prefer-ip-address: true
 
-auth:
-  feign:
-    name: parts-auth-server
+

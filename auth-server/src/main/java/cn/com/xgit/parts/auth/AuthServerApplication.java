@@ -10,8 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @EnableFeignClients
-@EnableDiscoveryClient
 @SpringBootApplication
+@EnableDiscoveryClient
 public class AuthServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(AuthServerApplication.class, args);
