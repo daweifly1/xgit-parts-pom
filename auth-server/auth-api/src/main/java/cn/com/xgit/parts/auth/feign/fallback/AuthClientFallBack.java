@@ -10,7 +10,10 @@ import cn.com.xgit.parts.common.result.ResultMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Component
@@ -41,6 +44,12 @@ public class AuthClientFallBack implements AuthClient {
         return ResultMessage.error("服务异常，请稍后重试");
     }
 
+
+    @Override
+    public ResultMessage<Map<Long, SysAccountVO>> map(@NotEmpty ArrayList<Long> ids) {
+        log.warn("map 方法熔断，ids：{}", ids);
+        return ResultMessage.error("服务异常，请稍后重试");
+    }
 
     @Override
     public ResultMessage<SysAccountVO> queryAccountByLoginName(String loginName, Long platformId) {

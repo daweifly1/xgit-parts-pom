@@ -1,7 +1,6 @@
 package cn.com.xgit.gw.security.filter.jwt;
 
-import cn.com.xgit.gw.api.beans.CommonUserDetails;
-import cn.com.xgit.gw.enums.SystemEnum;
+import cn.com.xgit.gw.api.CommonUserDetails;
 import cn.com.xgit.gw.http.CookieUtil;
 import cn.com.xgit.gw.http.HttpUtil;
 import cn.com.xgit.gw.http.exceptions.GwException;
@@ -23,9 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 @Slf4j
 @Component
@@ -99,22 +96,6 @@ public class TokenAuthenticationHandler implements Serializable {
             boolean needRefresh = false;
             Long platformId = HttpUtil.getPlatformId();
             SysUserLoginInfoVO baseUser = subject.getBaseUser();
-            if (null != platformId && null != baseUser && SystemEnum.SHOP.getLongCode() == platformId.longValue()) {
-                if (baseUser.getPlatformId() != null && baseUser.getPlatformId().longValue() != platformId) {
-                    Long storeId = HttpUtil.getStoreId();
-                    Long shopId = HttpUtil.getShopId();
-                    //TODO 角色仅仅返回当前用户当前 总店或者分店的角色
-//            Set<Long> curRoleIds = authClient.queryCurrentRoles(baseUser.getId(), storeId, shopId);
-                    Set<Long> curRoleIds = new HashSet<>();
-                    baseUser.setCurRoleIds(curRoleIds);
-                    baseUser.setStoreId(storeId);
-                    baseUser.setShopId(shopId);
-                    baseUser.setPlatformId(platformId);
-
-                    subject.setBaseUser(baseUser);
-                    needRefresh = true;
-                }
-            }
             final long expiration = claims.getExpiration().getTime();
             final long date = System.currentTimeMillis() + (this.securityProperties.getJwtExpiration() * 1000L >> 1);
             if (System.currentTimeMillis() > expiration && !needRefresh) {

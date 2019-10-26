@@ -29,11 +29,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -254,6 +251,9 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
             saveRegistPassword(account.getId(), userRegistVO.getPassword());
             if (CollectionUtils.isNotEmpty(account.getRoles())) {
                 List<SysAccountRole> rs = getRolesFromRoles(account.getRoles(), account.getId());
+                for (SysAccountRole r : rs) {
+                    r.setDataId(userRegistVO.getDataId());
+                }
                 sysAccountRoleService.saveBatch(rs);
             }
         } else {
@@ -311,7 +311,7 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
         } else {
             sysUserLoginInfoVO.setPassword(queryDbNomalPsw(ddo.getId()));
         }
-        sysUserLoginInfoVO.setRoleIds(new HashSet<>(sysAccountRoleService.querRoleIdsByUserId(null, ddo.getId())));
+        sysUserLoginInfoVO.setRoleIds(new HashSet<>(sysAccountRoleService.querRoleIdsByUserId(platformId, ddo.getId())));
         return sysUserLoginInfoVO;
     }
 
@@ -344,5 +344,9 @@ public class SysAccountService extends SuperService<SuperMapper<SysAccount>, Sys
             throw new AuthException("保存错误");
         }
         return r;
+    }
+
+    public Map<Long, SysAccountVO> map(ArrayList<Long> ids) {
+        return super.listByIds(ids).stream().collect(Collectors.toMap(SysAccount::getId, x -> BeanUtil.do2bo(x, SysAccountVO.class)));
     }
 }

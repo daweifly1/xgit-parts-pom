@@ -16,16 +16,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -39,6 +35,12 @@ public class SysAccountController extends BasicController {
     @ApiOperation("查询用户列表")
     public ResultMessage<IPage<SysAccount>> list(SysAccount condition) {
         return ResultMessage.success(sysAccountService.page(getPagination(), new QueryWrapper<>(condition)));
+    }
+
+    @GetMapping("/map")
+    @ApiOperation("根据ID查询用户信息")
+    public ResultMessage<Map<Long, SysAccountVO>> map(@NotEmpty ArrayList<Long> ids) {
+        return ResultMessage.success(sysAccountService.map(ids));
     }
 
     @PostMapping("/update")

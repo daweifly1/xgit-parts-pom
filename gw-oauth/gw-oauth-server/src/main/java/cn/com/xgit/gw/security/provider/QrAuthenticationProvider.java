@@ -1,7 +1,7 @@
 package cn.com.xgit.gw.security.provider;
 
 
-import cn.com.xgit.gw.api.beans.CommonUserDetails;
+import cn.com.xgit.gw.api.CommonUserDetails;
 import cn.com.xgit.gw.security.token.QrAuthenticationToken;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;

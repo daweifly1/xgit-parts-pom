@@ -1,7 +1,6 @@
 package cn.com.xgit.gw.security.userdetails;
 
-import cn.com.xgit.gw.api.beans.CommonUserDetails;
-import cn.com.xgit.gw.enums.SystemEnum;
+import cn.com.xgit.gw.api.CommonUserDetails;
 import cn.com.xgit.gw.http.HttpUtil;
 import cn.com.xgit.parts.auth.feign.AuthClient;
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
@@ -14,8 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 
 @Slf4j
@@ -33,18 +30,6 @@ public abstract class BaseUserDetailService implements UserDetailsService {
             baseUser = rsp.getData();
         } else {
             throw new UsernameNotFoundException("找不到该用户，用户名：" + username);
-        }
-        if (null != platformId && SystemEnum.SHOP.getLongCode() == platformId.longValue()) {
-            Long storeId = HttpUtil.getStoreId();
-            Long shopId = HttpUtil.getShopId();
-            //TODO 角色仅仅返回当前用户当前 总店或者分店的角色
-//            Set<Long> curRoleIds = authClient.queryCurrentRoles(baseUser.getId(), storeId, shopId);
-            Set<Long> curRoleIds = new HashSet<>();
-            baseUser.setCurRoleIds(curRoleIds);
-            baseUser.setStoreId(storeId);
-            baseUser.setShopId(shopId);
-        } else {
-            baseUser.setCurRoleIds(baseUser.getRoleIds());
         }
         baseUser.setPlatformId(platformId);
         GrantedAuthority au = new GrantedAuthority() {

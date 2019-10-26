@@ -5,6 +5,7 @@ import cn.com.xgit.parts.auth.common.base.SuperService;
 import cn.com.xgit.parts.auth.module.account.entity.SysAccountRole;
 import cn.com.xgit.parts.auth.module.account.mapper.SysAccountRoleMapper;
 import cn.com.xgit.parts.auth.module.role.entity.SysRole;
+import cn.com.xgit.parts.auth.module.role.param.AuthRolePlatformParam;
 import cn.com.xgit.parts.auth.module.role.service.SysRoleService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * SysAccountRole 系统密码
@@ -70,5 +72,17 @@ public class SysAccountRoleService extends SuperService<SuperMapper<SysAccountRo
             r.addAll(sysRoleService.listByIds(ll));
         }
         return r;
+    }
+
+    public List<Long> queryDataRole(AuthRolePlatformParam param) {
+        SysAccountRole m = new SysAccountRole();
+        m.setPlatformId(param.getPlatformId());
+        m.setDataId(param.getDataId());
+        QueryWrapper<SysAccountRole> queryWrapper = new QueryWrapper(m);
+        if (CollectionUtils.isNotEmpty(param.getRoleIdList())) {
+            queryWrapper.in("", param.getRoleIdList());
+        }
+        List<SysAccountRole> l = super.list(queryWrapper);
+        return l.stream().map(SysAccountRole::getId).collect(Collectors.toList());
     }
 }

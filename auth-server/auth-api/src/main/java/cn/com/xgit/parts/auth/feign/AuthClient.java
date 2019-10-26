@@ -8,20 +8,20 @@ import cn.com.xgit.parts.auth.module.menu.param.SysAuthsParam;
 import cn.com.xgit.parts.auth.module.role.param.AuthRolePlatformParam;
 import cn.com.xgit.parts.common.result.ResultMessage;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @FeignClient(name = "${auth.feign.name:parts-auth-server}", fallback = AuthClientFallBack.class)
 public interface AuthClient {
 
+
+    @GetMapping(value = {"/sysAccount/map"})
+    public ResultMessage<Map<Long, SysAccountVO>> map(@NotEmpty ArrayList<Long> ids);
 
     /**
      * 根据平台、用户查询用户的信息（指定平台时候仅返回平台下的角色，否则不返回角色信息）
@@ -35,7 +35,7 @@ public interface AuthClient {
 
 
     @RequestMapping(value = {"/sysAccount/queryAccountByUserNameOrMobi"}, method = {RequestMethod.GET})
-    ResultMessage<SysUserLoginInfoVO> queryAccountByUserNameOrMobi(@RequestParam(value = "account") String account, @RequestParam(value = "platformId", required = false) Long platformId,@RequestParam(value = "dynamicPsw") Boolean dynamicPsw);
+    ResultMessage<SysUserLoginInfoVO> queryAccountByUserNameOrMobi(@RequestParam(value = "account") String account, @RequestParam(value = "platformId", required = false) Long platformId, @RequestParam(value = "dynamicPsw") Boolean dynamicPsw);
 
 
     /**

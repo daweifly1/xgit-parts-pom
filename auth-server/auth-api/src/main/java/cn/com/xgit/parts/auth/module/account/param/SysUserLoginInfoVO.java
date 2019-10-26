@@ -32,7 +32,4 @@ public class SysUserLoginInfoVO implements Serializable {
 
     //根据平台查询拥有的角色
     private Set<Long> roleIds;
-
-    //根据平台和当前数据信息筛选后的角色（storeId、shopId）
-    private Set<Long> curRoleIds;
 }

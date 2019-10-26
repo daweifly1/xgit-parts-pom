@@ -26,8 +26,8 @@ public class SysAccountRole extends BaseEntity {
     private Long roleId;
 
     //角色标识
-    @ApiModelProperty(value = "商店ID，具体的角色作用对象", name = "shop_id")
-    private Long shopId;
+    @ApiModelProperty(value = "平台数据ID，具体的角色作用对象（例如一个平台多个店铺，每个店铺权限不一样）", name = "dataId")
+    private Long dataId;
 
     @ApiModelProperty(value = "平台id,冗余", name = "platform_id")
     private Long platformId;

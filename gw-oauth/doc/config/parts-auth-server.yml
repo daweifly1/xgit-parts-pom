@@ -1,0 +1,30 @@
+server:
+  port: 17003
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.100.2.109:3306/parts_rm?characterEncoding=UTF-8
+    username: mall
+    password: 123456
+test-env: true
+version: 1.0.1-SNAPSHOT
+
+mybatis-plus:
+  configuration:
+    cache-enabled: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      column-underline: true
+      db-type: mysql
+      field-strategy: not_empty
+      id-type: AUTO
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+    refresh: true
+  mapper-locations: classpath:/mybatis/mysql-mapper/*/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: cn.com.xgit.parts.auth.module.*.entity
+
+  useLocalCache: true

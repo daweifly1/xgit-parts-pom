@@ -62,8 +62,12 @@ public class HttpUtil {
 
     public static Long getPlatformId() {
         String spId = getRequestHeader(ZuulRequestHeader.SYSTEM);
-        return getLongParam(spId);
-
+        Long p = getLongParam(spId);
+        if (null != p) {
+            return p;
+        }
+        //默認系統平臺
+        return 1L;
     }
 
     private static Long getLongParam(String spId) {
@@ -87,4 +91,13 @@ public class HttpUtil {
         String spId = getRequestHeader(ZuulRequestHeader.SHOP_ID);
         return getLongParam(spId);
     }
+
+    public static Long getDataId() {
+        Long shopId = getShopId();
+        if (null != shopId) {
+            return shopId;
+        }
+        return getStoreId();
+    }
+
 }

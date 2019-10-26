@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    #    hikari:
+    #      minimum-idle: 5
+    #      idle-timeout: 60000
+    #      max-lifetime: 60000
+    #      validation-timeout: 60000
+    #      maximum-pool-size: 15
+    #      pool-name: HikariCP
+    #      connection-timeout: 30000
+    #      connection-test-query: SELECT 1
+    druid:
+      name: druid
+      maxActive: 50
+      initialSize: 1
+      maxWait: 60000
+      minIdle: 5
+      timeBetweenEvictionRunsMillis: 60000       #如果空闲时间超过minEvictableIdleTimeMillis设置的值则直接物理关闭
+      minEvictableIdleTimeMillis: 30000          #配置一个连接在池中最大空闲时间，单位是毫秒
+      validationQuery: select 1
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      removeAbandoned: true                       #连接泄露检查
+      logAbandoned: true
+      removeAbandonedTimeout: 300                 #超时时间，秒
+      poolPreparedStatements: true
+      maxOpenPreparedStatements: 20
+      filters: stat,wall,slf4j
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000  # 通过connectProperties属性mergeSql功能；慢SQL记录
+      filter:
+        stat:
+          log-slow-sql: true
+      stat-view-servlet:
+        enabled: true

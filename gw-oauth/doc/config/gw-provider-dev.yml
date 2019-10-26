@@ -1,0 +1,107 @@
+auth:
+  feign:
+    name: parts-auth-server
+logging:
+  file: ${LOG_TEMP:./logs}/${spring.application.name}.log
+  level:
+    cn.com.xgit: debug
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+server:
+  port: 9000
+spring:
+  session:
+    store-type: none
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      filters: stat,wall,slf4j
+      initial-size: 5
+      maxActive: 20
+      maxPoolPreparedStatementPerConnectionSize: 20
+      maxWait: 60000
+      min-idle: 5
+      minEvictableIdleTimeMillis: 300000
+      poolPreparedStatements: true
+      stat-view-servlet:
+        allow: 10.100.2.109,10.3.1.33,10.3.1.41
+        deny: 192.168.1.73
+        login-password: 123456
+        login-username: admin
+        reset-enable: false
+        url-pattern: /druid/*
+      testOnBorrow: false
+      testOnReturn: false
+      testWhileIdle: true
+      timeBetweenEvictionRunsMillis: 60000
+      validationQuery: SELECT 1 FROM DUAL
+      web-stat-filter:
+        enabled: true
+        exclusions: '*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*'
+        url-pattern: /*
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://10.100.2.109:3306/parts_rm?characterEncoding=UTF-8
+    username: mall
+
+xgxx:
+  customs:
+    aesSeed: dnmbqsbsbxgxx
+    superAdmins: admin,sysadmin,chendawei,zhuluming,heruiquan
+    claimKeyCreated: xgxxDev
+    claimKeySecret: oooooo33333
+    jwtExpiration: 100000
+    signInPage: /login
+    signOutPage: /logout
+    customSignInPage: /ius/auth/login
+    permitAllUrls: /login,/phoneLogin,/api/v1/auth,/api/v1/signout,/error/**,/connet,/druid/**,/ius/profile/**,/ius/auth/**,/menu/tree,/logout
+    permitAccessUrls: /ius/auth/authInfo,/,/oauth/**
+    signOutSuccessUrl: /login
+    loginSuccRedirectUrl: /
+    noLoginRedirectUrl: /login
+    gwUrl: /
+  #        redirectErrorPage403: http://10.100.2.109:9101/web/index
+  #        redirectErrorPage404: http://10.100.2.109:9101/web/index
+  #        redirectErrorPage500: http://10.100.2.109:9101/web/index
+  social:
+    github:
+      appId: c2414a22b635afbfb5ec
+      appSecret: e17c54e4d78ab22fc1a335a3eb796a2074598a8e
+      callback: http://127.0.0.1:9000/connet/github
+      loginGitHubSuccessUrl: http://127.0.0.1:9000/
+zuul:
+  host:
+    connect-timeout-millis: 600000
+    socket-timeout-millis: 600000
+  max:
+    host:
+      connections: 500
+  routes:
+    api-a:
+      path: /ius/**
+      serviceid: parts-auth-server
+    api-b:
+      path: /shop/**
+      serviceid: xgit-shop-server
+    api-c:
+      path: /pay/**
+      serviceid: parts-pay
+
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+ribbon:
+  ConnectTimeout: 3000
+  ReadTimeout: 60000

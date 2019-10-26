@@ -23,7 +23,7 @@ spring:
         shared-dataids: ${NACOS_CONFIG_SHARED_DATAIDS:${REDIS:redis.yml},${MYSQL:mysql.yml}}
         refreshable-dataids: ${NACOS_CONFIG_REFRESHABLE_DATAIDS:${spring.cloud.nacos.config.shared-dataids:}}
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
+    active: ${SPRING_PROFILES_ACTIVE:local}
   main:
     allow-bean-definition-overriding: true
 management:

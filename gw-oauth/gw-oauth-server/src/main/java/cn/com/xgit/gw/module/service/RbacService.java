@@ -3,8 +3,7 @@
  */
 package cn.com.xgit.gw.module.service;
 
-import cn.com.xgit.gw.api.beans.CommonUserDetails;
-import cn.com.xgit.gw.enums.SystemEnum;
+import cn.com.xgit.gw.api.CommonUserDetails;
 import cn.com.xgit.gw.http.HttpUtil;
 import cn.com.xgit.gw.module.CustomsSecurityProperties;
 import cn.com.xgit.gw.module.beans.RequestUrlSet;
@@ -21,13 +20,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component("rbacService")
 public class RbacService {
@@ -51,7 +44,7 @@ public class RbacService {
             if (null == baseUser || null == baseUser.getId() || StringUtils.isBlank(baseUser.getUsername())) {
                 return false;
             }
-            //TODO若是超级管理员直接放过(内置用户名)
+            //若是超级管理员直接放过(内置用户名)
             String[] sus = customsSecurityProperties.getSuperAdmins();
             if (null != sus && sus.length > 0) {
                 for (String superAdmin : sus) {
@@ -72,17 +65,7 @@ public class RbacService {
             if (CollectionUtils.isEmpty(baseUser.getRoleIds())) {
                 return false;
             }
-            RequestUrlSet rSet = null;
-            Long platformId = HttpUtil.getPlatformId();
-            if (null != platformId && SystemEnum.SHOP.getLongCode() == platformId.longValue()) {
-                if (CollectionUtils.isEmpty(baseUser.getCurRoleIds())) {
-                    return false;
-                }
-                rSet = getRequestUrlSet(baseUser.getCurRoleIds(), getPlatformId(request));
-            } else {
-                rSet = getRequestUrlSet(baseUser.getRoleIds(), getPlatformId(request));
-            }
-
+            RequestUrlSet rSet = getRequestUrlSet(baseUser.getRoleIds(), HttpUtil.getPlatformId(), HttpUtil.getDataId());
             if (rSet.getUrls().contains(request.getRequestURI())) {
                 return true;
             }
@@ -95,30 +78,6 @@ public class RbacService {
         return false;
     }
 
-    /**
-     * 尝试从请求中获取平台id
-     * @param request
-     * @return
-     */
-    private Long getPlatformId(HttpServletRequest request) {
-        String platformId = request.getHeader(PLATFORM_ID);
-        if (StringUtils.isNotBlank(platformId)) {
-            return parseLong(platformId);
-        }
-        platformId = request.getParameter(PLATFORM_ID);
-        if (StringUtils.isNotBlank(platformId)) {
-            return parseLong(platformId);
-        }
-        return null;
-    }
-
-    private Long parseLong(String s) {
-        try {
-            return Long.parseLong(s);
-        } catch (Exception e) {
-            return null;
-        }
-    }
 
     /**
      * 角色对应的权限集合可以考虑cach
@@ -126,9 +85,9 @@ public class RbacService {
      * @param platformId
      * @return
      */
-    private RequestUrlSet getRequestUrlSet(Set<Long> roleIds, Long platformId) {
+    private RequestUrlSet getRequestUrlSet(Set<Long> roleIds, Long platformId, Long dataId) {
         RequestUrlSet result = new RequestUrlSet();
-        Set<String> set = getUrlsByRoles(roleIds, platformId);
+        Set<String> set = getUrlsByRoles(roleIds, platformId, dataId);
         result.setMatchUrls(new HashSet<>(set.size()));
         result.setUrls(new HashSet<>(set.size()));
         for (String s : set) {
@@ -141,7 +100,7 @@ public class RbacService {
         return result;
     }
 
-    private Set<String> getUrlsByRoles(Set<Long> roleIds, Long platformId) {
+    private Set<String> getUrlsByRoles(Set<Long> roleIds, Long platformId, Long dataId) {
         List<Long> roleList = new ArrayList<>(roleIds);
         Collections.sort(roleList, new Comparator<Long>() {
             @Override
@@ -153,6 +112,7 @@ public class RbacService {
         AuthRolePlatformParam param = new AuthRolePlatformParam();
         param.setPlatformId(platformId);
         param.setRoleIdList(roleList);
+        param.setDataId(dataId);
         ResultMessage<Set<String>> r = authClient.queryUrlsByRoleIds(param);
         if (null != r && !CollectionUtils.isEmpty(r.getData())) {
             return r.getData();

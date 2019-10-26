@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: gw-provider
+  cloud:
+    nacos:
+      discovery:
+        namespace: ${NACOS_DISCOVERY_NAMESPACE:}
+        ip: 10.3.1.42

@@ -1,6 +1,6 @@
 package cn.com.xgit.gw.security.handler;
 
-import cn.com.xgit.gw.api.beans.CommonUserDetails;
+import cn.com.xgit.gw.api.CommonUserDetails;
 import cn.com.xgit.gw.http.HttpUtil;
 import cn.com.xgit.gw.module.CustomsSecurityProperties;
 import cn.com.xgit.gw.security.filter.jwt.TokenAuthenticationHandler;

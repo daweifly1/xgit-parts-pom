@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: parts-auth-server
+  cloud:
+    nacos:
+      discovery:
+        ip: 10.3.1.42

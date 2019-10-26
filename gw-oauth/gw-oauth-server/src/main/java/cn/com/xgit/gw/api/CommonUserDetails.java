@@ -1,4 +1,4 @@
-package cn.com.xgit.gw.api.beans;
+package cn.com.xgit.gw.api;
 
 import cn.com.xgit.parts.auth.module.account.param.SysUserLoginInfoVO;
 import lombok.Data;

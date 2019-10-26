@@ -1,6 +1,6 @@
 package cn.com.xgit.gw.zuul;
 
-import cn.com.xgit.gw.api.beans.CommonUserDetails;
+import cn.com.xgit.gw.api.CommonUserDetails;
 import cn.com.xgit.gw.http.HttpUtil;
 import cn.com.xgit.gw.http.consts.ZuulRequestHeader;
 import com.netflix.zuul.ZuulFilter;
@@ -46,6 +46,9 @@ public class ProcessHeaderFilter extends ZuulFilter {
                 ctx.addZuulRequestHeader(ZuulRequestHeader.USER_ID, commonUserDetails.getBaseUser().getId() + "");
                 ctx.addZuulRequestHeader(ZuulRequestHeader.USER_NAME, commonUserDetails.getUsername());
                 ctx.addZuulRequestHeader(ZuulRequestHeader.REMOTE_IP, HttpUtil.getIpAddress(request));
+
+                ctx.addZuulRequestHeader(ZuulRequestHeader.SHOP_ID, HttpUtil.getShopId()+"");
+                ctx.addZuulRequestHeader(ZuulRequestHeader.STORE_ID, HttpUtil.getStoreId()+"");
             }
         }
         return null;

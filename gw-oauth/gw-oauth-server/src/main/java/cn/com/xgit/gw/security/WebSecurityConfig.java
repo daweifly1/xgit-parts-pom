@@ -103,7 +103,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .and().openidLogin().loginProcessingUrl("/openIdLogin").permitAll().successHandler(commonLoginSuccessHandler)
 //                .and().oauth2Login().loginProcessingUrl("/authLogin").permitAll().successHandler(commonLoginSuccessHandler)
                 // 登出页
-                .and().logout().logoutUrl(signOutPage).logoutSuccessHandler(jwtLogoutSuccessHandler)
+                .and().logout().logoutUrl(signOutPage).deleteCookies("JSESSIONID", "Authorization").logoutSuccessHandler(jwtLogoutSuccessHandler)
                 .and().authorizeRequests()
                 .anyRequest().access("@rbacService.hasPermission(request, authentication)");
         // 禁用缓存

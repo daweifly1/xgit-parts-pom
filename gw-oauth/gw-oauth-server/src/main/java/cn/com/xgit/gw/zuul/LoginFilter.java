@@ -1,7 +1,6 @@
 package cn.com.xgit.gw.zuul;
 
-import cn.com.xgit.gw.api.beans.CommonUserDetails;
-import cn.com.xgit.gw.enums.SystemEnum;
+import cn.com.xgit.gw.api.CommonUserDetails;
 import cn.com.xgit.gw.http.HttpUtil;
 import cn.com.xgit.gw.module.CustomsSecurityProperties;
 import cn.com.xgit.gw.security.filter.jwt.TokenAuthenticationHandler;
@@ -25,8 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * 当有较复杂 逻辑登录校验时候，可以自定义登录
@@ -78,20 +75,7 @@ public class LoginFilter extends ZuulFilter {
             SysUserLoginInfoVO sysUserLoginInfoVO = postUserLogin(ctx);
             if (null != sysUserLoginInfoVO) {
                 Long platformId = HttpUtil.getPlatformId();
-                if (null != platformId && SystemEnum.SHOP.getLongCode() == platformId.longValue()) {
-                    Long storeId = HttpUtil.getStoreId();
-                    Long shopId = HttpUtil.getShopId();
-                    //TODO 角色仅仅返回当前用户当前 总店或者分店的角色
-//            Set<Long> curRoleIds = authClient.queryCurrentRoles(baseUser.getId(), storeId, shopId);
-                    Set<Long> curRoleIds = new HashSet<>();
-                    sysUserLoginInfoVO.setCurRoleIds(curRoleIds);
-                    sysUserLoginInfoVO.setStoreId(storeId);
-                    sysUserLoginInfoVO.setShopId(shopId);
-                } else {
-                    sysUserLoginInfoVO.setCurRoleIds(sysUserLoginInfoVO.getRoleIds());
-                }
                 sysUserLoginInfoVO.setPlatformId(platformId);
-
                 GrantedAuthority au = new GrantedAuthority() {
                     @Override
                     public String getAuthority() {

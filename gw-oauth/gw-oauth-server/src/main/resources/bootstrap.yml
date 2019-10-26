@@ -20,12 +20,10 @@ spring:
         group: ${NACOS_CONFIG_GROUP:DEFAULT_GROUP}
         prefix: ${NACOS_CONFIG_PREFIX:${spring.application.name:}}
         file-extension: ${NACOS_CONFIG_FILE_EXT:yml}
-        shared-dataids: ${NACOS_CONFIG_SHARED_DATAIDS:${REDIS:redis.yml},${MYSQL:mysql.yml}}
+        shared-dataids: ${NACOS_CONFIG_SHARED_DATAIDS:${REDIS:redis.yml}}
         refreshable-dataids: ${NACOS_CONFIG_REFRESHABLE_DATAIDS:${spring.cloud.nacos.config.shared-dataids:}}
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
   main:
     allow-bean-definition-overriding: true
-
-
 

@@ -17,6 +17,9 @@ public class AuthRolePlatformParam implements Serializable {
     @ApiModelProperty(value = "平台id", required = false)
     private Long platformId;
 
+    @ApiModelProperty(value = "数据id，具体数据的角色，如多店铺", required = false)
+    private Long dataId;
+
     @ApiModelProperty(value = "角色id集合")
     private List<Long> roleIdList;
 

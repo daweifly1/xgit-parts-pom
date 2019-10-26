@@ -11,11 +11,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,7 +39,7 @@ public class MenuFacade {
         //查询平台所有权限资源
         List<SysAuthsVO> ll = sysAuthsService.treeList(condition, true);
         //权限码（权限id）
-        Set<Long> hasAuthCode = queryAuthIds(condition.getPlatformId(), userId, true);
+        Set<Long> hasAuthCode = queryAuthIds(condition.getPlatformId(), condition.getDataId(), userId, true);
         if (CollectionUtils.isNotEmpty(ll)) {
             //ll可以加local cache
             result.addAll(ll);
@@ -79,22 +75,40 @@ public class MenuFacade {
         }
     }
 
-    private Set<Long> queryAuthIds(Long platformId, Long userId, boolean onlyMenu) {
+    private Set<Long> queryAuthIds(Long platformId, Long dataId, Long userId, boolean onlyMenu) {
         //查询用户对应平台所有角色集合
         List<Long> roleIds = sysAccountRoleService.querRoleIdsByUserId(platformId, userId);
+        if (null != dataId) {
+            //如果有dataId要区分下当前有效的角色
+            AuthRolePlatformParam param = new AuthRolePlatformParam();
+            param.setRoleIdList(roleIds);
+            param.setDataId(dataId);
+            List<Long> roleIds2 = sysAccountRoleService.queryDataRole(param);
+            if (CollectionUtils.isEmpty(roleIds2)) {
+                return null;
+            }
+            //根据roleId查询拥有的权限码（权限id）
+            return sysRoleAuthService.queryAuthIdSet(platformId, roleIds2, onlyMenu);
+        }
         //根据roleId查询拥有的权限码（权限id）
         Set<Long> hasAuthCode = sysRoleAuthService.queryAuthIdSet(platformId, roleIds, onlyMenu);
         return hasAuthCode;
     }
 
     public List<Long> getAuthIds(SysAuthsParam sysAuthsParam) {
-        return new ArrayList<>(queryAuthIds(sysAuthsParam.getPlatformId(), sysAuthsParam.getUserId(), false));
+        return new ArrayList<>(queryAuthIds(sysAuthsParam.getPlatformId(), null, sysAuthsParam.getUserId(), false));
     }
 
-    //此内容可以考虑localcache(角色--》url集合)
+    //此内容可以考虑localcache(角色[dataId]---》url集合)
     public Set<String> queryUrlsByRoleIds(AuthRolePlatformParam param) {
         Set<String> urls = new HashSet<>();
         if (null == param || CollectionUtils.isEmpty(param.getRoleIdList())) {
+            return urls;
+        }
+        //如果有dataId要区分下当前有效的角色
+        List<Long> roleIds = sysAccountRoleService.queryDataRole(param);
+        param.setRoleIdList(roleIds);
+        if (CollectionUtils.isEmpty(roleIds)) {
             return urls;
         }
         Set<Long> authIds = sysRoleAuthService.queryAuthIdList(param);
@@ -111,97 +125,4 @@ public class MenuFacade {
         });
         return urls;
     }
-
-//    @Autowired
-//    private SysRoleAuthService sysRoleAuthService;
-//
-//    @Autowired
-//    private SysUserRolesService sysUserRolesService;
-//
-//    @Autowired
-//    private SysRoleService sysRoleService;
-//
-//    @Autowired
-//    private SysAuthsService sysAuthsService;
-//
-//    @Autowired
-//    private SysAccountService sysAccountService;
-//
-//
-//    @Autowired
-//    DepartmentService departmentService;
-//
-//
-//    /**
-//     * 查询菜单按钮集合（树形结构）
-//     *
-//     * @param userId
-//     * @return
-//     */
-//    public List<SysAuthsVO> queryMenuByUserId(Long userId) {
-//        if (null == userId) {
-//            throw new AuthException(ErrorCode.NeedLogin, "用户未登录！");
-//        }
-//        List<SysAuthsVO> tree = sysAuthsService.queryAllMenuVOList();
-//        List<SysUserRolesDO> ll = sysUserRolesService.queryUserRoles(userId);
-//        if (CollectionUtils.isEmpty(ll)) {
-//            return null;
-//        }
-//        Set<String> roleIds = new HashSet<>();
-//        ll.forEach((x) -> roleIds.add(x.getRoleId()));
-//        List<Integer> ausIdList = sysRoleAuthService.queryAuthIds(roleIds);
-//        if (CollectionUtils.isNotEmpty(tree)) {
-//            Iterator<SysAuthsVO> it = tree.iterator();
-//            while (it.hasNext()) {
-//                SysAuthsVO vo = it.next();
-//                if (1 == vo.getType() && ausIdList.contains(vo.getId())) {
-////                    vo.setChecked(true);
-//                    vo.setState("app" + vo.getUrl().replace("/", "."));
-//                    doCheckedChilren(vo, ausIdList);
-//                } else {
-//                    it.remove();
-//                }
-//            }
-//        }
-//        return tree;
-//    }
-//
-//    private void doCheckedChilren(SysAuthsVO vo, List<Integer> ausIdList) {
-//        if (CollectionUtils.isNotEmpty(vo.getChildren())) {
-//            Iterator<SysAuthsVO> it = vo.getChildren().iterator();
-//            while (it.hasNext()) {
-//                SysAuthsVO vvo = it.next();
-//                if (1 == vvo.getType() && ausIdList.contains(vvo.getId())) {
-////                    vo.setChecked(true);
-//                    vvo.setState("app" + vvo.getUrl().replace("/", "."));
-//                    doCheckedChilren(vvo, ausIdList);
-//                } else {
-//                    it.remove();
-//                }
-//            }
-//        }
-//    }
-//
-//
-//    public List<SysRoleVO> queryAllRoles(String userId) {
-//        //TODO　暂时返回所有角色
-//        List<SysRoleDO> ll = sysRoleService.queryList(new SysRoleVO());
-//        return BeanUtil.do2bo4List(ll, SysRoleVO.class);
-//    }
-//
-//    public Boolean checkAuthCodes(String userId, String url) {
-//        List<SysUserRolesDO> ll = sysUserRolesService.queryUserRoles(userId);
-//        if (CollectionUtils.isEmpty(ll)) {
-//            return false;
-//        }
-//        Set<String> roleIds = new HashSet<>();
-//        for (SysUserRolesDO x : ll) {
-//            roleIds.add(x.getRoleId());
-//        }
-//        List<SysRoleAuthDO> aus = sysRoleAuthService.queryAuthCodeExist(roleIds, url);
-//        if (CollectionUtils.isNotEmpty(aus)) {
-//            return true;
-//        }
-//        return false;
-//    }
 }

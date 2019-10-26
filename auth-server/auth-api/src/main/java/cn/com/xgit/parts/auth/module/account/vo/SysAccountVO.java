@@ -54,4 +54,7 @@ public class SysAccountVO extends CommEntity implements Serializable {
     @ApiModelProperty(value = "拥有角色ID信息")
     private List<Long> roleIds;
 
+    @ApiModelProperty(value = "数据范围id，例如分店id", name = "dataId")
+    private Long dataId;
+
 }

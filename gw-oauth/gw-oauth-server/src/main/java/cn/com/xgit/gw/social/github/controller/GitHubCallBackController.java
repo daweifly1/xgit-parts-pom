@@ -1,6 +1,6 @@
 package cn.com.xgit.gw.social.github.controller;
 
-import cn.com.xgit.gw.api.beans.CommonUserDetails;
+import cn.com.xgit.gw.api.CommonUserDetails;
 import cn.com.xgit.gw.security.filter.jwt.TokenAuthenticationHandler;
 import cn.com.xgit.gw.social.enums.OAuthTypes;
 import cn.com.xgit.gw.social.github.GitHubProperties;
