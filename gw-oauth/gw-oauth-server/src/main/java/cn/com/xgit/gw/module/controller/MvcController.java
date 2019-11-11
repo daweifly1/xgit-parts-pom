@@ -78,30 +78,30 @@ public class MvcController {
      * @param model
      * @return
      */
-    @RequestMapping("/")
-    public ModelAndView indexPage(Map<String, Object> model) {
-        // 获取用户名
-        String userName = ((UserDetails) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal())
-                .getUsername();
-        model.put("userName", userName);
-
-        List<ClientDetails> ll = jdbcClientDetailsService.listClientDetails();
-        List<Map<String, Object>> client = new ArrayList<>();
-
-        for (int i = 0; i < ll.size(); i++) {
-            ClientDetails cc = ll.get(i);
-            Map<String, Object> dd = new HashMap<>();
-            dd.put("name", "CODE模式授权给" + cc.getClientId());
-            dd.put("webServerRedirectUri", this.customsSecurityProperties.getGwUrl() + "/oauth/authorize?response_type=code&client_id=" + cc.getClientId() + "&redirect_uri=" + cc.getRegisteredRedirectUri().toArray()[0]);
-            client.add(dd);
-            Map<String, Object> dd2 = new HashMap<>();
-            dd2.put("name", "简化模式授权给" + cc.getClientId());
-            dd2.put("webServerRedirectUri", this.customsSecurityProperties.getGwUrl() + "/oauth/authorize?response_type=token&client_id=" + cc.getClientId() + "&scope=all&redirect_uri=" + cc.getRegisteredRedirectUri().toArray()[0]);
-            client.add(dd2);
-        }
-        model.put("client", client);
-        return new ModelAndView("index", model);
-    }
+//    @RequestMapping("/")
+//    public ModelAndView indexPage(Map<String, Object> model) {
+//        // 获取用户名
+//        String userName = ((UserDetails) SecurityContextHolder.getContext()
+//                .getAuthentication()
+//                .getPrincipal())
+//                .getUsername();
+//        model.put("userName", userName);
+//
+//        List<ClientDetails> ll = jdbcClientDetailsService.listClientDetails();
+//        List<Map<String, Object>> client = new ArrayList<>();
+//
+//        for (int i = 0; i < ll.size(); i++) {
+//            ClientDetails cc = ll.get(i);
+//            Map<String, Object> dd = new HashMap<>();
+//            dd.put("name", "CODE模式授权给" + cc.getClientId());
+//            dd.put("webServerRedirectUri", this.customsSecurityProperties.getGwUrl() + "/oauth/authorize?response_type=code&client_id=" + cc.getClientId() + "&redirect_uri=" + cc.getRegisteredRedirectUri().toArray()[0]);
+//            client.add(dd);
+//            Map<String, Object> dd2 = new HashMap<>();
+//            dd2.put("name", "简化模式授权给" + cc.getClientId());
+//            dd2.put("webServerRedirectUri", this.customsSecurityProperties.getGwUrl() + "/oauth/authorize?response_type=token&client_id=" + cc.getClientId() + "&scope=all&redirect_uri=" + cc.getRegisteredRedirectUri().toArray()[0]);
+//            client.add(dd2);
+//        }
+//        model.put("client", client);
+//        return new ModelAndView("index", model);
+//    }
 }

@@ -32,6 +32,7 @@ export namespace UserServiceNs {
   export interface AuthLoginReqModel {
     authId: string;
     code: string;
+    status?:string
     username: string;
     password: string;
   }

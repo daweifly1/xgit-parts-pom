@@ -6,7 +6,7 @@ spring:
       discovery:
         server-addr: ${NACOS_DISCOVERY_ADDRESS:${NACOS_HOST:10.100.2.109}:${NACOS_PORT:8848}}
         cluster-name: ${NACOS_DISCOVERY_CLUSTER:}
-        namespace: ${NACOS_DISCOVERY_NAMESPACE:12c825eb-55f3-4391-919b-90e06d1415f1}
+        namespace: ${NACOS_DISCOVERY_NAMESPACE:}
         secure: ${NACOS_DISCOVERY_SECURE:false}
         accessKey: ${NACOS_DISCOVERY_ACCESSKEY:}
         secretKey: ${NACOS_DISCOVERY_SECRETKEY:}

@@ -7,7 +7,7 @@
  ****/
 
 // export const webServerUrl = 'http://10.99.102.208:8087';     // 生产
-export const webServerUrl = 'http://gw.jt.com';
+export const webServerUrl = 'http://127.0.0.1:9000';
  // export const webServerUrl = 'http://192.168.2.103:5055';
 export const gatewayKey = {
   Ius: 'ius',
@@ -30,7 +30,11 @@ export const gatewayKey = {
   /**
    * 审批流
    * */
-  Flow: 'flow'
+  Flow: 'flow',
+  /**
+   * 审批流
+   * */
+  Shop: 'shop'
 };
 
 export const environment = {
@@ -41,7 +45,8 @@ export const environment = {
     bs: `${webServerUrl}/bs`,
     ps: `${webServerUrl}/ps`,
     ss: `${webServerUrl}/ss`,
-    flow: `${webServerUrl}/flow`
+    flow: `${webServerUrl}/flow`,
+    shop: `${webServerUrl}/shop`
   },
   otherData: {
     sysRole: 0,

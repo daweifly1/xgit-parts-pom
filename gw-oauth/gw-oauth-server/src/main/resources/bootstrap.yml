@@ -26,4 +26,7 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE:dev}
   main:
     allow-bean-definition-overriding: true
+#  resources:
+#    static-locations: classpath:/resources/,classpath:/resources/templates/,classpath:/static/,classpath:/public/,file:C:/privateSpace/xgit-parts-pom/manage-web
+
 
